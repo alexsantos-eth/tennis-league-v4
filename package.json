@@ -12,6 +12,20 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^6.0.4"
+    "@astrojs/react": "^5.0.0",
+    "@tailwindcss/vite": "^4.2.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^6.0.4",
+    "class-variance-authority": "^0.7.1",
+    "firebase": "^12.10.0",
+    "lucide-react": "^0.577.0",
+    "radix-ui": "^1.4.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.1",
+    "tailwindcss-animated": "^2.0.0",
+    "zustand": "^5.0.11"
   }
 }

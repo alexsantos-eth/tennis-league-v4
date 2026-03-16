@@ -1,0 +1,20 @@
+---
+import Heads from "../../layouts/heads.astro";
+import Page from "../../layouts/page.astro";
+import Login from "./components/login.tsx";
+
+export const prerender = false;
+---
+
+<Page>
+  <Heads>
+    <title>Login | Liga de Tenis GT</title>
+  </Heads>
+
+  <body>
+    <main>
+      <Login client:load />
+    </main>
+  </body>
+</Page>
+

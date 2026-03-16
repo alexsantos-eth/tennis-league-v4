@@ -1,0 +1,40 @@
+import { Button } from "../../../components/ui/button";
+import Text from "../../../components/ui/text";
+
+interface EventCardProps {
+  title?: string;
+  description?: string;
+  link?: string;
+}
+
+const EventCard: React.FC<EventCardProps> = ({ title, description, link }) => {
+  return (
+    <div className="snap-center w-full drop-shadow-lg relative bg-[url(/images/events/background.png)] bg-cover rounded-2xl overflow-hidden mx-6">
+      <div className="pointer-events-none absolute left-0 right-0 top-0 bottom-0 bg-linear-to-r from-black/80 to-transparent"></div>
+
+      <div className="relative z-2 px-4 py-4 flex flex-col gap-4">
+        {(title?.length ?? 0) > 0 && (
+          <Text variant="h4" className="text-primary-foreground leading-6">
+            {title}
+          </Text>
+        )}
+
+        {(description?.length ?? 0) > 0 && (
+          <Text variant="body" className="text-primary-foreground max-w-55">
+            {description}
+          </Text>
+        )}
+
+        {(link?.length ?? 0) > 0 && (
+          <a href={link!}>
+            <Button size="lg" variant="secondary" className="px-4">
+              Ver más
+            </Button>
+          </a>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default EventCard;

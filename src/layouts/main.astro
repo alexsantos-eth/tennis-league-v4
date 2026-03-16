@@ -1,0 +1,22 @@
+---
+import Navigation from "./components/navigation";
+import Topbar from "./components/topbar";
+import { cn } from "../lib/styles";
+
+interface Props {
+  topbar?: {
+    title: string;
+    subtitle?: string;
+  };
+  className?: string;
+  showNav?: boolean;
+}
+
+const { topbar, className, showNav } = Astro.props;
+---
+
+<div class="h-dvh gap-0">
+  {Boolean(topbar) && <Topbar {...topbar} />}
+  <main class={cn("bg-accent pb-22.5", className)}><slot /></main>
+  {showNav && <Navigation />}
+</div>
