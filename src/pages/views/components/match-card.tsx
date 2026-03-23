@@ -12,6 +12,7 @@ interface MatchCardPlayerProps {
 interface MatchCardProps {
   time: string;
   format: string;
+  type: string;
   category: string;
   status: string;
   playerOne: MatchCardPlayerProps;
@@ -21,6 +22,7 @@ interface MatchCardProps {
 const MatchCard = ({
   time,
   format,
+  type,
   category,
   status,
   playerOne,
@@ -31,16 +33,24 @@ const MatchCard = ({
       <div className="flex flex-col relative gap-6">
         <div className="flex flex-col justify-center items-start">
           <div className="flex justify-start items-center relative gap-2 flex-wrap">
-            <Text variant="h4" className="text-muted-foreground">
-              {time}
+            <Text variant="bodyLarge" className="font-semibold text-muted-foreground">
+              {type}
             </Text>
-            <Text variant="h4" className="font-bold text-foreground">
+
+            <Text variant="bodyLarge" className="font-bold text-foreground">
               {format}
             </Text>
           </div>
-          <Text variant="body" className="text-foreground">
-            {category}
-          </Text>
+
+          <div className="flex justify-start items-center relative gap-2 flex-wrap">
+            <Text variant="body" className="font-semibold text-muted-foreground">
+              {time}
+            </Text>
+
+            <Text variant="body" className="text-foreground">
+              {category}
+            </Text>
+          </div>
         </div>
 
         <div className="absolute right-0 top-0">
@@ -50,39 +60,43 @@ const MatchCard = ({
         </div>
       </div>
 
-      <div className="flex items-center w-full gap-4">
-        <BoxContainer className="bg-accent w-full py-2 rounded-lg flex items-center gap-2">
-          <Avatar size="lg">
-            <AvatarFallback className="bg-gray-200 font-semibold">PL</AvatarFallback>
+      <div className="grid grid-cols-2 w-full gap-4">
+        <BoxContainer className="bg-accent py-2 rounded-lg flex items-center gap-2">
+          <Avatar size="default">
+            <AvatarFallback className="bg-gray-200 font-semibold">
+              PL
+            </AvatarFallback>
           </Avatar>
 
-          <div>
-            <Text variant="body" className="text-foreground font-semibold">
+          <div className="flex flex-col gap-0 overflow-hidden">
+            <Text variant="body" className="truncate text-foreground leading-4 font-semibold">
               {playerOne.name}
             </Text>
             <Text
-              variant="body"
-              className="text-muted-foreground font-semibold"
+              variant="bodySmall"
+              className="text-muted-foreground"
             >
-              {(playerOne.detailLabel ?? "GTR")}: {playerOne.gtr}
+              {playerOne.detailLabel ?? "GTR"}: {playerOne.gtr}
             </Text>
           </div>
         </BoxContainer>
 
         <BoxContainer className="bg-accent w-full py-2 rounded-lg flex items-center gap-2">
-          <Avatar size="lg">
-            <AvatarFallback className="bg-gray-200 font-semibold">PL</AvatarFallback>
+          <Avatar size="default">
+            <AvatarFallback className="bg-gray-200 font-semibold">
+              PL
+            </AvatarFallback>
           </Avatar>
 
-          <div>
-            <Text variant="body" className="text-foreground font-semibold">
+          <div className="flex flex-col gap-0 overflow-hidden">
+            <Text variant="body" className="truncate text-foreground leading-4 font-semibold">
               {playerTwo.name}
             </Text>
             <Text
-              variant="body"
-              className="text-muted-foreground font-semibold"
+              variant="bodySmall"
+              className="text-muted-foreground"
             >
-              {(playerTwo.detailLabel ?? "GTR")}: {playerTwo.gtr}
+              {playerTwo.detailLabel ?? "GTR"}: {playerTwo.gtr}
             </Text>
           </div>
         </BoxContainer>

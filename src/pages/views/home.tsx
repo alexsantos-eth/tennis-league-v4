@@ -7,7 +7,7 @@ const Home: React.FC = () => {
     <>
       <HomeHeader />
 
-      <div className="w-full flex flex-col gap-6 h-full mt-26.25 py-6">
+      <div className="w-full flex flex-col gap-6 h-full mt-26 py-6 overflow-scroll">
         <HomeEvents />
         <Matches />
       </div>

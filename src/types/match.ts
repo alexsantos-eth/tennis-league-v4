@@ -1,5 +1,5 @@
 
-export type PublicMatchSport = "Tennis" | "Padel" | "Pickleball";
+export type PublicMatchSport = "Tenis" | "Padel" | "Pickleball";
 export type PublicMatchType = "Doubles" | "Singles";
 export type PublicMatchFormat = "Ranking" | "Friendly";
 export type PublicMatchStatus = "open" | "reserved";

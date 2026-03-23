@@ -14,18 +14,19 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 }) => {
   const dayOfWeek = date
     .toLocaleDateString("es", { weekday: "short" })
+    .toUpperCase()
     .substring(0, 2)
-    .toUpperCase();
+
   const dayOfMonth = date.getDate();
 
   if (isSelected) {
     return (
-      <BoxContainer className="snap-end p-0 bg-primary min-w-19 min-h-19 flex flex-col items-center justify-center">
+      <BoxContainer className="snap-start p-0 bg-primary min-w-16 min-h-16 max-h-16 flex flex-col items-center justify-center">
         <Text variant="bodySmall" className="text-white font-semibold">
           {dayOfWeek}
         </Text>
 
-        <Text variant="h2" className="text-white">
+        <Text variant="h4" className="text-white">
           {dayOfMonth}
         </Text>
       </BoxContainer>
@@ -34,14 +35,14 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 
   return (
     <BoxContainer
-      className="snap-end p-0 w-19 h-19 flex flex-col items-center justify-center cursor-pointer"
+      className="snap-start p-0 min-w-16 w-16 h-16 max-h-16 flex flex-col items-center justify-center cursor-pointer"
       onClick={onClick}
     >
       <Text variant="bodySmall" className="text-muted-foreground font-semibold">
         {dayOfWeek}
       </Text>
 
-      <Text variant="h2" className="text-muted-foreground">
+      <Text variant="h4" className="text-muted-foreground">
         {dayOfMonth}
       </Text>
     </BoxContainer>

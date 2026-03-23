@@ -10,10 +10,17 @@ export interface TopbarProps {
 }
 
 const Topbar = ({ title, className, goBack, rightButton }: TopbarProps) => {
+  const onGoBack = () => {
+    if (typeof goBack === "function") {
+      goBack();
+    } else {
+      history.back();
+    }
+  }
 
   return (
     <header
-      style={{ boxShadow: "0px 5px 5px -1px rgba(0,0,0,0.1)" }}
+      style={{ boxShadow: "0px 5px 5px -1px rgba(0,0,0,0.05)" }}
       className={`fixed top-0 left-0 right-0 z-10 bg-background ${className}`}
     >
       <div
@@ -23,6 +30,7 @@ const Topbar = ({ title, className, goBack, rightButton }: TopbarProps) => {
         <div className="flex flex-row items-center gap-4">
           {goBack && (
             <Button
+              onClick={onGoBack}
               variant="outline"
               size="icon"
               className="bg-transparent text-foreground animate-fade-left"

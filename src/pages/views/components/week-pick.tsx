@@ -1,4 +1,5 @@
-"use client";
+import { useRef } from "react";
+
 import Text from "../../../components/ui/text";
 import CalendarDay from "./calendar-day";
 
@@ -11,7 +12,9 @@ const WeekPick = ({ selectedDate, onDateSelect }: WeekPickProps) => {
   const startDate = new Date(selectedDate);
   startDate.setDate(selectedDate.getDate() - 1);
 
-  const weekDates = Array.from({ length: 5 }, (_, index) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const weekDates = Array.from({ length: 15 }, (_, index) => {
     const date = new Date(startDate);
     date.setDate(startDate.getDate() + index);
     return date;
@@ -19,32 +22,40 @@ const WeekPick = ({ selectedDate, onDateSelect }: WeekPickProps) => {
 
   const selectedDateLocale = selectedDate.toLocaleDateString("es", {
     weekday: "long",
-    month: "short",
+    month: "long",
     day: "numeric",
   });
 
-  const selectedDateLocaleCapitalized = selectedDateLocale.replace(/\b\p{L}/gu, (char) =>
-    char.toUpperCase(),
-  );
+  const selectedDateLocaleCapitalized = `${selectedDateLocale[0].toUpperCase()}${selectedDateLocale.slice(1)}`;
+
+  const onDayClick = (date: Date) => {
+    onDateSelect(date);
+
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    scrollContainer.scrollTo({ left: 0, behavior: "smooth" });
+  };
 
   return (
-    <div className="flex flex-col gap-4">
-      <Text variant="h3" className="text-foreground px-6">
+    <div className="flex flex-col gap-2">
+      <Text variant="bodyLarge" className="font-bold text-foreground px-6">
         {selectedDateLocaleCapitalized}
       </Text>
 
-      <div className="flex flex-col w-full overflow-scroll snap-x snap-mandatory scrollbar-hide px-6">
-        <div className="flex w-max gap-4">
+      <div
+        ref={scrollRef}
+        className="flex flex-col max-w-full overflow-scroll snap-x snap-mandatory scrollbar-hide mx-6"
+      >
+        <div className="flex gap-4">
           {weekDates.map((date) => (
             <CalendarDay
               key={date.toISOString()}
               date={date}
               isSelected={date.toDateString() === selectedDate.toDateString()}
-              onClick={() => onDateSelect(date)}
+              onClick={() => onDayClick(date)}
             />
           ))}
-
-          <div className="snap-end w-19 h-19" />
         </div>
       </div>
     </div>

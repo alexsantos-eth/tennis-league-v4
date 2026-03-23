@@ -1,0 +1,26 @@
+---
+import Heads from "../../../layouts/heads.astro";
+import Main from "../../../layouts/main.astro";
+import Page from "../../../layouts/page.astro";
+import Match from "./views/newMatch";
+
+export const prerender = false;
+---
+
+<Page>
+  <Heads>
+    <title>Nuevo partido | Liga de Tenis GT</title>
+  </Heads>
+
+  <body>
+    <Main
+      showNav={false}
+      topbar={{
+        title: "Nuevo partido",
+        goBack: true,
+      }}
+    >
+      <Match client:load />
+    </Main>
+  </body>
+</Page>

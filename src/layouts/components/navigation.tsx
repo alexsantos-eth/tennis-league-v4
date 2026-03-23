@@ -1,5 +1,3 @@
-"use client";
-
 import { Award, Home, PlusIcon, Trophy, User } from "lucide-react";
 
 import NavItem from "./nav-item";
@@ -19,7 +17,7 @@ const Navigation: React.FC = () => {
           <NavItem
             href="/"
             label="Inicio"
-            className="animate-jump-in animate-ease-[linear]"
+            className="animate-jump-in animate-ease-linear"
             
             icon={
               <Home
@@ -29,7 +27,7 @@ const Navigation: React.FC = () => {
           />
 
           <NavItem
-            className="animate-jump-in animate-delay-200 animate-ease-[linear]"
+            className="animate-jump-in animate-delay-200 animate-ease-linear"
             href="/torneos"
             label="Torneos"
             icon={
@@ -41,7 +39,7 @@ const Navigation: React.FC = () => {
 
           <NavItem
             justIcon
-            className="bg-primary max-w-15 min-w-0 w-15 max-h-15 h-15 animate-jump-in animate-delay-200 animate-ease-[linear] rounded-full relative -top-12"
+            className="bg-primary max-w-15 min-w-0 w-15 max-h-15 h-15 animate-jump-in animate-delay-200 animate-ease-linear rounded-full relative -top-12"
             href="/match/new"
             label="Nuevo Partido"
             icon={
@@ -54,7 +52,7 @@ const Navigation: React.FC = () => {
           <NavItem
             href="/ranking"
             label="Ranking"
-            className="animate-jump-in animate-delay-300 animate-ease-[linear]"
+            className="animate-jump-in animate-delay-300 animate-ease-linear"
   
             icon={
               <Award
@@ -66,7 +64,7 @@ const Navigation: React.FC = () => {
           <NavItem
             href="/perfil"
             label="Perfil"
-            className="animate-jump-in animate-delay-400 animate-ease-[linear]"
+            className="animate-jump-in animate-delay-400 animate-ease-linear"
          
             icon={
               <User

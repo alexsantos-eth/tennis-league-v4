@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
@@ -10,4 +10,10 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  fonts: [{
+    provider: fontProviders.fontsource(),
+    name: "Raleway",
+    weights: [400, 500, 600, 700],
+    cssVariable: "--font-raleway",
+  }]
 });
