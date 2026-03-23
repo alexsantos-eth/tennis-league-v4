@@ -28,6 +28,31 @@ const Matches = () => {
       <WeekPick selectedDate={selectedDate} onDateSelect={setSelectedDate} />
 
       <div className="flex flex-col gap-6 px-6">
+        <If condition={!isLoading && !hasError}>
+          <Then>
+            {filteredMatches.map((match) => (
+              <a key={match.id} href={`/match/${match.id}`}>
+                <MatchCard
+                  time={match.timeOfMatch}
+                  type={match.matchType}
+                  format={match.matchFormat}
+                  category={`${match.sport} · ${match.location}`}
+                  status={getStatusLabel(match)}
+                  playerOne={{
+                    name: match.createdBy.firstName || "",
+                    gtr: match.createdBy.gtr.toFixed(2),
+                  }}
+                  playerTwo={{
+                    name: match.isPrivate ? "Privado" : "Pendiente",
+                    gtr: `${match.skillRange.min.toFixed(2)}`,
+                    detailLabel: "GTR min",
+                  }}
+                />
+              </a>
+            ))}
+          </Then>
+        </If>
+
         <If condition={isLoading}>
           <Then>
             <Alert>
@@ -72,31 +97,6 @@ const Matches = () => {
                 No hay partidos para la fecha seleccionada.
               </AlertDescription>
             </Alert>
-          </Then>
-        </If>
-
-        <If condition={!isLoading && !hasError}>
-          <Then>
-            {filteredMatches.map((match) => (
-              <a key={match.id} href={`/match/${match.id}`}>
-                <MatchCard
-                  time={match.timeOfMatch}
-                  type={match.matchType}
-                  format={match.matchFormat}
-                  category={`${match.sport} · ${match.location}`}
-                  status={getStatusLabel(match)}
-                  playerOne={{
-                    name: match.createdBy.firstName || "",
-                    gtr: match.createdBy.gtr.toFixed(2),
-                  }}
-                  playerTwo={{
-                    name: match.isPrivate ? "Privado" : "Pendiente",
-                    gtr: `${match.skillRange.min.toFixed(2)}`,
-                    detailLabel: "GTR min",
-                  }}
-                />
-              </a>
-            ))}
           </Then>
         </If>
       </div>
