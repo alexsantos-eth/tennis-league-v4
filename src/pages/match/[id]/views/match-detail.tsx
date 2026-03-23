@@ -7,7 +7,7 @@ import MatchHero from "./components/match-hero";
 import MatchInfoCard from "./components/match-info-card";
 import MatchPlayersCard from "./components/match-players-card";
 import MatchSkillCard from "./components/match-skill-card";
-import useMatchDetail from "./hooks/use-match-detail";
+import useMatchDetail from "./hooks/use-match-detail.tsx";
 
 interface MatchDetailPageProps {
   matchId: string;
