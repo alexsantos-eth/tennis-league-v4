@@ -2,8 +2,10 @@ import { type FormEvent } from "react";
 import { create } from "zustand";
 
 import { createMatch } from "../firebase/match";
+import { getAllUsers } from "../firebase/users";
 import type {
 	CreateMatchInput,
+	MatchCreatorSummary,
 	PublicMatchFormat,
 	PublicMatchSport,
 	PublicMatchType,
@@ -15,6 +17,24 @@ import {
 	getClosestHalfHourTime,
 } from "../pages/match/new/views/tools";
 import { useAuthStore } from "./auth";
+import type { User } from "../types/users";
+
+type PlayersTab = "Amigos" | "Global";
+
+const getDisplayName = (user: Partial<User>) => {
+	const fallback = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
+	return user.name || fallback || "Jugador";
+};
+
+const mapUserToMatchPlayer = (user: Partial<User>): MatchCreatorSummary => ({
+	id: String(user.uid ?? ""),
+	uid: user.uid,
+	name: getDisplayName(user),
+	firstName: user.firstName,
+	lastName: user.lastName,
+	picture: user.picture,
+	gtr: Number(user.utr) || 0,
+});
 
 interface NewMatchState {
 	sport: PublicMatchSport;
@@ -34,6 +54,12 @@ interface NewMatchState {
 	tempDate?: Date;
 	tempLocation: string;
 	timeOptions: string[];
+	invitedPlayers: MatchCreatorSummary[];
+	availablePlayers: User[];
+	friendPlayerIds: string[];
+	playersTab: PlayersTab;
+	playersSearch: string;
+	isLoadingPlayers: boolean;
 	setSport: (sport: PublicMatchSport) => void;
 	setMatchType: (matchType: PublicMatchType) => void;
 	setMatchFormat: (matchFormat: PublicMatchFormat) => void;
@@ -50,6 +76,12 @@ interface NewMatchState {
 	openLocationSheet: () => void;
 	confirmLocation: () => void;
 	setSkillRange: (values: number[]) => void;
+	setPlayersTab: (playersTab: PlayersTab) => void;
+	setPlayersSearch: (playersSearch: string) => void;
+	loadAvailablePlayers: () => Promise<void>;
+	bootstrapCurrentUserPlayer: () => void;
+	toggleInvitedPlayer: (player: User) => void;
+	isPlayerInvited: (playerId: string) => boolean;
 	handleSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
@@ -71,6 +103,12 @@ export const useNewMatchStore = create<NewMatchState>((set, get) => ({
 	tempDate: undefined,
 	tempLocation: "",
 	timeOptions: buildHalfHourTimeOptions(),
+	invitedPlayers: [],
+	availablePlayers: [],
+	friendPlayerIds: [],
+	playersTab: "Amigos",
+	playersSearch: "",
+	isLoadingPlayers: false,
 	setSport: (sport) => set({ sport }),
 	setMatchType: (matchType) => set({ matchType }),
 	setMatchFormat: (matchFormat) => set({ matchFormat }),
@@ -116,6 +154,80 @@ export const useNewMatchStore = create<NewMatchState>((set, get) => ({
 
 		set({ rangeMin: min, rangeMax: max });
 	},
+	setPlayersTab: (playersTab) => set({ playersTab }),
+	setPlayersSearch: (playersSearch) => set({ playersSearch }),
+	bootstrapCurrentUserPlayer: () => {
+		const currentUser = useAuthStore.getState().currentUser;
+		const currentUserId = String(currentUser?.uid ?? "");
+
+		if (!currentUser || !currentUserId) {
+			return;
+		}
+
+		const currentUserPlayer = mapUserToMatchPlayer(currentUser);
+
+		set((state) => {
+			const existing = state.invitedPlayers.some((player) => player.id === currentUserId);
+
+			if (existing) {
+				return {
+					invitedPlayers: state.invitedPlayers.map((player) => (
+						player.id === currentUserId ? currentUserPlayer : player
+					)),
+				};
+			}
+
+			return {
+				invitedPlayers: [currentUserPlayer, ...state.invitedPlayers],
+			};
+		});
+	},
+	loadAvailablePlayers: async () => {
+		const currentUserId = String(useAuthStore.getState().currentUser?.uid ?? "");
+		set({ isLoadingPlayers: true });
+
+		try {
+			const players = await getAllUsers();
+			const filteredPlayers = players.filter((player) => String(player.uid ?? "") !== currentUserId);
+
+			set({
+				availablePlayers: filteredPlayers,
+				friendPlayerIds: filteredPlayers
+					.slice(0, 8)
+					.map((player) => String(player.uid ?? "")),
+			});
+		} catch (error) {
+			console.error("Error loading players:", error);
+			set({ availablePlayers: [], friendPlayerIds: [] });
+		} finally {
+			set({ isLoadingPlayers: false });
+		}
+	},
+	toggleInvitedPlayer: (player) => {
+		const playerId = String(player.uid ?? "");
+		const currentUserId = String(useAuthStore.getState().currentUser?.uid ?? "");
+
+		if (!playerId || playerId === currentUserId) {
+			return;
+		}
+
+		set((state) => {
+			const alreadyInvited = state.invitedPlayers.some((item) => item.id === playerId);
+
+			if (alreadyInvited) {
+				return {
+					invitedPlayers: state.invitedPlayers.filter((item) => item.id !== playerId),
+				};
+			}
+
+			return {
+				invitedPlayers: [...state.invitedPlayers, mapUserToMatchPlayer(player)],
+			};
+		});
+	},
+	isPlayerInvited: (playerId) => {
+		return get().invitedPlayers.some((player) => player.id === playerId);
+	},
 	handleSubmit: async (event) => {
 		event.preventDefault();
 
@@ -138,6 +250,7 @@ export const useNewMatchStore = create<NewMatchState>((set, get) => ({
 			matchDate,
 			matchTime,
 			location,
+			invitedPlayers,
 		} = get();
 
 		const payload: CreateMatchInput = {
@@ -165,6 +278,7 @@ export const useNewMatchStore = create<NewMatchState>((set, get) => ({
 				picture: currentUser.picture,
 				gtr: Number(currentUser.utr) || 0,
 			},
+			invitedPlayers,
 		};
 
 		try {

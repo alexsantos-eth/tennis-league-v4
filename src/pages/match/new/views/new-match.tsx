@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
+
 import { useNewMatchStore } from '../../../../store/new-match';
+import { useAuthStore } from '../../../../store/auth';
 import CommentsSection from './components/comments-section';
 import CreateMatchButton from './components/create-match-button';
 import DateSheet from './components/date-sheet';
@@ -13,6 +16,12 @@ import TeamsSection from './components/teams-section';
 
 const NewMatchPage:React.FC = () => {
   const handleSubmit = useNewMatchStore((state) => state.handleSubmit);
+  const bootstrapCurrentUserPlayer = useNewMatchStore((state) => state.bootstrapCurrentUserPlayer);
+  const currentUserUid = useAuthStore((state) => state.currentUser?.uid);
+
+  useEffect(() => {
+    bootstrapCurrentUserPlayer();
+  }, [bootstrapCurrentUserPlayer, currentUserUid]);
 
   return (
     <>

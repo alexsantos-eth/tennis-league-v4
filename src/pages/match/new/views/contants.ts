@@ -20,6 +20,6 @@ export const popularClubs = [
   "Sporta",
 ];
 
-export const rangeFloor = 0;
+export const rangeFloor = 1;
 export const rangeCeiling = 10;
 export const rangeStep = 1;

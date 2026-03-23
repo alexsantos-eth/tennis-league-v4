@@ -33,6 +33,7 @@ export interface MatchRecord {
   scheduledAt: string;
   skillRange: MatchSkillRange;
   createdBy: MatchCreatorSummary;
+  invitedPlayers?: MatchCreatorSummary[];
   status: PublicMatchStatus;
   createdAt: string;
   updatedAt: string;
@@ -50,4 +51,5 @@ export interface CreateMatchInput {
   timeOfMatch: string;
   skillRange: MatchSkillRange;
   createdBy: MatchCreatorSummary;
+  invitedPlayers?: MatchCreatorSummary[];
 }

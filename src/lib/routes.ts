@@ -24,6 +24,11 @@ export const ROUTES = {
     pathRgx: "^/match/new",
     public: false,
   },
+  ADD_PLAYERS: {
+    path: "/match/new/add-players",
+    pathRgx: "^/match/new/add-players",
+    public: false,
+  },
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];
