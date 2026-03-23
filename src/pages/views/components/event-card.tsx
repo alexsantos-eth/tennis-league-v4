@@ -1,4 +1,6 @@
-import { If, Then } from "react-if";
+import * as ReactIf from "react-if";
+
+const { If, Then } = ReactIf;
 
 import { Button } from "../../../components/ui/button";
 import Text from "../../../components/ui/text";

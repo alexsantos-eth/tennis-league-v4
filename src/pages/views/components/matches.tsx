@@ -1,5 +1,7 @@
 import { InfoIcon } from "lucide-react";
-import { If, Then } from "react-if";
+import * as ReactIf from "react-if";
+
+const { If, Then } = ReactIf;
 
 import { Alert, AlertDescription } from "../../../components/ui/alert";
 import useMatches from "../hooks/useMatches";

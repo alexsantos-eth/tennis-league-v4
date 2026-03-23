@@ -1,8 +1,10 @@
 import { CalendarDays, Globe, MapPin } from "lucide-react";
-import { If, Then } from "react-if";
+import * as ReactIf from "react-if";
 
 import BoxContainer from "../../../../../components/ui/container";
 import Text from "../../../../../components/ui/text";
+
+const { If, Then } = ReactIf;
 
 import type { MatchRecord } from "../../../../../types/match";
 

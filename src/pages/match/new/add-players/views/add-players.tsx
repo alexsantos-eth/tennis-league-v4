@@ -16,8 +16,10 @@ import { Button } from "@/components/ui/button";
 import Text from "@/components/ui/text";
 import { useNewMatchStore } from "@/store/new-match";
 import { useAuthStore } from "@/store/auth";
-import { Else, If, Then } from "react-if";
+import * as ReactIf from "react-if";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+
+const { Else, If, Then } = ReactIf;
 
 const getInitials = (name: string) => {
   const [first = "", second = ""] = name.trim().split(" ");
