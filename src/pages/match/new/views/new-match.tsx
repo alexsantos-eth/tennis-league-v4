@@ -1,20 +1,26 @@
-import BoxContainer from "../../../../components/ui/container";
-import Text from "../../../../components/ui/text";
-import { Button } from "../../../../components/ui/button";
-import { createMatch } from "../../../../firebase/match";
-
-import { useAuthStore } from "../../../../store/auth";
 import {
   Calendar,
+  CircleDotDashed,
+  CircleEqualIcon,
+  CircleSlash2Icon,
   Clock,
   Lock,
   MapPin,
   PlayIcon,
   SlidersHorizontal,
+  UserIcon,
   Users2,
+  UsersIcon,
 } from "lucide-react";
-
 import { type FormEvent, useState } from "react";
+import { If, Then, Switch, Case } from "react-if";
+
+import { Button } from "../../../../components/ui/button";
+import BoxContainer from "../../../../components/ui/container";
+import { Tabs, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
+import Text from "../../../../components/ui/text";
+import { createMatch } from "../../../../firebase/match";
+import { useAuthStore } from "../../../../store/auth";
 
 import type {
   CreateMatchInput,
@@ -22,8 +28,18 @@ import type {
   PublicMatchSport,
   PublicMatchType,
 } from "../../../../types/match";
-import { Tabs, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
-
+import { Textarea } from "@/components/ui/textarea";
+import { Switch as SwitchButton } from "@/components/ui/switch";
+import MatchDetailsRow from "./components/match-details-row";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 const sports: PublicMatchSport[] = ["Tenis", "Padel", "Pickleball"];
 const matchTypes: PublicMatchType[] = ["Doubles", "Singles"];
 const matchFormats: PublicMatchFormat[] = ["Ranking", "Friendly"];
@@ -43,8 +59,8 @@ export default function NewMatchPage() {
   const [location, setLocation] = useState("");
   const [matchDate, setMatchDate] = useState("");
   const [matchTime, setMatchTime] = useState("");
-  const [rangeMin, setRangeMin] = useState(1);
-  const [rangeMax, setRangeMax] = useState(10);
+  const [rangeMin, setRangeMin] = useState(2);
+  const [rangeMax, setRangeMax] = useState(6);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleMinRangeChange = (value: number) => {
@@ -101,68 +117,71 @@ export default function NewMatchPage() {
     }
   };
 
-  console.log("Current user:", sport);
-
   return (
     <>
-      <Tabs  defaultValue={sport}>
-        <TabsList variant="default">
-          {sports.map((item: string) => {
-            const isActive = sport === item;
-
-            return (
-              <TabsTrigger key={item} value={item}>
-                {item}
-              </TabsTrigger>
-            );
-          })}
-        </TabsList>
-      </Tabs>
-
       <form
         className="w-full flex flex-col pb-24 gap-6 overflow-scroll h-full"
         onSubmit={handleSubmit}
       >
-        <BoxContainer className="flex items-center gap-2 rounded-none px-6">
-          <div>
-            {sports.map((item) => {
-              const isActive = sport === item;
-
+        <Tabs defaultValue={sport} className="bg-background w-full px-6 py-5">
+          <TabsList variant="default" className="w-full">
+            {sports.map((item: string) => {
               return (
-                <Button
+                <TabsTrigger
                   key={item}
-                  type="button"
-                  variant={isActive ? "default" : "ghost"}
-                  className="flex-1 h-9 rounded-lg"
-                  onClick={() => setSport(item)}
+                  value={item}
+                  className="h-8"
+                  onClick={() => setSport(item as PublicMatchSport)}
                 >
+                  <Switch>
+                    <Case condition={item === "Tenis"}>
+                      <CircleSlash2Icon />
+                    </Case>
+
+                    <Case condition={item === "Padel"}>
+                      <CircleEqualIcon />
+                    </Case>
+
+                    <Case condition={item === "Pickleball"}>
+                      <CircleDotDashed />
+                    </Case>
+                  </Switch>
+
                   {item}
-                </Button>
+                </TabsTrigger>
               );
             })}
-          </div>
-        </BoxContainer>
+          </TabsList>
+        </Tabs>
 
         <div className="w-full flex flex-col gap-6 px-6">
-          <BoxContainer
-            className="flex items-center gap-2"
-            title="Tipo de partido"
-          >
-            {matchTypes.map((item) => {
-              const isActive = matchType === item;
+          <BoxContainer title="Tipo de partido" className="p-2">
+            <Tabs defaultValue={matchType} className="bg-background w-full">
+              <TabsList variant="default" className="w-full p-0">
+                {matchTypes.map((item: string) => {
+                  return (
+                    <TabsTrigger
+                      key={item}
+                      value={item}
+                      className="h-8"
+                      onClick={() => setMatchType(item as PublicMatchType)}
+                    >
+                      <Switch>
+                        <Case condition={item === "Doubles"}>
+                          <UsersIcon />
+                        </Case>
 
-              return (
-                <Button
-                  key={item}
-                  type="button"
-                  variant={isActive ? "default" : "outline"}
-                  className="flex-1 h-10 rounded-lg"
-                  onClick={() => setMatchType(item)}
-                >
-                  {item}
-                </Button>
-              );
-            })}
+                        <Case condition={item === "Singles"}>
+                          <UserIcon />
+                        </Case>
+                      </Switch>
+
+                      {item}
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
+            </Tabs>
           </BoxContainer>
 
           <BoxContainer className="flex flex-col gap-4" title="Lugar">
@@ -214,7 +233,7 @@ export default function NewMatchPage() {
 
           <BoxContainer className="flex flex-col gap-5" title="Rango permitido">
             <div className="flex items-center justify-between">
-              <Text variant="body" className="text-foreground font-semibold">
+              <Text variant="body" className="text-foreground font-medium">
                 GTR
               </Text>
               <Text variant="body" className="text-primary font-semibold">
@@ -222,126 +241,86 @@ export default function NewMatchPage() {
               </Text>
             </div>
 
-            <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-foreground">
-                Minimo
-              </span>
-              <input
-                type="range"
-                min={rangeFloor}
-                max={rangeCeiling}
-                step={rangeStep}
-                value={rangeMin}
-                onChange={(event) =>
-                  handleMinRangeChange(Number(event.target.value))
-                }
-                className="w-full accent-primary"
-              />
-            </label>
+            <Slider
+              defaultValue={[rangeMin, rangeMax]}
+              max={10}
+              min={1}
+              step={1}
+              onValueChange={(ev) => {
+                const [min, max] = ev;
 
-            <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-foreground">
-                Maximo
-              </span>
-              <input
-                type="range"
-                min={rangeFloor}
-                max={rangeCeiling}
-                step={rangeStep}
-                value={rangeMax}
-                onChange={(event) =>
-                  handleMaxRangeChange(Number(event.target.value))
-                }
-                className="w-full accent-primary"
-              />
-            </label>
+                handleMinRangeChange(min);
+                handleMaxRangeChange(max);
+              }}
+            />
           </BoxContainer>
 
           <BoxContainer
             className="flex flex-col gap-4"
             title="Detalles de partido"
           >
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2">
-                <Users2 className="w-4 h-4 text-muted-foreground" />
-                <Text variant="body" className="text-foreground font-semibold">
-                  Tipo
-                </Text>
-              </div>
+            <MatchDetailsRow
+              title="Tipo"
+              icon={<Users2 className="w-4 h-4 text-muted-foreground" />}
+            >
+              <Select defaultValue={matchFormat}>
+                <SelectTrigger className="text-primary font-medium">
+                  <SelectValue className="text-primary" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {matchFormats.map((item) => (
+                      <SelectItem
+                        key={item}
+                        value={item}
+                        onClick={() => setMatchFormat(item)}
+                      >
+                        <Switch>
+                          <Case condition={item === "Ranking"}>
+                            Competitivo
+                          </Case>
 
-              <div className="flex items-center gap-2">
-                {matchFormats.map((item) => {
-                  const isActive = matchFormat === item;
+                          <Case condition={item === "Friendly"}>Amistoso</Case>
+                        </Switch>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </MatchDetailsRow>
 
-                  return (
-                    <Button
-                      key={item}
-                      type="button"
-                      variant={isActive ? "default" : "outline"}
-                      className="flex-1 h-10 rounded-lg"
-                      onClick={() => setMatchFormat(item)}
-                    >
-                      {item}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+            <MatchDetailsRow
+              icon={
                 <SlidersHorizontal className="w-4 h-4 text-muted-foreground" />
-                <Text variant="body" className="text-foreground font-semibold">
-                  Marcar como reservado
-                </Text>
-              </div>
-              <button
-                type="button"
-                className={`h-6 w-11 rounded-full transition-colors ${isReserved ? "bg-primary" : "bg-muted"}`}
+              }
+              title="Marcar como reservado"
+            >
+              <SwitchButton
+                size="lg"
+                checked={isReserved}
                 onClick={() => setIsReserved((prev) => !prev)}
-                aria-pressed={isReserved}
-                aria-label="Marcar como reservado"
-              >
-                <span
-                  className={`block h-5 w-5 rounded-full bg-white transition-transform ${
-                    isReserved ? "translate-x-5" : "translate-x-0.5"
-                  }`}
-                />
-              </button>
-            </div>
+              />
+            </MatchDetailsRow>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-muted-foreground" />
-                <Text variant="body" className="text-foreground font-semibold">
-                  Partido privado
-                </Text>
-              </div>
-              <button
-                type="button"
-                className={`h-6 w-11 rounded-full transition-colors ${isPrivate ? "bg-primary" : "bg-muted"}`}
+            <MatchDetailsRow
+              icon={<Lock className="w-4 h-4 text-muted-foreground" />}
+              title="Partido privado"
+            >
+              <SwitchButton
+                size="lg"
+                checked={isPrivate}
                 onClick={() => setIsPrivate((prev) => !prev)}
-                aria-pressed={isPrivate}
-                aria-label="Partido privado"
-              >
-                <span
-                  className={`block h-5 w-5 rounded-full bg-white transition-transform ${
-                    isPrivate ? "translate-x-5" : "translate-x-0.5"
-                  }`}
-                />
-              </button>
-            </div>
+              />
+            </MatchDetailsRow>
           </BoxContainer>
 
           <BoxContainer className="p-0 overflow-hidden" title="Comentarios">
-            <label className="flex flex-col gap-2 p-4">
-              <textarea
-                value={comments}
-                onChange={(event) => setComments(event.target.value)}
-                className="w-full min-h-24 resize-none bg-card text-foreground placeholder:text-muted-foreground outline-none"
-                placeholder="Comentarios sobre el partido (opcional)"
-              />
-            </label>
+            <Textarea
+              value={comments}
+              className="rounded-2xl p-4"
+              placeholder="Agrega detalles adicionales"
+              onChange={(event) => setComments(event.target.value)}
+            />
           </BoxContainer>
 
           <Button

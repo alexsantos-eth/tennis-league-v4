@@ -56,7 +56,7 @@ function AlertDescription({
       variant="bodySmall"
       data-slot="alert-description"
       className={cn(
-        "text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+        "text-muted-foreground font-medium text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
         className,
       )}
       {...props}

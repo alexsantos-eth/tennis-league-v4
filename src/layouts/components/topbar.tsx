@@ -20,7 +20,7 @@ const Topbar = ({ title, className, goBack, rightButton }: TopbarProps) => {
 
   return (
     <header
-      style={{ boxShadow: "0px 5px 5px -1px rgba(0,0,0,0.05)" }}
+      style={{ boxShadow: "0px 5px 5px -1px rgba(0,0,0,0.02)" }}
       className={`fixed top-0 left-0 right-0 z-10 bg-background ${className}`}
     >
       <div

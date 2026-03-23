@@ -45,7 +45,7 @@ const Matches = () => {
                   playerTwo={{
                     name: match.isPrivate ? "Privado" : "Pendiente",
                     gtr: `${match.skillRange.min.toFixed(2)}`,
-                    detailLabel: "GTR min",
+                    detailLabel: "GTR",
                   }}
                 />
               </a>

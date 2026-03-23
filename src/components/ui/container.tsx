@@ -18,7 +18,7 @@ const BoxContainer: React.FC<BoxContainerProps> = ({
 }) => {
   if (Boolean(title)) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         {title && <Text variant="bodyXs" className="text-muted-foreground uppercase font-semibold">{title}</Text>}
 
         <div
