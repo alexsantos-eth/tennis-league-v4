@@ -1,10 +1,13 @@
 import { type FormEvent } from "react";
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 import { createMatch } from "../firebase/match";
 import { getAllUsers } from "../firebase/users";
 import type {
 	CreateMatchInput,
+	MatchPlayerPosition,
+	MatchTeam,
 	MatchCreatorSummary,
 	PublicMatchFormat,
 	PublicMatchSport,
@@ -21,6 +24,31 @@ import type { User } from "../types/users";
 
 type PlayersTab = "Amigos" | "Global";
 
+const getMaxGuestInvitesByMatchType = (matchType: PublicMatchType) =>
+	matchType === "Singles" ? 1 : 3;
+
+const getTeamAndPositionByIndex = (
+	index: number,
+	matchType: PublicMatchType,
+): { team: MatchTeam; position: MatchPlayerPosition } => {
+	if (matchType === "Singles") {
+		return index === 0
+			? { team: "A", position: 0 }
+			: { team: "B", position: 0 };
+	}
+
+	switch (index) {
+		case 0:
+			return { team: "A", position: 0 };
+		case 1:
+			return { team: "A", position: 1 };
+		case 2:
+			return { team: "B", position: 0 };
+		default:
+			return { team: "B", position: 1 };
+	}
+};
+
 const getDisplayName = (user: Partial<User>) => {
 	const fallback = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
 	return user.name || fallback || "Jugador";
@@ -34,6 +62,32 @@ const mapUserToMatchPlayer = (user: Partial<User>): MatchCreatorSummary => ({
 	lastName: user.lastName,
 	picture: user.picture,
 	gtr: Number(user.utr) || 0,
+});
+
+const getInitialNewMatchState = () => ({
+	sport: "Tenis" as PublicMatchSport,
+	matchType: "Doubles" as PublicMatchType,
+	matchFormat: "Ranking" as PublicMatchFormat,
+	isReserved: false,
+	isPrivate: true,
+	comments: "",
+	location: "",
+	matchDate: "",
+	matchTime: getClosestHalfHourTime(),
+	rangeMin: 2,
+	rangeMax: 6,
+	isSubmitting: false,
+	isDateSheetOpen: false,
+	isLocationSheetOpen: false,
+	tempDate: undefined as Date | undefined,
+	tempLocation: "",
+	timeOptions: buildHalfHourTimeOptions(),
+	invitedPlayers: [] as MatchCreatorSummary[],
+	availablePlayers: [] as User[],
+	friendPlayerIds: [] as string[],
+	playersTab: "Amigos" as PlayersTab,
+	playersSearch: "",
+	isLoadingPlayers: false,
 });
 
 interface NewMatchState {
@@ -80,214 +134,267 @@ interface NewMatchState {
 	setPlayersSearch: (playersSearch: string) => void;
 	loadAvailablePlayers: () => Promise<void>;
 	bootstrapCurrentUserPlayer: () => void;
+	resetNewMatchStore: () => void;
+	resetInvitedPlayers: () => void;
 	toggleInvitedPlayer: (player: User) => void;
 	isPlayerInvited: (playerId: string) => boolean;
 	handleSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
-export const useNewMatchStore = create<NewMatchState>((set, get) => ({
-	sport: "Tenis",
-	matchType: "Doubles",
-	matchFormat: "Ranking",
-	isReserved: false,
-	isPrivate: true,
-	comments: "",
-	location: "",
-	matchDate: "",
-	matchTime: getClosestHalfHourTime(),
-	rangeMin: 2,
-	rangeMax: 6,
-	isSubmitting: false,
-	isDateSheetOpen: false,
-	isLocationSheetOpen: false,
-	tempDate: undefined,
-	tempLocation: "",
-	timeOptions: buildHalfHourTimeOptions(),
-	invitedPlayers: [],
-	availablePlayers: [],
-	friendPlayerIds: [],
-	playersTab: "Amigos",
-	playersSearch: "",
-	isLoadingPlayers: false,
-	setSport: (sport) => set({ sport }),
-	setMatchType: (matchType) => set({ matchType }),
-	setMatchFormat: (matchFormat) => set({ matchFormat }),
-	setIsReserved: (isReserved) => set({ isReserved }),
-	setIsPrivate: (isPrivate) => set({ isPrivate }),
-	setComments: (comments) => set({ comments }),
-	setMatchTime: (matchTime) => set({ matchTime }),
-	setIsDateSheetOpen: (isDateSheetOpen) => set({ isDateSheetOpen }),
-	setIsLocationSheetOpen: (isLocationSheetOpen) => set({ isLocationSheetOpen }),
-	setTempDate: (tempDate) => set({ tempDate }),
-	setTempLocation: (tempLocation) => set({ tempLocation }),
-	openDateSheet: () => {
-		const { matchDate, matchTime } = get();
+export const useNewMatchStore = create<NewMatchState>()(
+	persist(
+		(set, get) => ({
+			...getInitialNewMatchState(),
+			setSport: (sport) => set({ sport }),
+			setMatchType: (matchType) => {
+				set((state) => {
+					const hostPlayer = state.invitedPlayers[0];
+					const guestPlayers = state.invitedPlayers.slice(1);
+					const maxGuestInvites = getMaxGuestInvitesByMatchType(matchType);
 
-		set({
-			tempDate: matchDate ? new Date(matchDate) : undefined,
-			matchTime: matchTime || getClosestHalfHourTime(),
-			isDateSheetOpen: true,
-		});
-	},
-	confirmDate: () => {
-		const { tempDate } = get();
-
-		set({
-			matchDate: tempDate ? formatDateForMatch(tempDate) : get().matchDate,
-			isDateSheetOpen: false,
-		});
-	},
-	openLocationSheet: () => {
-		const { location } = get();
-		set({ tempLocation: location, isLocationSheetOpen: true });
-	},
-	confirmLocation: () => {
-		const { tempLocation } = get();
-		set({ location: tempLocation.trim(), isLocationSheetOpen: false });
-	},
-	setSkillRange: (values) => {
-		const [nextMin, nextMax] = values;
-		const { rangeMin, rangeMax } = get();
-
-		const min = Math.min(nextMin, rangeMax - rangeStep);
-		const max = Math.max(nextMax, rangeMin + rangeStep);
-
-		set({ rangeMin: min, rangeMax: max });
-	},
-	setPlayersTab: (playersTab) => set({ playersTab }),
-	setPlayersSearch: (playersSearch) => set({ playersSearch }),
-	bootstrapCurrentUserPlayer: () => {
-		const currentUser = useAuthStore.getState().currentUser;
-		const currentUserId = String(currentUser?.uid ?? "");
-
-		if (!currentUser || !currentUserId) {
-			return;
-		}
-
-		const currentUserPlayer = mapUserToMatchPlayer(currentUser);
-
-		set((state) => {
-			const existing = state.invitedPlayers.some((player) => player.id === currentUserId);
-
-			if (existing) {
-				return {
-					invitedPlayers: state.invitedPlayers.map((player) => (
-						player.id === currentUserId ? currentUserPlayer : player
-					)),
-				};
-			}
-
-			return {
-				invitedPlayers: [currentUserPlayer, ...state.invitedPlayers],
-			};
-		});
-	},
-	loadAvailablePlayers: async () => {
-		const currentUserId = String(useAuthStore.getState().currentUser?.uid ?? "");
-		set({ isLoadingPlayers: true });
-
-		try {
-			const players = await getAllUsers();
-			const filteredPlayers = players.filter((player) => String(player.uid ?? "") !== currentUserId);
-
-			set({
-				availablePlayers: filteredPlayers,
-				friendPlayerIds: filteredPlayers
-					.slice(0, 8)
-					.map((player) => String(player.uid ?? "")),
-			});
-		} catch (error) {
-			console.error("Error loading players:", error);
-			set({ availablePlayers: [], friendPlayerIds: [] });
-		} finally {
-			set({ isLoadingPlayers: false });
-		}
-	},
-	toggleInvitedPlayer: (player) => {
-		const playerId = String(player.uid ?? "");
-		const currentUserId = String(useAuthStore.getState().currentUser?.uid ?? "");
-
-		if (!playerId || playerId === currentUserId) {
-			return;
-		}
-
-		set((state) => {
-			const alreadyInvited = state.invitedPlayers.some((item) => item.id === playerId);
-
-			if (alreadyInvited) {
-				return {
-					invitedPlayers: state.invitedPlayers.filter((item) => item.id !== playerId),
-				};
-			}
-
-			return {
-				invitedPlayers: [...state.invitedPlayers, mapUserToMatchPlayer(player)],
-			};
-		});
-	},
-	isPlayerInvited: (playerId) => {
-		return get().invitedPlayers.some((player) => player.id === playerId);
-	},
-	handleSubmit: async (event) => {
-		event.preventDefault();
-
-		const currentUser = useAuthStore.getState().currentUser;
-		const currentUserId = String(currentUser?.id ?? currentUser?.uid);
-
-		if (!currentUser || !currentUserId) {
-			return;
-		}
-
-		const {
-			sport,
-			matchType,
-			matchFormat,
-			isReserved,
-			isPrivate,
-			comments,
-			rangeMin,
-			rangeMax,
-			matchDate,
-			matchTime,
-			location,
-			invitedPlayers,
-		} = get();
-
-		const payload: CreateMatchInput = {
-			sport,
-			matchType,
-			matchFormat,
-			isReserved,
-			isPrivate,
-			comments,
-			skillRange: {
-				min: rangeMin,
-				max: rangeMax,
+					return {
+						matchType,
+						invitedPlayers: hostPlayer
+							? [hostPlayer, ...guestPlayers.slice(0, maxGuestInvites)]
+							: guestPlayers.slice(0, maxGuestInvites),
+					};
+				});
 			},
-			dateOfMatch: matchDate,
-			timeOfMatch: matchTime,
-			location,
-			createdBy: {
-				id: currentUserId,
-				uid: currentUser.uid,
-				name:
-					currentUser.name ||
-					`${currentUser.firstName ?? ""} ${currentUser.lastName ?? ""}`.trim(),
-				firstName: currentUser.firstName,
-				lastName: currentUser.lastName,
-				picture: currentUser.picture,
-				gtr: Number(currentUser.utr) || 0,
-			},
-			invitedPlayers,
-		};
+			setMatchFormat: (matchFormat) => set({ matchFormat }),
+			setIsReserved: (isReserved) => set({ isReserved }),
+			setIsPrivate: (isPrivate) => set({ isPrivate }),
+			setComments: (comments) => set({ comments }),
+			setMatchTime: (matchTime) => set({ matchTime }),
+			setIsDateSheetOpen: (isDateSheetOpen) => set({ isDateSheetOpen }),
+			setIsLocationSheetOpen: (isLocationSheetOpen) =>
+				set({ isLocationSheetOpen }),
+			setTempDate: (tempDate) => set({ tempDate }),
+			setTempLocation: (tempLocation) => set({ tempLocation }),
+			openDateSheet: () => {
+				const { matchDate, matchTime } = get();
 
-		try {
-			set({ isSubmitting: true });
-			await createMatch(payload);
-		} catch (error) {
-			console.error("Error creating match:", error);
-		} finally {
-			set({ isSubmitting: false });
-		}
-	},
-}));
+				set({
+					tempDate: matchDate ? new Date(matchDate) : undefined,
+					matchTime: matchTime || getClosestHalfHourTime(),
+					isDateSheetOpen: true,
+				});
+			},
+			confirmDate: () => {
+				const { tempDate } = get();
+
+				set({
+					matchDate: tempDate ? formatDateForMatch(tempDate) : get().matchDate,
+					isDateSheetOpen: false,
+				});
+			},
+			openLocationSheet: () => {
+				const { location } = get();
+				set({ tempLocation: location, isLocationSheetOpen: true });
+			},
+			confirmLocation: () => {
+				const { tempLocation } = get();
+				set({ location: tempLocation.trim(), isLocationSheetOpen: false });
+			},
+			setSkillRange: (values) => {
+				const [nextMin, nextMax] = values;
+				const { rangeMin, rangeMax } = get();
+
+				const min = Math.min(nextMin, rangeMax - rangeStep);
+				const max = Math.max(nextMax, rangeMin + rangeStep);
+
+				set({ rangeMin: min, rangeMax: max });
+			},
+			setPlayersTab: (playersTab) => set({ playersTab }),
+			setPlayersSearch: (playersSearch) => set({ playersSearch }),
+			bootstrapCurrentUserPlayer: () => {
+				const currentUser = useAuthStore.getState().currentUser;
+				const currentUserId = String(currentUser?.uid ?? "");
+
+				if (!currentUser || !currentUserId) {
+					return;
+				}
+
+				const currentUserPlayer = mapUserToMatchPlayer(currentUser);
+
+				set((state) => {
+					const existing = state.invitedPlayers.some(
+						(player) => player.id === currentUserId,
+					);
+
+					if (existing) {
+						return {
+							invitedPlayers: state.invitedPlayers.map((player) =>
+								player.id === currentUserId ? currentUserPlayer : player,
+							),
+						};
+					}
+
+					return {
+						invitedPlayers: [currentUserPlayer, ...state.invitedPlayers],
+					};
+				});
+			},
+			resetInvitedPlayers: () => {
+				set((state) => ({
+					invitedPlayers: state.invitedPlayers[0] ? [state.invitedPlayers[0]] : [],
+				}));
+			},
+			resetNewMatchStore: () => {
+				set(getInitialNewMatchState());
+			},
+			loadAvailablePlayers: async () => {
+				const currentUserId = String(
+					useAuthStore.getState().currentUser?.uid ?? "",
+				);
+				set({ isLoadingPlayers: true });
+
+				try {
+					const players = await getAllUsers();
+					const filteredPlayers = players.filter(
+						(player) => String(player.uid ?? "") !== currentUserId,
+					);
+
+					set({
+						availablePlayers: filteredPlayers,
+						friendPlayerIds: filteredPlayers
+							.slice(0, 8)
+							.map((player) => String(player.uid ?? "")),
+					});
+				} catch (error) {
+					console.error("Error loading players:", error);
+					set({ availablePlayers: [], friendPlayerIds: [] });
+				} finally {
+					set({ isLoadingPlayers: false });
+				}
+			},
+			toggleInvitedPlayer: (player) => {
+				const playerId = String(player.uid ?? "");
+				const currentUserId = String(useAuthStore.getState().currentUser?.uid ?? "");
+
+				if (!playerId || playerId === currentUserId) {
+					return;
+				}
+
+				set((state) => {
+					const alreadyInvited = state.invitedPlayers.some(
+						(item) => item.id === playerId,
+					);
+
+					if (alreadyInvited) {
+						return {
+							invitedPlayers: state.invitedPlayers.filter(
+								(item) => item.id !== playerId,
+							),
+						};
+					}
+
+					const hostPlayer = state.invitedPlayers[0];
+					const guestPlayers = state.invitedPlayers.slice(1);
+					const maxGuestInvites = getMaxGuestInvitesByMatchType(state.matchType);
+
+					if (guestPlayers.length >= maxGuestInvites) {
+						return state;
+					}
+
+					const nextGuestPlayers = [...guestPlayers, mapUserToMatchPlayer(player)];
+
+					return {
+						invitedPlayers: hostPlayer
+							? [hostPlayer, ...nextGuestPlayers]
+							: nextGuestPlayers,
+					};
+				});
+			},
+			isPlayerInvited: (playerId) => {
+				return get().invitedPlayers.some((player) => player.id === playerId);
+			},
+			handleSubmit: async (event) => {
+				event.preventDefault();
+
+				const currentUser = useAuthStore.getState().currentUser;
+				const currentUserId = String(currentUser?.id ?? currentUser?.uid);
+
+				if (!currentUser || !currentUserId) {
+					return;
+				}
+
+				const {
+					sport,
+					matchType,
+					matchFormat,
+					isReserved,
+					isPrivate,
+					comments,
+					rangeMin,
+					rangeMax,
+					matchDate,
+					matchTime,
+					location,
+					invitedPlayers,
+				} = get();
+
+				const [hostPlayer, ...guestPlayers] = invitedPlayers;
+
+				if (!hostPlayer) {
+					return;
+				}
+
+				const hostAssignment = getTeamAndPositionByIndex(0, matchType);
+				const invitedPlayersWithAssignments = guestPlayers.map((player, index) => ({
+					...player,
+					...getTeamAndPositionByIndex(index + 1, matchType),
+				}));
+
+				const payload: CreateMatchInput = {
+					sport,
+					matchType,
+					matchFormat,
+					isReserved,
+					isPrivate,
+					comments,
+					skillRange: {
+						min: rangeMin,
+						max: rangeMax,
+					},
+					dateOfMatch: matchDate,
+					timeOfMatch: matchTime,
+					location,
+					createdBy: {
+						...hostPlayer,
+						...hostAssignment,
+					},
+					invitedPlayers: invitedPlayersWithAssignments,
+				};
+
+				try {
+					set({ isSubmitting: true });
+					await createMatch(payload);
+				} catch (error) {
+					console.error("Error creating match:", error);
+				} finally {
+					set({ isSubmitting: false });
+				}
+			},
+		}),
+		{
+			name: "new-match-storage",
+			storage: createJSONStorage(() => localStorage),
+			partialize: (state) => ({
+				sport: state.sport,
+				matchType: state.matchType,
+				matchFormat: state.matchFormat,
+				isReserved: state.isReserved,
+				isPrivate: state.isPrivate,
+				comments: state.comments,
+				location: state.location,
+				matchDate: state.matchDate,
+				matchTime: state.matchTime,
+				rangeMin: state.rangeMin,
+				rangeMax: state.rangeMax,
+				invitedPlayers: state.invitedPlayers,
+				playersTab: state.playersTab,
+				playersSearch: state.playersSearch,
+			}),
+		},
+	),
+);

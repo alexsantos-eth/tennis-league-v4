@@ -3,6 +3,8 @@ export type PublicMatchSport = "Tenis" | "Padel" | "Pickleball";
 export type PublicMatchType = "Doubles" | "Singles";
 export type PublicMatchFormat = "Ranking" | "Friendly";
 export type PublicMatchStatus = "open" | "reserved";
+export type MatchTeam = "A" | "B";
+export type MatchPlayerPosition = 0 | 1;
 
 export interface MatchCreatorSummary {
   id: string;
@@ -12,6 +14,8 @@ export interface MatchCreatorSummary {
   lastName?: string;
   picture?: string;
   gtr: number;
+  team?: MatchTeam;
+  position?: MatchPlayerPosition;
 }
 
 export interface MatchSkillRange {

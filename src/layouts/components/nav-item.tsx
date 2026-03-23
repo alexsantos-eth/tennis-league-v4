@@ -10,6 +10,7 @@ interface NavItemProps {
   isActive?: boolean;
   className?: string;
   justIcon?: boolean;
+  onClick?: () => void;
 }
 const NavItem: React.FC<NavItemProps> = ({
   href,
@@ -18,10 +19,12 @@ const NavItem: React.FC<NavItemProps> = ({
   isActive = false,
   justIcon = false,
   className,
+  onClick,
 }) => {
   return (
     <a
       href={href}
+      onClick={onClick}
       className={cn(
         "flex flex-col space-y-1 items-center h-13.75 w-13.75 justify-center",
         isActive ? "text-primary" : "text-foreground",

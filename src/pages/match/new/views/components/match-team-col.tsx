@@ -20,13 +20,28 @@ const getInitials = (name: string) => {
 
 const MatchTeamCol: React.FC<MatchTeamColProps> = ({ title, team }) => {
   const invitedPlayers = useNewMatchStore((state) => state.invitedPlayers);
+  const matchType = useNewMatchStore((state) => state.matchType);
   const hostPlayer = invitedPlayers[0];
   const guestPlayers = invitedPlayers.slice(1);
-  const teamPlayers = (
-    team === 'A'
-      ? [hostPlayer, ...guestPlayers.filter((_, index) => index % 2 === 0)]
-      : guestPlayers.filter((_, index) => index % 2 !== 0)
-  ).filter((player): player is MatchCreatorSummary => Boolean(player));
+  const maxGuestInvites = matchType === 'Singles' ? 1 : 3;
+
+  const teamSlots = matchType === 'Singles'
+    ? 1
+    : 2;
+
+  const rawTeamPlayers = matchType === 'Singles'
+    ? (team === 'A' ? [hostPlayer] : guestPlayers.slice(0, 1))
+    : (team === 'A' ? [hostPlayer, guestPlayers[0]] : guestPlayers.slice(1, 3));
+
+  const teamPlayers = rawTeamPlayers.filter(
+    (player): player is MatchCreatorSummary => Boolean(player),
+  );
+
+  const emptySlots = Math.max(teamSlots - teamPlayers.length, 0);
+  const canInviteMoreGuests = guestPlayers.length < maxGuestInvites;
+
+  const inviteSlotCount = canInviteMoreGuests ? emptySlots : 0;
+  const placeholderSlotCount = emptySlots - inviteSlotCount;
 
   return (
     <div className="flex flex-col gap-5 items-center">
@@ -61,26 +76,31 @@ const MatchTeamCol: React.FC<MatchTeamColProps> = ({ title, team }) => {
           </div>
         ))}
 
-        {teamPlayers.length === 0 && (
-          <div className="w-14 h-14 rounded-full border border-dashed border-border" />
-        )}
+        {Array.from({ length: inviteSlotCount }).map((_, index) => (
+          <div key={`invite-${team}-${index}`} className="relative w-14 flex flex-col gap-2 items-center">
+            <Button
+              asChild
+              variant="outline"
+              size="icon-lg"
+              className="h-14 w-14 rounded-full border-dashed text-muted-foreground"
+            >
+              <a href={ROUTES.ADD_PLAYERS.path} aria-label="Invitar jugadores">
+                <PlusIcon />
+              </a>
+            </Button>
 
-        <div className="relative w-14 flex flex-col gap-2 items-center">
-          <Button
-            asChild
-            variant="outline"
-            size="icon-lg"
-            className="h-14 w-14 rounded-full border-dashed text-muted-foreground"
-          >
-            <a href={ROUTES.ADD_PLAYERS.path} aria-label="Invitar jugadores">
-              <PlusIcon />
-            </a>
-          </Button>
+            <Text variant="bodySmall" className="text-foreground font-medium">
+              Invitar
+            </Text>
+          </div>
+        ))}
 
-          <Text variant="bodySmall" className="text-foreground font-medium">
-            Invitar
-          </Text>
-        </div>
+        {Array.from({ length: placeholderSlotCount }).map((_, index) => (
+          <div
+            key={`empty-${team}-${index}`}
+            className="w-14 h-14 rounded-full border border-dashed border-border"
+          />
+        ))}
       </div>
     </div>
   );

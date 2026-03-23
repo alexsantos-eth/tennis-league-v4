@@ -35,6 +35,8 @@ const formatGtr = (value: number) => {
 const AddPlayersView: React.FC = () => {
   const availablePlayers = useNewMatchStore((state) => state.availablePlayers);
   const friendPlayerIds = useNewMatchStore((state) => state.friendPlayerIds);
+  const invitedPlayers = useNewMatchStore((state) => state.invitedPlayers);
+  const matchType = useNewMatchStore((state) => state.matchType);
   const playersTab = useNewMatchStore((state) => state.playersTab);
   const playersSearch = useNewMatchStore((state) => state.playersSearch);
   const isLoadingPlayers = useNewMatchStore((state) => state.isLoadingPlayers);
@@ -82,6 +84,10 @@ const AddPlayersView: React.FC = () => {
     });
   }, [availablePlayers, friendPlayerIds, playersSearch, playersTab]);
 
+  const guestLimit = matchType === "Singles" ? 1 : 3;
+  const invitedGuestsCount = Math.max(invitedPlayers.length - 1, 0);
+  const hasReachedGuestLimit = invitedGuestsCount >= guestLimit;
+
   return (
     <div className="w-full h-full flex flex-col gap-6 overflow-scroll">
       <div className="w-full flex flex-col gap-6 px-6 py-4 bg-background">
@@ -118,6 +124,19 @@ const AddPlayersView: React.FC = () => {
       </div>
 
       <div className="px-6 flex flex-col gap-6 mb-8">
+        <If condition={hasReachedGuestLimit}>
+          <Then>
+            <Alert>
+              <InfoIcon />
+              <AlertDescription>
+                {matchType === "Singles"
+                  ? "En Singles solo puedes invitar 1 jugador."
+                  : "En Doubles puedes invitar hasta 3 jugadores."}
+              </AlertDescription>
+            </Alert>
+          </Then>
+        </If>
+
         <BoxContainer
           title={playersTab === "Amigos" ? "Lista de amigos" : "Lista global"}
           className="gap-6"
@@ -150,6 +169,7 @@ const AddPlayersView: React.FC = () => {
                   `${player.firstName ?? ""} ${player.lastName ?? ""}`
                 ).trim();
                 const isAdded = isPlayerInvited(String(player.uid ?? ""));
+                const isAddDisabled = !isAdded && hasReachedGuestLimit;
 
                 return (
                   <div
@@ -184,6 +204,7 @@ const AddPlayersView: React.FC = () => {
                       type="button"
                       variant={isAdded ? "secondary" : "outline"}
                       size="default"
+                      disabled={isAddDisabled}
                       onClick={() => toggleInvitedPlayer(player)}
                     >
                       <If condition={isAdded}>

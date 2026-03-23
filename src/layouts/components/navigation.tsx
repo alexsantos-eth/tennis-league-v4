@@ -1,8 +1,11 @@
 import { Award, Home, PlusIcon, Trophy, User } from "lucide-react";
 
 import NavItem from "./nav-item";
+import { useNewMatchStore } from "../../store/new-match";
 
 const Navigation: React.FC = () => {
+  const resetNewMatchStore = useNewMatchStore((state) => state.resetNewMatchStore);
+
   return (
     <nav
       data-id="nav"
@@ -42,6 +45,7 @@ const Navigation: React.FC = () => {
             className="bg-primary max-w-15 min-w-0 w-15 max-h-15 h-15 animate-jump-in animate-delay-200 animate-ease-linear rounded-full relative -top-12"
             href="/match/new"
             label="Nuevo Partido"
+            onClick={resetNewMatchStore}
             icon={
               <PlusIcon
                 className={`h-6 w-6 text-white`}
