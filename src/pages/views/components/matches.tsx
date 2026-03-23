@@ -1,7 +1,4 @@
 import { InfoIcon } from "lucide-react";
-import * as ReactIf from "react-if";
-
-const { If, Then } = ReactIf;
 
 import { Alert, AlertDescription } from "../../../components/ui/alert";
 import useMatches from "../hooks/useMatches";
@@ -53,20 +50,19 @@ const Matches = () => {
       <WeekPick selectedDate={selectedDate} onDateSelect={setSelectedDate} />
 
       <div className="flex flex-col gap-6 px-6">
-        <If condition={!isLoading && !hasError}>
-          <Then>
-            {filteredMatches.map((match) => {
-              const firstInvitedPlayer = match.invitedPlayers?.[0];
-              const invitedPlayerName =
-                firstInvitedPlayer?.name ||
-                `${firstInvitedPlayer?.firstName ?? ""} ${firstInvitedPlayer?.lastName ?? ""}`.trim();
+        {!isLoading && !hasError &&
+          filteredMatches.map((match) => {
+            const firstInvitedPlayer = match.invitedPlayers?.[0];
+            const invitedPlayerName =
+              firstInvitedPlayer?.name ||
+              `${firstInvitedPlayer?.firstName ?? ""} ${firstInvitedPlayer?.lastName ?? ""}`.trim();
 
-              const hasInvitedPlayer = Boolean(
-                firstInvitedPlayer && invitedPlayerName,
-              );
+            const hasInvitedPlayer = Boolean(
+              firstInvitedPlayer && invitedPlayerName,
+            );
 
-              return (
-                <a key={match.id} href={`/match/${match.id}`}>
+            return (
+              <a key={match.id} href={`/match/${match.id}`}>
                 <MatchCard
                   time={match.timeOfMatch}
                   type={match.matchType}
@@ -92,58 +88,44 @@ const Matches = () => {
                     detailLabel: "GTR",
                   }}
                 />
-                </a>
-              );
-            })}
-          </Then>
-        </If>
+              </a>
+            );
+          })}
 
-        <If condition={isLoading}>
-          <Then>
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>Cargando partidos...</AlertDescription>
-            </Alert>
-          </Then>
-        </If>
+        {isLoading && (
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>Cargando partidos...</AlertDescription>
+          </Alert>
+        )}
 
-        <If condition={!isLoading && hasError}>
-          <Then>
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>
-                No se pudieron cargar los partidos creados.
-              </AlertDescription>
-            </Alert>
-          </Then>
-        </If>
+        {!isLoading && hasError && (
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>
+              No se pudieron cargar los partidos creados.
+            </AlertDescription>
+          </Alert>
+        )}
 
-        <If condition={!isLoading && !hasError && matches.length === 0}>
-          <Then>
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>Aun no hay partidos creados.</AlertDescription>
-            </Alert>
-          </Then>
-        </If>
+        {!isLoading && !hasError && matches.length === 0 && (
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>Aun no hay partidos creados.</AlertDescription>
+          </Alert>
+        )}
 
-        <If
-          condition={
-            !isLoading &&
-            !hasError &&
-            matches.length > 0 &&
-            filteredMatches.length === 0
-          }
-        >
-          <Then>
+        {!isLoading &&
+          !hasError &&
+          matches.length > 0 &&
+          filteredMatches.length === 0 && (
             <Alert>
               <InfoIcon />
               <AlertDescription>
                 No hay partidos para la fecha seleccionada.
               </AlertDescription>
             </Alert>
-          </Then>
-        </If>
+          )}
       </div>
     </div>
   );

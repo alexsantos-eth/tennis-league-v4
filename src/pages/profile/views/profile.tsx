@@ -1,7 +1,4 @@
 import { InfoIcon } from "lucide-react";
-import * as ReactIf from "react-if";
-
-const { Else, If, Then } = ReactIf;
 
 import { Alert, AlertDescription } from "../../../components/ui/alert";
 import useProfile from "./hooks/use-profile";
@@ -14,51 +11,43 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="w-full h-full overflow-scroll py-6 px-6 ">
       <div className="w-full flex flex-col gap-6">
-        <If condition={isLoading}>
-          <Then>
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>Cargando perfil...</AlertDescription>
-            </Alert>
-          </Then>
-        </If>
+        {isLoading && (
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>Cargando perfil...</AlertDescription>
+          </Alert>
+        )}
 
-        <If condition={!isLoading && hasError}>
-          <Then>
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>
-                Ocurrio un problema al cargar la informacion del perfil.
-              </AlertDescription>
-            </Alert>
-          </Then>
-        </If>
+        {!isLoading && hasError && (
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>
+              Ocurrio un problema al cargar la informacion del perfil.
+            </AlertDescription>
+          </Alert>
+        )}
 
-        <If condition={!isLoading && !hasError}>
-          <Then>
+        {!isLoading && !hasError && (
+          <>
             <ProfileSummaryCard user={user} fullName={fullName} stats={stats} />
 
-            <If condition={Boolean(upcomingMatch)}>
-              <Then>
-                {upcomingMatch && (
-                  <UpcomingMatchCard
-                    match={upcomingMatch}
-                    currentUserUid={user?.uid as string}
-                  />
-                )}
-              </Then>
-
-              <Else>
-                <Alert>
-                  <InfoIcon />
-                  <AlertDescription>
-                    Aun no tienes proximos partidos programados.
-                  </AlertDescription>
-                </Alert>
-              </Else>
-            </If>
-          </Then>
-        </If>
+            {Boolean(upcomingMatch) ? (
+              upcomingMatch && (
+                <UpcomingMatchCard
+                  match={upcomingMatch}
+                  currentUserUid={user?.uid as string}
+                />
+              )
+            ) : (
+              <Alert>
+                <InfoIcon />
+                <AlertDescription>
+                  Aun no tienes proximos partidos programados.
+                </AlertDescription>
+              </Alert>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

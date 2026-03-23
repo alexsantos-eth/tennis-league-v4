@@ -1,10 +1,7 @@
 import { CalendarDays, Globe, MapPin } from "lucide-react";
-import * as ReactIf from "react-if";
 
 import BoxContainer from "../../../../../components/ui/container";
 import Text from "../../../../../components/ui/text";
-
-const { If, Then } = ReactIf;
 
 import type { MatchRecord } from "../../../../../types/match";
 
@@ -98,21 +95,17 @@ const MatchInfoCard: React.FC<MatchInfoCardProps> = ({ match }) => {
             {match.isPrivate ? "Partido Privado" : "Partido Publico"}
           </Text>
 
-          <If condition={match.isPrivate}>
-            <Then>
-              <Text variant="bodySmall" className="text-muted-foreground">
-                Solo por invitacion
-              </Text>
-            </Then>
-          </If>
+          {match.isPrivate && (
+            <Text variant="bodySmall" className="text-muted-foreground">
+              Solo por invitacion
+            </Text>
+          )}
 
-          <If condition={!match.isPrivate}>
-            <Then>
-              <Text variant="bodySmall" className="text-muted-foreground">
-                Abierto a todos los niveles
-              </Text>
-            </Then>
-          </If>
+          {!match.isPrivate && (
+            <Text variant="bodySmall" className="text-muted-foreground">
+              Abierto a todos los niveles
+            </Text>
+          )}
         </div>
       </div>
     </BoxContainer>

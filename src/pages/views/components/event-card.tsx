@@ -1,7 +1,3 @@
-import * as ReactIf from "react-if";
-
-const { If, Then } = ReactIf;
-
 import { Button } from "../../../components/ui/button";
 import Text from "../../../components/ui/text";
 
@@ -17,34 +13,28 @@ const EventCard: React.FC<EventCardProps> = ({ title, description, link }) => {
       <div className="pointer-events-none absolute left-0 right-0 top-0 bottom-0 bg-linear-to-r from-black/80 to-transparent"></div>
 
       <div className="relative z-2 px-4 py-4 flex flex-col gap-2">
-        <If condition={(title?.length ?? 0) > 0}>
-          <Then>
-            <Text
-              variant="bodyLarge"
-              className="font-bold text-primary-foreground leading-6"
-            >
-              {title}
-            </Text>
-          </Then>
-        </If>
+        {(title?.length ?? 0) > 0 && (
+          <Text
+            variant="bodyLarge"
+            className="font-bold text-primary-foreground leading-6"
+          >
+            {title}
+          </Text>
+        )}
 
-        <If condition={(description?.length ?? 0) > 0}>
-          <Then>
-            <Text variant="body" className="text-primary-foreground max-w-55">
-              {description}
-            </Text>
-          </Then>
-        </If>
+        {(description?.length ?? 0) > 0 && (
+          <Text variant="body" className="text-primary-foreground max-w-55">
+            {description}
+          </Text>
+        )}
 
-        <If condition={(link?.length ?? 0) > 0}>
-          <Then>
-            <a href={link!}>
-              <Button size="lg" variant="secondary" className="px-4">
-                Ver más
-              </Button>
-            </a>
-          </Then>
-        </If>
+        {(link?.length ?? 0) > 0 && (
+          <a href={link!}>
+            <Button size="lg" variant="secondary" className="px-4">
+              Ver más
+            </Button>
+          </a>
+        )}
       </div>
     </div>
   );

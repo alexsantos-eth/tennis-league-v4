@@ -1,7 +1,4 @@
 import { InfoIcon } from "lucide-react";
-import * as ReactIf from "react-if";
-
-const { Else, If, Then } = ReactIf;
 
 import { Alert, AlertDescription } from "../../../../components/ui/alert";
 import MatchCtaBar from "./components/match-cta-bar";
@@ -29,32 +26,28 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
 
   return (
     <div className="w-full h-full overflow-scroll pb-28">
-      <If condition={isLoading}>
-        <Then>
-          <div className="p-6">
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>Cargando partido...</AlertDescription>
-            </Alert>
-          </div>
-        </Then>
-      </If>
+      {isLoading && (
+        <div className="p-6">
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>Cargando partido...</AlertDescription>
+          </Alert>
+        </div>
+      )}
 
-      <If condition={!isLoading && hasError}>
-        <Then>
-          <div className="p-6">
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>
-                No pudimos cargar los datos del partido.
-              </AlertDescription>
-            </Alert>
-          </div>
-        </Then>
-      </If>
+      {!isLoading && hasError && (
+        <div className="p-6">
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>
+              No pudimos cargar los datos del partido.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
 
-      <If condition={!isLoading && !hasError && Boolean(match)}>
-        <Then>
+      {!isLoading && !hasError && Boolean(match) && (
+        <>
           {match && (
             <>
               <MatchHero match={match} />
@@ -76,21 +69,17 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
               />
             </>
           )}
-        </Then>
+        </>
+      )}
 
-        <Else>
-          <If condition={!isLoading && !hasError && !match}>
-            <Then>
-              <div className="p-6">
-                <Alert>
-                  <InfoIcon />
-                  <AlertDescription>Partido no encontrado.</AlertDescription>
-                </Alert>
-              </div>
-            </Then>
-          </If>
-        </Else>
-      </If>
+      {!isLoading && !hasError && !match && (
+        <div className="p-6">
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>Partido no encontrado.</AlertDescription>
+          </Alert>
+        </div>
+      )}
     </div>
   );
 };

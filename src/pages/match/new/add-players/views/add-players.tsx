@@ -16,10 +16,7 @@ import { Button } from "@/components/ui/button";
 import Text from "@/components/ui/text";
 import { useNewMatchStore } from "@/store/new-match";
 import { useAuthStore } from "@/store/auth";
-import * as ReactIf from "react-if";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-
-const { Else, If, Then } = ReactIf;
 
 const getInitials = (name: string) => {
   const [first = "", second = ""] = name.trim().split(" ");
@@ -126,102 +123,94 @@ const AddPlayersView: React.FC = () => {
       </div>
 
       <div className="px-6 flex flex-col gap-6 mb-8">
-        <If condition={hasReachedGuestLimit}>
-          <Then>
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>
-                {matchType === "Singles"
-                  ? "En Singles solo puedes invitar 1 jugador."
-                  : "En Doubles puedes invitar hasta 3 jugadores."}
-              </AlertDescription>
-            </Alert>
-          </Then>
-        </If>
+        {hasReachedGuestLimit && (
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>
+              {matchType === "Singles"
+                ? "En Singles solo puedes invitar 1 jugador."
+                : "En Doubles puedes invitar hasta 3 jugadores."}
+            </AlertDescription>
+          </Alert>
+        )}
 
         <BoxContainer
           title={playersTab === "Amigos" ? "Lista de amigos" : "Lista global"}
           className="gap-6"
         >
-          <If condition={isLoadingPlayers}>
-            <Then>
-              <Alert>
-                <InfoIcon />
-                <AlertDescription> Cargando jugadores...</AlertDescription>
-              </Alert>
-            </Then>
-          </If>
+          {isLoadingPlayers && (
+            <Alert>
+              <InfoIcon />
+              <AlertDescription> Cargando jugadores...</AlertDescription>
+            </Alert>
+          )}
 
-          <If condition={!isLoadingPlayers && filteredPlayers.length === 0}>
-            <Then>
-              <Alert>
-                <InfoIcon />
-                <AlertDescription>
-                  No se encontraron jugadores.
-                </AlertDescription>
-              </Alert>
-            </Then>
-          </If>
+          {!isLoadingPlayers && filteredPlayers.length === 0 && (
+            <Alert>
+              <InfoIcon />
+              <AlertDescription>
+                No se encontraron jugadores.
+              </AlertDescription>
+            </Alert>
+          )}
 
-          <If condition={!isLoadingPlayers}>
-            <Then>
-              {filteredPlayers.map((player) => {
-                const name = (
-                  player.name ||
-                  `${player.firstName ?? ""} ${player.lastName ?? ""}`
-                ).trim();
-                const isAdded = isPlayerInvited(String(player.uid ?? ""));
-                const isAddDisabled = !isAdded && hasReachedGuestLimit;
+          {!isLoadingPlayers &&
+            filteredPlayers.map((player) => {
+              const name = (
+                player.name ||
+                `${player.firstName ?? ""} ${player.lastName ?? ""}`
+              ).trim();
+              const isAdded = isPlayerInvited(String(player.uid ?? ""));
+              const isAddDisabled = !isAdded && hasReachedGuestLimit;
 
-                return (
-                  <div
-                    key={player.uid}
-                    className="flex items-center justify-between gap-3"
-                  >
-                    <div className="flex items-center gap-4 min-w-0">
-                      <Avatar size="default">
-                        <AvatarImage src={player.picture} alt={name} />
-                        <AvatarFallback className="bg-gray-200 text-foreground font-semibold">
-                          {getInitials(name)}
-                        </AvatarFallback>
-                      </Avatar>
+              return (
+                <div
+                  key={player.uid}
+                  className="flex items-center justify-between gap-3"
+                >
+                  <div className="flex items-center gap-4 min-w-0">
+                    <Avatar size="default">
+                      <AvatarImage src={player.picture} alt={name} />
+                      <AvatarFallback className="bg-gray-200 text-foreground font-semibold">
+                        {getInitials(name)}
+                      </AvatarFallback>
+                    </Avatar>
 
-                      <div className="min-w-0">
-                        <Text
-                          variant="body"
-                          className="text-foreground font-semibold truncate"
-                        >
-                          {name || "Jugador sin nombre"}
-                        </Text>
-                        <Text
-                          variant="bodySmall"
-                          className="text-foreground/80"
-                        >
-                          {formatGtr(Number(player.utr) || 0)}
-                        </Text>
-                      </div>
+                    <div className="min-w-0">
+                      <Text
+                        variant="body"
+                        className="text-foreground font-semibold truncate"
+                      >
+                        {name || "Jugador sin nombre"}
+                      </Text>
+                      <Text
+                        variant="bodySmall"
+                        className="text-foreground/80"
+                      >
+                        {formatGtr(Number(player.utr) || 0)}
+                      </Text>
                     </div>
-
-                    <Button
-                      type="button"
-                      variant={isAdded ? "secondary" : "outline"}
-                      size="default"
-                      disabled={isAddDisabled}
-                      onClick={() => toggleInvitedPlayer(player)}
-                    >
-                      <If condition={isAdded}>
-                        <Then>Añadido</Then>
-                        <Else>
-                          <PlusIcon />
-                          Añadir
-                        </Else>
-                      </If>
-                    </Button>
                   </div>
-                );
-              })}
-            </Then>
-          </If>
+
+                  <Button
+                    type="button"
+                    variant={isAdded ? "secondary" : "outline"}
+                    size="default"
+                    disabled={isAddDisabled}
+                    onClick={() => toggleInvitedPlayer(player)}
+                  >
+                    {isAdded ? (
+                      "Añadido"
+                    ) : (
+                      <>
+                        <PlusIcon />
+                        Añadir
+                      </>
+                    )}
+                  </Button>
+                </div>
+              );
+            })}
         </BoxContainer>
 
         <Button

@@ -1,7 +1,3 @@
-import * as ReactIf from "react-if";
-
-const { Else, If, Then } = ReactIf;
-
 import { Button } from "../../../../../components/ui/button";
 
 interface MatchCtaBarProps {
@@ -17,27 +13,23 @@ const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
 }) => {
   return (
     <div className="fixed bottom-0 left-0 w-full p-5 bg-background border-t border-border z-10">
-      <If condition={canJoin}>
-        <Then>
-          <Button type="button" size="lg" className="w-full text-lg h-12 rounded-2xl">
-            Unirse al partido
-          </Button>
-        </Then>
-
-        <Else>
-          <Button
-            type="button"
-            size="lg"
-            className="w-full text-lg h-12 rounded-2xl"
-            variant="secondary"
-            disabled
-          >
-            {isParticipant && "Ya estas en este partido"}
-            {!isParticipant && isPrivate && "Este partido es privado"}
-            {!isParticipant && !isPrivate && "Partido no disponible"}
-          </Button>
-        </Else>
-      </If>
+      {canJoin ? (
+        <Button type="button" size="lg" className="w-full text-lg h-12 rounded-2xl">
+          Unirse al partido
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          size="lg"
+          className="w-full text-lg h-12 rounded-2xl"
+          variant="secondary"
+          disabled
+        >
+          {isParticipant && "Ya estas en este partido"}
+          {!isParticipant && isPrivate && "Este partido es privado"}
+          {!isParticipant && !isPrivate && "Partido no disponible"}
+        </Button>
+      )}
     </div>
   );
 };
