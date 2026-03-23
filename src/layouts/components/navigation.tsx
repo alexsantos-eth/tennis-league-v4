@@ -31,7 +31,7 @@ const Navigation: React.FC = () => {
 
           <NavItem
             className="animate-jump-in animate-delay-200 animate-ease-linear"
-            href="/torneos"
+            href="/tournaments"
             label="Torneos"
             icon={
               <Trophy
@@ -66,7 +66,7 @@ const Navigation: React.FC = () => {
           />
 
           <NavItem
-            href="/perfil"
+            href="/profile"
             label="Perfil"
             className="animate-jump-in animate-delay-400 animate-ease-linear"
          

@@ -23,6 +23,7 @@ const { topbar, className, showNav } = Astro.props;
       "bg-accent max-h-dvh h-full",
       Boolean(topbar) && "mt-16 h-[calc(100%-65px)]",
       showNav && "h-[calc(100%-195px)]",
+    !Boolean(topbar) && showNav && "h-[calc(100%-90px)]",
       className,
     )}
   >

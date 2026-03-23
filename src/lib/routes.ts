@@ -10,8 +10,8 @@ export const ROUTES = {
     public: false,
   },
   PROFILE: {
-    path: "/profile",
-    pathRgx: "^/profile",
+    path: "/perfil",
+    pathRgx: "^/perfil",
     public: false,
   },
   MATCH: {

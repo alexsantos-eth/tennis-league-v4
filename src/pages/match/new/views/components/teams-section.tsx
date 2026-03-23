@@ -19,7 +19,7 @@ const TeamsSection: React.FC = () => {
         <MatchTeamCol title="Equipo A" team="A" />
         <div className="w-full flex flex-col items-center pt-8">
           <div className="bg-primary h-9 w-9 flex items-center rounded-full justify-center">
-            <Text variant="body">vs</Text>
+            <Text variant="body" className="text-primary-foreground">vs</Text>
           </div>
         </div>
         <MatchTeamCol title="Equipo B" team="B" />

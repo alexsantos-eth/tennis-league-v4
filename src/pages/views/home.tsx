@@ -4,14 +4,11 @@ import Matches from "./components/matches";
 
 const Home: React.FC = () => {
   return (
-    <>
+    <div className="h-full pt-32 overflow-scroll pb-6 flex flex-col gap-6">
       <HomeHeader />
-
-      <div className="w-full flex flex-col gap-6 h-full mt-26 py-6 overflow-scroll">
-        <HomeEvents />
+<HomeEvents />
         <Matches />
-      </div>
-    </>
+    </div>
   );
 };
 

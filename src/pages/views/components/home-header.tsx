@@ -24,12 +24,12 @@ const HomeHeader: React.FC = () => {
             />
 
             <div>
-              <Text variant="body" className="animate-fade-down">
+              <Text variant="body" className="animate-fade-down text-primary-foreground">
                 Bienvenido de nuevo!
               </Text>
 
               {name.length > 0 && (
-                <Text variant="h3" className="animate-fade-down">
+                <Text variant="h3" className="animate-fade-down text-primary-foreground">
                   {name}
                 </Text>
               )}

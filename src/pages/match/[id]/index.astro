@@ -1,0 +1,22 @@
+---
+import Heads from "../../../layouts/heads.astro";
+import Main from "../../../layouts/main.astro";
+import Page from "../../../layouts/page.astro";
+import MatchDetail from "./views/match-detail";
+
+export const prerender = false;
+
+const { id = "" } = Astro.params;
+---
+
+<Page>
+  <Heads>
+    <title>Partido | Liga de Tenis GT</title>
+  </Heads>
+
+  <body>
+    <Main showNav={false}>
+      <MatchDetail client:load matchId={id} />
+    </Main>
+  </body>
+</Page>

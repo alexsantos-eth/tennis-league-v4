@@ -1,0 +1,20 @@
+---
+import Heads from "../../layouts/heads.astro";
+import Main from "../../layouts/main.astro";
+import Page from "../../layouts/page.astro";
+import Profile from "./views/profile";
+
+export const prerender = false;
+---
+
+<Page>
+  <Heads>
+    <title>Perfil | Liga de Tenis GT</title>
+  </Heads>
+
+  <body>
+    <Main showNav>
+      <Profile client:load />
+    </Main>
+  </body>
+</Page>

@@ -20,7 +20,7 @@ const Text: React.FC<TextProps> = ({ children, variant, className }) => {
       return (
         <h1
           className={cn(
-            "text-5xl text-primary-foreground font-semibold",
+            "text-5xl text-foreground font-semibold",
             className,
           )}
         >
@@ -31,7 +31,7 @@ const Text: React.FC<TextProps> = ({ children, variant, className }) => {
       return (
         <h2
           className={cn(
-            "text-3xl text-primary-foreground font-semibold",
+            "text-3xl text-foreground font-semibold",
             className,
           )}
         >
@@ -42,7 +42,7 @@ const Text: React.FC<TextProps> = ({ children, variant, className }) => {
       return (
         <h3
           className={cn(
-            "text-2xl text-primary-foreground font-semibold",
+            "text-2xl text-foreground font-semibold",
             className,
           )}
         >
@@ -53,7 +53,7 @@ const Text: React.FC<TextProps> = ({ children, variant, className }) => {
       return (
         <h4
           className={cn(
-            "text-xl text-primary-foreground font-semibold",
+            "text-xl text-foreground font-semibold",
             className,
           )}
         >
@@ -62,25 +62,25 @@ const Text: React.FC<TextProps> = ({ children, variant, className }) => {
       );
     case "body":
       return (
-        <p className={cn("text-base text-primary-foreground", className)}>
+        <p className={cn("text-base text-foreground", className)}>
           {children}
         </p>
       );
     case "bodyLarge":
       return (
-        <p className={cn("text-lg text-primary-foreground", className)}>
+        <p className={cn("text-lg text-foreground", className)}>
           {children}
         </p>
       );
     case "bodySmall":
       return (
-        <p className={cn("text-sm text-primary-foreground", className)}>
+        <p className={cn("text-sm text-foreground", className)}>
           {children}
         </p>
       );
     case "bodyXs":
       return (
-        <p className={cn("text-xs text-primary-foreground", className)}>
+        <p className={cn("text-xs text-foreground", className)}>
           {children}
         </p>
       );
