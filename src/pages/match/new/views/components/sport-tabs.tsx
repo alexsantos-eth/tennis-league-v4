@@ -5,15 +5,13 @@ import {
 } from "lucide-react";
 
 import { Tabs, TabsList, TabsTrigger } from "../../../../../components/ui/tabs";
+import { useNewMatchStore } from "../../../../../store/new-match";
 import { sports } from "../contants";
-import type { PublicMatchSport } from "../../../../../types/match";
 
-interface SportTabsProps {
-  sport: PublicMatchSport;
-  onSportChange: (sport: PublicMatchSport) => void;
-}
+const SportTabs: React.FC = () => {
+  const sport = useNewMatchStore((state) => state.sport);
+  const setSport = useNewMatchStore((state) => state.setSport);
 
-const SportTabs: React.FC<SportTabsProps> = ({ sport, onSportChange }) => {
   return (
     <Tabs value={sport} className="bg-background w-full px-6 py-5">
       <TabsList variant="default" className="w-full">
@@ -22,7 +20,7 @@ const SportTabs: React.FC<SportTabsProps> = ({ sport, onSportChange }) => {
             key={item}
             value={item}
             className="h-8"
-            onClick={() => onSportChange(item)}
+            onClick={() => setSport(item)}
           >
             {item === "Tenis" && <CircleSlash2Icon />}
             {item === "Padel" && <CircleEqualIcon />}

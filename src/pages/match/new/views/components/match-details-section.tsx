@@ -11,37 +11,26 @@ import {
 import { Switch as SwitchButton } from "@/components/ui/switch";
 
 import BoxContainer from "../../../../../components/ui/container";
+import { useNewMatchStore } from "../../../../../store/new-match";
 import type { PublicMatchFormat } from "../../../../../types/match";
 import { matchFormatLabels, matchFormats } from "../contants";
 import MatchDetailsRow from "./match-details-row";
 
-interface MatchDetailsSectionProps {
-  matchFormat: PublicMatchFormat;
-  isReserved: boolean;
-  isPrivate: boolean;
-  onMatchFormatChange: (value: PublicMatchFormat) => void;
-  onReservedChange: (value: boolean) => void;
-  onPrivateChange: (value: boolean) => void;
-}
+const MatchDetailsSection: React.FC = () => {
+  const matchFormat = useNewMatchStore((state) => state.matchFormat);
+  const isReserved = useNewMatchStore((state) => state.isReserved);
+  const isPrivate = useNewMatchStore((state) => state.isPrivate);
+  const setMatchFormat = useNewMatchStore((state) => state.setMatchFormat);
+  const setIsReserved = useNewMatchStore((state) => state.setIsReserved);
+  const setIsPrivate = useNewMatchStore((state) => state.setIsPrivate);
 
-const MatchDetailsSection: React.FC<MatchDetailsSectionProps> = ({
-  matchFormat,
-  isReserved,
-  isPrivate,
-  onMatchFormatChange,
-  onReservedChange,
-  onPrivateChange,
-}) => {
   return (
     <BoxContainer className="flex flex-col gap-4" title="Detalles de partido">
       <MatchDetailsRow
         title="Tipo"
         icon={<Users2 className="w-4 h-4 text-muted-foreground" />}
       >
-        <Select
-          value={matchFormat}
-          onValueChange={(value) => onMatchFormatChange(value as PublicMatchFormat)}
-        >
+        <Select value={matchFormat} onValueChange={(value) => setMatchFormat(value as PublicMatchFormat)}>
           <SelectTrigger className="text-primary font-medium">
             <SelectValue className="text-primary" />
           </SelectTrigger>
@@ -64,7 +53,7 @@ const MatchDetailsSection: React.FC<MatchDetailsSectionProps> = ({
         <SwitchButton
           size="lg"
           checked={isReserved}
-          onClick={() => onReservedChange(!isReserved)}
+          onClick={() => setIsReserved(!isReserved)}
         />
       </MatchDetailsRow>
 
@@ -75,7 +64,7 @@ const MatchDetailsSection: React.FC<MatchDetailsSectionProps> = ({
         <SwitchButton
           size="lg"
           checked={isPrivate}
-          onClick={() => onPrivateChange(!isPrivate)}
+          onClick={() => setIsPrivate(!isPrivate)}
         />
       </MatchDetailsRow>
     </BoxContainer>

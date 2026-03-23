@@ -2,20 +2,15 @@ import { Calendar, Edit2Icon, PlusIcon } from "lucide-react";
 
 import { Button } from "../../../../../components/ui/button";
 import BoxContainer from "../../../../../components/ui/container";
+import { useNewMatchStore } from "../../../../../store/new-match";
 import Text from "../../../../../components/ui/text";
 import MatchDetailsRow from "./match-details-row";
 
-interface DateTimeSectionProps {
-  matchDate: string;
-  matchTime: string;
-  onOpen: () => void;
-}
+const DateTimeSection: React.FC = () => {
+  const matchDate = useNewMatchStore((state) => state.matchDate);
+  const matchTime = useNewMatchStore((state) => state.matchTime);
+  const openDateSheet = useNewMatchStore((state) => state.openDateSheet);
 
-const DateTimeSection: React.FC<DateTimeSectionProps> = ({
-  matchDate,
-  matchTime,
-  onOpen,
-}) => {
   return (
     <BoxContainer>
       <MatchDetailsRow
@@ -23,7 +18,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
         icon={<Calendar className="w-4 h-4 text-muted-foreground" />}
       >
         {matchDate ? (
-          <div className="flex items-center gap-2" onClick={onOpen}>
+          <div className="flex items-center gap-2" onClick={openDateSheet}>
             <Text variant="body" className="text-foreground text-right">
               {matchDate} {matchTime && `- ${matchTime}`}
             </Text>
@@ -36,7 +31,7 @@ const DateTimeSection: React.FC<DateTimeSectionProps> = ({
             type="button"
             size="icon"
             className="rounded-full bg-muted text-foreground"
-            onClick={onOpen}
+            onClick={openDateSheet}
           >
             <PlusIcon />
           </Button>

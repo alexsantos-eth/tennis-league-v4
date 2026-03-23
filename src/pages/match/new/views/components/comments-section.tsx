@@ -1,23 +1,19 @@
 import { Textarea } from "@/components/ui/textarea";
 
 import BoxContainer from "../../../../../components/ui/container";
+import { useNewMatchStore } from "../../../../../store/new-match";
 
-interface CommentsSectionProps {
-  comments: string;
-  onCommentsChange: (value: string) => void;
-}
+const CommentsSection: React.FC = () => {
+  const comments = useNewMatchStore((state) => state.comments);
+  const setComments = useNewMatchStore((state) => state.setComments);
 
-const CommentsSection: React.FC<CommentsSectionProps> = ({
-  comments,
-  onCommentsChange,
-}) => {
   return (
     <BoxContainer className="p-0 overflow-hidden" title="Comentarios">
       <Textarea
         value={comments}
         className="rounded-2xl p-4"
         placeholder="Agrega detalles adicionales"
-        onChange={(event) => onCommentsChange(event.target.value)}
+        onChange={(event) => setComments(event.target.value)}
       />
     </BoxContainer>
   );

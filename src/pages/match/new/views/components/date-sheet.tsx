@@ -21,30 +21,20 @@ import {
 
 import { Button } from "../../../../../components/ui/button";
 import BoxContainer from "../../../../../components/ui/container";
+import { useNewMatchStore } from "../../../../../store/new-match";
 
-interface DateSheetProps {
-  open: boolean;
-  selectedDate?: Date;
-  selectedTime: string;
-  timeOptions: string[];
-  onOpenChange: (open: boolean) => void;
-  onDateChange: (date: Date | undefined) => void;
-  onTimeChange: (time: string) => void;
-  onConfirm: () => void;
-}
+const DateSheet: React.FC = () => {
+  const open = useNewMatchStore((state) => state.isDateSheetOpen);
+  const selectedDate = useNewMatchStore((state) => state.tempDate);
+  const selectedTime = useNewMatchStore((state) => state.matchTime);
+  const timeOptions = useNewMatchStore((state) => state.timeOptions);
+  const setIsDateSheetOpen = useNewMatchStore((state) => state.setIsDateSheetOpen);
+  const setTempDate = useNewMatchStore((state) => state.setTempDate);
+  const setMatchTime = useNewMatchStore((state) => state.setMatchTime);
+  const confirmDate = useNewMatchStore((state) => state.confirmDate);
 
-const DateSheet: React.FC<DateSheetProps> = ({
-  open,
-  selectedDate,
-  selectedTime,
-  timeOptions,
-  onOpenChange,
-  onDateChange,
-  onTimeChange,
-  onConfirm,
-}) => {
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={setIsDateSheetOpen}>
       <SheetContent side="bottom" aria-describedby="date-sheet-description">
         <SheetHeader className="flex-row justify-between items-center">
           <SheetTitle>Selecciona una fecha</SheetTitle>
@@ -57,11 +47,11 @@ const DateSheet: React.FC<DateSheetProps> = ({
             mode="single"
             selected={selectedDate}
             captionLayout="dropdown"
-            onSelect={onDateChange}
+            onSelect={setTempDate}
             disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
           />
 
-          <Select value={selectedTime} onValueChange={onTimeChange}>
+          <Select value={selectedTime} onValueChange={setMatchTime}>
             <BoxContainer title="Selecciona una hora" className="p-0 w-full">
               <SelectTrigger size="lg" className="w-full">
                 <SelectValue placeholder="Selecciona una hora" />
@@ -84,7 +74,7 @@ const DateSheet: React.FC<DateSheetProps> = ({
           <Button
             size="lg"
             type="button"
-            onClick={onConfirm}
+            onClick={confirmDate}
             className="flex-1 rounded-xl"
             disabled={!selectedDate}
           >

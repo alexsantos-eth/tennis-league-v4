@@ -5,26 +5,19 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 
 import { Button } from "../../../../../components/ui/button";
 import BoxContainer from "../../../../../components/ui/container";
+import { useNewMatchStore } from "../../../../../store/new-match";
 import Text from "../../../../../components/ui/text";
 import { popularClubs } from "../contants";
 
-interface LocationSheetProps {
-  open: boolean;
-  tempLocation: string;
-  onOpenChange: (open: boolean) => void;
-  onTempLocationChange: (value: string) => void;
-  onConfirm: () => void;
-}
+const LocationSheet: React.FC = () => {
+  const open = useNewMatchStore((state) => state.isLocationSheetOpen);
+  const tempLocation = useNewMatchStore((state) => state.tempLocation);
+  const setIsLocationSheetOpen = useNewMatchStore((state) => state.setIsLocationSheetOpen);
+  const setTempLocation = useNewMatchStore((state) => state.setTempLocation);
+  const confirmLocation = useNewMatchStore((state) => state.confirmLocation);
 
-const LocationSheet: React.FC<LocationSheetProps> = ({
-  open,
-  tempLocation,
-  onOpenChange,
-  onTempLocationChange,
-  onConfirm,
-}) => {
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={setIsLocationSheetOpen}>
       <SheetContent side="bottom" aria-describedby="location-sheet-description">
         <SheetHeader>
           <SheetTitle>Selecciona una ubicacion</SheetTitle>
@@ -40,7 +33,7 @@ const LocationSheet: React.FC<LocationSheetProps> = ({
                 key={club}
                 type="button"
                 className="w-full px-4 py-4 flex items-center gap-3 border-b border-border/70 last:border-b-0"
-                onClick={() => onTempLocationChange(club)}
+                onClick={() => setTempLocation(club)}
               >
                 <span className="h-9 w-9 rounded-full bg-muted flex items-center justify-center">
                   <Building2 className="h-4 w-4 text-muted-foreground" />
@@ -60,7 +53,7 @@ const LocationSheet: React.FC<LocationSheetProps> = ({
 
           <BoxContainer
             className="overflow-hidden border border-border flex gap-4"
-            onClick={() => onTempLocationChange("")}
+            onClick={() => setTempLocation("")}
           >
             <span className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
               <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -83,7 +76,7 @@ const LocationSheet: React.FC<LocationSheetProps> = ({
             <Input
               type="text"
               value={tempLocation}
-              onChange={(event) => onTempLocationChange(event.target.value)}
+              onChange={(event) => setTempLocation(event.target.value)}
               placeholder="Nombre del club o cancha"
             />
 
@@ -91,7 +84,7 @@ const LocationSheet: React.FC<LocationSheetProps> = ({
               type="button"
               size="icon-lg"
               className="h-10 w-10 rounded-xl"
-              onClick={onConfirm}
+              onClick={confirmLocation}
               disabled={!tempLocation.trim()}
             >
               <ArrowRight className="h-5 w-5" />

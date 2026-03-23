@@ -1,20 +1,15 @@
 import { Slider } from "@/components/ui/slider";
 
 import BoxContainer from "../../../../../components/ui/container";
+import { useNewMatchStore } from "../../../../../store/new-match";
 import Text from "../../../../../components/ui/text";
 import { rangeCeiling, rangeFloor } from "../contants";
 
-interface SkillRangeSectionProps {
-  rangeMin: number;
-  rangeMax: number;
-  onRangeChange: (values: number[]) => void;
-}
+const SkillRangeSection: React.FC = () => {
+  const rangeMin = useNewMatchStore((state) => state.rangeMin);
+  const rangeMax = useNewMatchStore((state) => state.rangeMax);
+  const setSkillRange = useNewMatchStore((state) => state.setSkillRange);
 
-const SkillRangeSection: React.FC<SkillRangeSectionProps> = ({
-  rangeMin,
-  rangeMax,
-  onRangeChange,
-}) => {
   return (
     <BoxContainer className="flex flex-col gap-5" title="Rango permitido">
       <div className="flex items-center justify-between">
@@ -31,7 +26,7 @@ const SkillRangeSection: React.FC<SkillRangeSectionProps> = ({
         max={rangeCeiling}
         min={rangeFloor}
         step={1}
-        onValueChange={onRangeChange}
+        onValueChange={setSkillRange}
       />
     </BoxContainer>
   );

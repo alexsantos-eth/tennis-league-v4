@@ -1,14 +1,11 @@
 import { PlayIcon } from "lucide-react";
 
 import { Button } from "../../../../../components/ui/button";
+import { useNewMatchStore } from "../../../../../store/new-match";
 
-interface CreateMatchButtonProps {
-  isSubmitting: boolean;
-}
+const CreateMatchButton: React.FC = () => {
+  const isSubmitting = useNewMatchStore((state) => state.isSubmitting);
 
-const CreateMatchButton: React.FC<CreateMatchButtonProps> = ({
-  isSubmitting,
-}) => {
   return (
     <Button
       type="submit"

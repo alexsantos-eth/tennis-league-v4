@@ -1,19 +1,14 @@
 import { UserIcon, UsersIcon } from "lucide-react";
 
 import BoxContainer from "../../../../../components/ui/container";
+import { useNewMatchStore } from "../../../../../store/new-match";
 import { Tabs, TabsList, TabsTrigger } from "../../../../../components/ui/tabs";
 import { matchTypes } from "../contants";
-import type { PublicMatchType } from "../../../../../types/match";
 
-interface MatchTypeSectionProps {
-  matchType: PublicMatchType;
-  onMatchTypeChange: (matchType: PublicMatchType) => void;
-}
+const MatchTypeSection: React.FC = () => {
+  const matchType = useNewMatchStore((state) => state.matchType);
+  const setMatchType = useNewMatchStore((state) => state.setMatchType);
 
-const MatchTypeSection: React.FC<MatchTypeSectionProps> = ({
-  matchType,
-  onMatchTypeChange,
-}) => {
   return (
     <BoxContainer title="Tipo de partido" className="p-2">
       <Tabs value={matchType} className="bg-background w-full">
@@ -23,7 +18,7 @@ const MatchTypeSection: React.FC<MatchTypeSectionProps> = ({
               key={item}
               value={item}
               className="h-8"
-              onClick={() => onMatchTypeChange(item)}
+              onClick={() => setMatchType(item)}
             >
               {item === "Doubles" && <UsersIcon />}
               {item === "Singles" && <UserIcon />}

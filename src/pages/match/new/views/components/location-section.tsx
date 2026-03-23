@@ -2,15 +2,14 @@ import { Edit2Icon, MapPin, PlusIcon } from "lucide-react";
 
 import { Button } from "../../../../../components/ui/button";
 import BoxContainer from "../../../../../components/ui/container";
+import { useNewMatchStore } from "../../../../../store/new-match";
 import Text from "../../../../../components/ui/text";
 import MatchDetailsRow from "./match-details-row";
 
-interface LocationSectionProps {
-  location: string;
-  onOpen: () => void;
-}
+const LocationSection: React.FC = () => {
+  const location = useNewMatchStore((state) => state.location);
+  const openLocationSheet = useNewMatchStore((state) => state.openLocationSheet);
 
-const LocationSection: React.FC<LocationSectionProps> = ({ location, onOpen }) => {
   return (
     <BoxContainer className="flex flex-col gap-4">
       <MatchDetailsRow
@@ -18,7 +17,7 @@ const LocationSection: React.FC<LocationSectionProps> = ({ location, onOpen }) =
         icon={<MapPin className="w-4 h-4 text-muted-foreground" />}
       >
         {location ? (
-          <div className="flex items-center gap-2" onClick={onOpen}>
+          <div className="flex items-center gap-2" onClick={openLocationSheet}>
             <Text variant="body" className="text-foreground text-right">
               {location}
             </Text>
@@ -31,7 +30,7 @@ const LocationSection: React.FC<LocationSectionProps> = ({ location, onOpen }) =
             type="button"
             size="icon"
             className="rounded-full bg-muted text-foreground"
-            onClick={onOpen}
+            onClick={openLocationSheet}
           >
             <PlusIcon />
           </Button>
