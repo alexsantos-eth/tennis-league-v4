@@ -1,15 +1,13 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import {
   GlobeIcon,
   InfoIcon,
-  PlusIcon,
-  SearchIcon,
   Share2Icon,
   UserRoundIcon,
+  SearchIcon,
 } from "lucide-react";
 
 import BoxContainer from "@/components/ui/container";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -17,19 +15,8 @@ import Text from "@/components/ui/text";
 import { useNewMatchStore } from "@/store/new-match";
 import { useAuthStore } from "@/store/auth";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-
-const getInitials = (name: string) => {
-  const [first = "", second = ""] = name.trim().split(" ");
-  return `${first.charAt(0)}${second.charAt(0)}`.toUpperCase() || "PL";
-};
-
-const formatGtr = (value: number) => {
-  if (!Number.isFinite(value)) {
-    return "Sin ranking";
-  }
-
-  return value > 0 ? Number(value).toFixed(2) : "Sin ranking";
-};
+import PlayersList from "@/pages/match/add-players-common/players-list";
+import { useFilteredPlayers } from "@/pages/match/add-players-common/use-players-list";
 
 const AddPlayersView: React.FC = () => {
   const availablePlayers = useNewMatchStore((state) => state.availablePlayers);
@@ -58,34 +45,24 @@ const AddPlayersView: React.FC = () => {
     void loadAvailablePlayers();
   }, [bootstrapCurrentUserPlayer, loadAvailablePlayers, currentUserUid]);
 
-  const filteredPlayers = useMemo(() => {
-    const normalizedQuery = playersSearch.trim().toLowerCase();
-
-    const scopedPlayers =
-      playersTab === "Amigos"
-        ? availablePlayers.filter((player) =>
-            friendPlayerIds.includes(String(player.uid ?? "")),
-          )
-        : availablePlayers;
-
-    if (!normalizedQuery) {
-      return scopedPlayers;
-    }
-
-    return scopedPlayers.filter((player) => {
-      const name = (
-        player.name || `${player.firstName ?? ""} ${player.lastName ?? ""}`
-      ).toLowerCase();
-      return (
-        name.includes(normalizedQuery) ||
-        String(player.utr ?? "").includes(normalizedQuery)
-      );
-    });
-  }, [availablePlayers, friendPlayerIds, playersSearch, playersTab]);
-
   const guestLimit = matchType === "Singles" ? 1 : 3;
   const invitedGuestsCount = Math.max(invitedPlayers.length - 1, 0);
   const hasReachedGuestLimit = invitedGuestsCount >= guestLimit;
+
+  const filteredPlayers = useFilteredPlayers(
+    availablePlayers,
+    friendPlayerIds,
+    playersTab,
+    playersSearch,
+  );
+
+  const handlePlayerClick = (player: any) => {
+    const isAdded = isPlayerInvited(String(player.uid ?? ""));
+    const isAddDisabled = !isAdded && hasReachedGuestLimit;
+    if (!isAddDisabled) {
+      toggleInvitedPlayer(player);
+    }
+  };
 
   return (
     <div className="w-full h-full flex flex-col gap-6 overflow-scroll">
@@ -138,79 +115,20 @@ const AddPlayersView: React.FC = () => {
           title={playersTab === "Amigos" ? "Lista de amigos" : "Lista global"}
           className="gap-6"
         >
-          {isLoadingPlayers && (
-            <Alert>
-              <InfoIcon />
-              <AlertDescription> Cargando jugadores...</AlertDescription>
-            </Alert>
-          )}
-
-          {!isLoadingPlayers && filteredPlayers.length === 0 && (
-            <Alert>
-              <InfoIcon />
-              <AlertDescription>
-                No se encontraron jugadores.
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {!isLoadingPlayers &&
-            filteredPlayers.map((player) => {
-              const name = (
-                player.name ||
-                `${player.firstName ?? ""} ${player.lastName ?? ""}`
-              ).trim();
+          <PlayersList
+            players={filteredPlayers}
+            isLoading={isLoadingPlayers}
+            onPlayerClick={handlePlayerClick}
+            isPlayerSelected={(player) =>
+              isPlayerInvited(String(player.uid ?? ""))
+            }
+            selectionMode="button"
+            buttonLabel="Añadir"
+            isButtonDisabled={(player) => {
               const isAdded = isPlayerInvited(String(player.uid ?? ""));
-              const isAddDisabled = !isAdded && hasReachedGuestLimit;
-
-              return (
-                <div
-                  key={player.uid}
-                  className="flex items-center justify-between gap-3"
-                >
-                  <div className="flex items-center gap-4 min-w-0">
-                    <Avatar size="default">
-                      <AvatarImage src={player.picture} alt={name} />
-                      <AvatarFallback className="bg-gray-200 text-foreground font-semibold">
-                        {getInitials(name)}
-                      </AvatarFallback>
-                    </Avatar>
-
-                    <div className="min-w-0">
-                      <Text
-                        variant="body"
-                        className="text-foreground font-semibold truncate"
-                      >
-                        {name || "Jugador sin nombre"}
-                      </Text>
-                      <Text
-                        variant="bodySmall"
-                        className="text-foreground/80"
-                      >
-                        {formatGtr(Number(player.utr) || 0)}
-                      </Text>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="button"
-                    variant={isAdded ? "secondary" : "outline"}
-                    size="default"
-                    disabled={isAddDisabled}
-                    onClick={() => toggleInvitedPlayer(player)}
-                  >
-                    {isAdded ? (
-                      "Añadido"
-                    ) : (
-                      <>
-                        <PlusIcon />
-                        Añadir
-                      </>
-                    )}
-                  </Button>
-                </div>
-              );
-            })}
+              return !isAdded && hasReachedGuestLimit;
+            }}
+          />
         </BoxContainer>
 
         <Button

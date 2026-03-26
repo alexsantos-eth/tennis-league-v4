@@ -7,10 +7,11 @@ import {
   limit,
   orderBy,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { normalizeMatchDateKey } from "../lib/dates";
-import type { CreateMatchInput, MatchRecord } from "../types/match";
+import type { CreateMatchInput, MatchRecord, MatchCreatorSummary } from "../types/match";
 
 const MATCH_COLLECTION = "match";
 
@@ -73,3 +74,35 @@ export const getMatchById = async (
     ...(matchDoc.data() as Omit<MatchRecord, "id">),
   };
 };
+
+export const updateMatchPlayers = async (
+  matchId: string,
+  newPlayers: MatchCreatorSummary[],
+): Promise<void> => {
+  const matchRef = doc(db, MATCH_COLLECTION, matchId);
+  const matchDoc = await getDoc(matchRef);
+
+  if (!matchDoc.exists()) {
+    throw new Error("Match not found");
+  }
+
+  const currentMatch = matchDoc.data() as Omit<MatchRecord, "id">;
+  const existingPlayers = currentMatch.invitedPlayers || [];
+
+  // Merge new players with existing ones, avoiding duplicates
+  const allPlayers = [...existingPlayers];
+  for (const newPlayer of newPlayers) {
+    const playerExists = allPlayers.some(
+      (p) => (p.id === newPlayer.id || p.uid === newPlayer.uid) && p.id !== currentMatch.createdBy.id
+    );
+    if (!playerExists) {
+      allPlayers.push(newPlayer);
+    }
+  }
+
+  await updateDoc(matchRef, {
+    invitedPlayers: allPlayers,
+    updatedAt: new Date().toISOString(),
+  });
+};
+

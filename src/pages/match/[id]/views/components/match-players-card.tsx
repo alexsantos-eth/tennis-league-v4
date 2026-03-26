@@ -4,6 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../../../../../components/u
 import { Badge } from "../../../../../components/ui/badge";
 import BoxContainer from "../../../../../components/ui/container";
 import Text from "../../../../../components/ui/text";
+import { ROUTES } from "../../../../../lib/routes";
+import { useMatchDetailPlayersStore } from "../../../../../store/match-detail-players";
 
 import type { MatchCreatorSummary } from "../../../../../types/match";
 
@@ -11,6 +13,7 @@ interface MatchPlayersCardProps {
   players: MatchCreatorSummary[];
   playersCapacity: number;
   currentUserUid?: string;
+  matchId?: string;
 }
 
 const getPlayerName = (player?: MatchCreatorSummary) => {
@@ -45,7 +48,17 @@ const MatchPlayersCard: React.FC<MatchPlayersCardProps> = ({
   players,
   playersCapacity,
   currentUserUid,
+  matchId,
 }) => {
+  const setMatchId = useMatchDetailPlayersStore((state) => state.setMatchId);
+
+  const handleAddPlayersClick = () => {
+    if (matchId) {
+      setMatchId(matchId);
+      window.location.href = ROUTES.ADD_PLAYERS_TO_MATCH.path(matchId);
+    }
+  };
+
   const slots = Array.from({ length: playersCapacity }, (_, index) => players[index] || null);
 
   return (
@@ -62,14 +75,18 @@ const MatchPlayersCard: React.FC<MatchPlayersCardProps> = ({
         {slots.map((player, index) => {
           if (!player) {
             return (
-              <div key={`slot-${index}`} className="flex flex-col items-center gap-2">
-                <div className="size-14 rounded-full border-2 border-dashed border-border flex items-center justify-center">
+              <button
+                key={`slot-${index}`}
+                onClick={handleAddPlayersClick}
+                className="flex flex-col items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+              >
+                <div className="size-14 rounded-full border-2 border-dashed border-border flex items-center justify-center hover:border-foreground">
                   <Plus className="size-5 text-muted-foreground" />
                 </div>
                 <Text variant="bodySmall" className="text-muted-foreground text-center">
                   Libre
                 </Text>
-              </div>
+              </button>
             );
           }
 

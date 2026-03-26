@@ -58,6 +58,7 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
                   players={players}
                   playersCapacity={playersCapacity}
                   currentUserUid={currentUser?.uid}
+                  matchId={matchId}
                 />
                 <MatchSkillCard match={match} />
               </div>
