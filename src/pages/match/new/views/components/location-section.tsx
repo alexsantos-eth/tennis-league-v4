@@ -1,14 +1,17 @@
 import { Edit2Icon, MapPin, PlusIcon } from "lucide-react";
 
-import { Button } from "../../../../../components/ui/button";
-import BoxContainer from "../../../../../components/ui/container";
-import { useNewMatchStore } from "../../../../../store/new-match";
-import Text from "../../../../../components/ui/text";
+import { Button } from "@/components/ui/button";
+import BoxContainer from "@/components/ui/container";
+import Text from "@/components/ui/text";
+import { useNewMatchStore } from "@/store/new-match";
+
 import MatchDetailsRow from "./match-details-row";
 
 const LocationSection: React.FC = () => {
   const location = useNewMatchStore((state) => state.location);
-  const openLocationSheet = useNewMatchStore((state) => state.openLocationSheet);
+  const openLocationSheet = useNewMatchStore(
+    (state) => state.openLocationSheet,
+  );
 
   return (
     <BoxContainer className="flex flex-col gap-4">

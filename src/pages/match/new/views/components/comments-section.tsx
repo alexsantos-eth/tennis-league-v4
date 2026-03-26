@@ -1,7 +1,6 @@
+import BoxContainer from "@/components/ui/container";
 import { Textarea } from "@/components/ui/textarea";
-
-import BoxContainer from "../../../../../components/ui/container";
-import { useNewMatchStore } from "../../../../../store/new-match";
+import { useNewMatchStore } from "@/store/new-match";
 
 const CommentsSection: React.FC = () => {
   const comments = useNewMatchStore((state) => state.comments);

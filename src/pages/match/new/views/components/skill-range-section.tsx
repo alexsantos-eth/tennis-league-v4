@@ -1,8 +1,8 @@
+import BoxContainer from "@/components/ui/container";
 import { Slider } from "@/components/ui/slider";
+import Text from "@/components/ui/text";
+import { useNewMatchStore } from "@/store/new-match";
 
-import BoxContainer from "../../../../../components/ui/container";
-import { useNewMatchStore } from "../../../../../store/new-match";
-import Text from "../../../../../components/ui/text";
 import { rangeCeiling, rangeFloor } from "../contants";
 
 const SkillRangeSection: React.FC = () => {
@@ -11,7 +11,7 @@ const SkillRangeSection: React.FC = () => {
   const setSkillRange = useNewMatchStore((state) => state.setSkillRange);
 
   return (
-    <BoxContainer className="flex flex-col gap-5" title="Rango permitido">
+    <BoxContainer className="flex flex-col gap-6" title="Rango permitido">
       <div className="flex items-center justify-between">
         <Text variant="body" className="text-foreground font-medium">
           GTR

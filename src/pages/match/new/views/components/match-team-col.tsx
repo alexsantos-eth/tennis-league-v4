@@ -44,12 +44,12 @@ const MatchTeamCol: React.FC<MatchTeamColProps> = ({ title, team }) => {
   const placeholderSlotCount = emptySlots - inviteSlotCount;
 
   return (
-    <div className="flex flex-col gap-5 items-center">
+    <div className="flex flex-col gap-4 items-center">
       <Text variant="body" className="text-foreground font-medium">
         {title}
       </Text>
 
-      <div className="w-full flex flex-col gap-3 items-center">
+      <div className="w-full flex flex-col gap-4 items-center">
         {teamPlayers.map((player) => (
           <div key={player?.id} className="relative w-14 flex flex-col gap-2 items-center">
             <div className="relative">

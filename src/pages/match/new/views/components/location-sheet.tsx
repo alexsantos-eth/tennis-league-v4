@@ -1,18 +1,25 @@
 import { ArrowRight, Building2, ChevronRight, MapPin } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import BoxContainer from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import Text from "@/components/ui/text";
+import { useNewMatchStore } from "@/store/new-match";
 
-import { Button } from "../../../../../components/ui/button";
-import BoxContainer from "../../../../../components/ui/container";
-import { useNewMatchStore } from "../../../../../store/new-match";
-import Text from "../../../../../components/ui/text";
 import { popularClubs } from "../contants";
 
 const LocationSheet: React.FC = () => {
   const open = useNewMatchStore((state) => state.isLocationSheetOpen);
   const tempLocation = useNewMatchStore((state) => state.tempLocation);
-  const setIsLocationSheetOpen = useNewMatchStore((state) => state.setIsLocationSheetOpen);
+  const setIsLocationSheetOpen = useNewMatchStore(
+    (state) => state.setIsLocationSheetOpen,
+  );
   const setTempLocation = useNewMatchStore((state) => state.setTempLocation);
   const confirmLocation = useNewMatchStore((state) => state.confirmLocation);
 
@@ -60,7 +67,10 @@ const LocationSheet: React.FC = () => {
             </span>
 
             <div>
-              <Text variant="bodySmall" className="text-base font-medium text-foreground">
+              <Text
+                variant="bodySmall"
+                className="text-base font-medium text-foreground"
+              >
                 Otro club o cancha privada
               </Text>
               <Text

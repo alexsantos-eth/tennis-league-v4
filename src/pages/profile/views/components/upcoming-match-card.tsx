@@ -13,7 +13,7 @@ interface UpcomingMatchCardProps {
 
 const getDisplayName = (player?: MatchCreatorSummary) => {
   if (!player) {
-    return "Jugador";
+    return "Oponente pendiente";
   }
 
   const byNames = `${player.firstName || ""} ${player.lastName || ""}`.trim();
@@ -90,11 +90,11 @@ const UpcomingMatchCard: React.FC<UpcomingMatchCardProps> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <Button asChild variant="secondary" size="lg">
+        <Button asChild variant="secondary" >
           <a href={`/match/${match.id}`}>Ver partido</a>
         </Button>
 
-        <Button asChild size="lg">
+        <Button asChild >
           <a href={`/match/${match.id}`}>
             <MessageCircle />
             Contactar

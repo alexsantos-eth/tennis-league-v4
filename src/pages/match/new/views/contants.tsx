@@ -5,7 +5,7 @@ import type {
 } from "../../../../types/match";
 
 export const sports: PublicMatchSport[] = ["Tenis", "Padel", "Pickleball"];
-export const matchTypes: PublicMatchType[] = ["Doubles", "Singles"];
+export const matchTypes: PublicMatchType[] = ["Singles","Doubles"];
 export const matchFormats: PublicMatchFormat[] = ["Ranking", "Friendly"];
 
 export const matchFormatLabels: Record<PublicMatchFormat, string> = {

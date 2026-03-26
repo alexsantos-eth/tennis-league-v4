@@ -35,7 +35,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 
   return (
     <BoxContainer
-      className="snap-start p-0 min-w-16 w-16 h-16 max-h-16 flex flex-col items-center justify-center cursor-pointer"
+      className="border snap-start p-0 min-w-16 w-16 h-16 max-h-16 flex flex-col items-center justify-center cursor-pointer"
       onClick={onClick}
     >
       <Text variant="bodySmall" className="text-muted-foreground font-semibold">

@@ -1,7 +1,7 @@
 import { PlayIcon } from "lucide-react";
 
-import { Button } from "../../../../../components/ui/button";
-import { useNewMatchStore } from "../../../../../store/new-match";
+import { Button } from "@/components/ui/button";
+import { useNewMatchStore } from "@/store/new-match";
 
 const CreateMatchButton: React.FC = () => {
   const isSubmitting = useNewMatchStore((state) => state.isSubmitting);

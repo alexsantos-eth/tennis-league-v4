@@ -1,35 +1,14 @@
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, LoaderIcon } from "lucide-react";
 
-import { Alert, AlertDescription } from "../../../components/ui/alert";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import Stack from "@/components/ui/stack";
+import { getDateKey, normalizeMatchDateKey } from "@/lib/dates";
+
 import useMatches from "../hooks/useMatches";
 import MatchCard from "./match-card";
 import WeekPick from "./week-pick";
 
-import type { MatchRecord } from "../../../types/match";
-import { getDateKey } from "../../../lib/dates";
-
-const normalizeMatchDateKey = (dateOfMatch: string, selectedDate: Date) => {
-  const normalizedInput = dateOfMatch.trim().split("T")[0];
-
-  const isoMatch = normalizedInput.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-
-  if (isoMatch) {
-    return normalizedInput;
-  }
-
-  const slashMatch = normalizedInput.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?$/);
-
-  if (slashMatch) {
-    const day = String(Number(slashMatch[1])).padStart(2, "0");
-    const month = String(Number(slashMatch[2])).padStart(2, "0");
-    const parsedYear = slashMatch[3] ? Number(slashMatch[3]) : selectedDate.getFullYear();
-    const year = parsedYear < 100 ? parsedYear + 2000 : parsedYear;
-
-    return `${year}-${month}-${day}`;
-  }
-
-  return normalizedInput;
-};
+import type { MatchRecord } from "@/types/match";
 
 const Matches = () => {
   const { matches, selectedDate, setSelectedDate, isLoading, hasError } =
@@ -46,11 +25,12 @@ const Matches = () => {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <Stack noPx>
       <WeekPick selectedDate={selectedDate} onDateSelect={setSelectedDate} />
 
-      <div className="flex flex-col gap-6 px-6">
-        {!isLoading && !hasError &&
+      <Stack>
+        {!isLoading &&
+          !hasError &&
           filteredMatches.map((match) => {
             const firstInvitedPlayer = match.invitedPlayers?.[0];
             const invitedPlayerName =
@@ -94,8 +74,8 @@ const Matches = () => {
 
         {isLoading && (
           <Alert>
-            <InfoIcon />
-            <AlertDescription>Cargando partidos...</AlertDescription>
+            <LoaderIcon />
+            <AlertDescription>Cargando partidos ...</AlertDescription>
           </Alert>
         )}
 
@@ -121,13 +101,11 @@ const Matches = () => {
           filteredMatches.length === 0 && (
             <Alert>
               <InfoIcon />
-              <AlertDescription>
-                No hay partidos para la fecha seleccionada.
-              </AlertDescription>
+              <AlertDescription>No hay partidos para este día</AlertDescription>
             </Alert>
           )}
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 };
 

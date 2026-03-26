@@ -1,5 +1,6 @@
 import { Lock, SlidersHorizontal, Users2 } from "lucide-react";
 
+import BoxContainer from "@/components/ui/container";
 import {
   Select,
   SelectContent,
@@ -9,13 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch as SwitchButton } from "@/components/ui/switch";
+import { useNewMatchStore } from "@/store/new-match";
 
-import BoxContainer from "../../../../../components/ui/container";
-import { useNewMatchStore } from "../../../../../store/new-match";
-import type { PublicMatchFormat } from "../../../../../types/match";
 import { matchFormatLabels, matchFormats } from "../contants";
 import MatchDetailsRow from "./match-details-row";
 
+import type { PublicMatchFormat } from "@/types/match";
 const MatchDetailsSection: React.FC = () => {
   const matchFormat = useNewMatchStore((state) => state.matchFormat);
   const isReserved = useNewMatchStore((state) => state.isReserved);
@@ -30,7 +30,10 @@ const MatchDetailsSection: React.FC = () => {
         title="Tipo"
         icon={<Users2 className="w-4 h-4 text-muted-foreground" />}
       >
-        <Select value={matchFormat} onValueChange={(value) => setMatchFormat(value as PublicMatchFormat)}>
+        <Select
+          value={matchFormat}
+          onValueChange={(value) => setMatchFormat(value as PublicMatchFormat)}
+        >
           <SelectTrigger className="text-primary font-medium">
             <SelectValue className="text-primary" />
           </SelectTrigger>

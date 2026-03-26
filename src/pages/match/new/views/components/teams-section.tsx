@@ -1,10 +1,11 @@
 import { RotateCcwIcon } from "lucide-react";
 
-import Text from "../../../../../components/ui/text";
-import { Button } from "../../../../../components/ui/button";
-import BoxContainer from "../../../../../components/ui/container";
+import { Button } from "@/components/ui/button";
+import BoxContainer from "@/components/ui/container";
+import Text from "@/components/ui/text";
+import { useNewMatchStore } from "@/store/new-match";
+
 import MatchTeamCol from "./match-team-col";
-import { useNewMatchStore } from "../../../../../store/new-match";
 
 const TeamsSection: React.FC = () => {
   const invitedPlayers = useNewMatchStore((state) => state.invitedPlayers);
@@ -19,7 +20,12 @@ const TeamsSection: React.FC = () => {
         <MatchTeamCol title="Equipo A" team="A" />
         <div className="w-full flex flex-col items-center pt-8">
           <div className="bg-primary h-9 w-9 flex items-center rounded-full justify-center">
-            <Text variant="body" className="text-primary-foreground">vs</Text>
+            <Text
+              variant="body"
+              className="text-primary-foreground font-semibold"
+            >
+              vs
+            </Text>
           </div>
         </div>
         <MatchTeamCol title="Equipo B" team="B" />

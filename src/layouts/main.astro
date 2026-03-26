@@ -2,6 +2,7 @@
 import Navigation from "./components/navigation";
 import Topbar from "./components/topbar";
 import { cn } from "../lib/styles";
+import { Toaster } from "@/components/ui/sonner";
 
 interface Props {
   topbar?: {
@@ -19,13 +20,13 @@ const { topbar, className, showNav } = Astro.props;
 <div class="h-dvh gap-0">
   {Boolean(topbar) && <Topbar {...topbar} client:load />}
   <main
-    class={cn(
-      "bg-accent max-h-dvh h-full",
-      Boolean(topbar) && "mt-16 h-[calc(100%-65px)]",
-      showNav && "h-[calc(100%-195px)]",
+  class={cn(
+    "bg-accent max-h-dvh h-full",
+    Boolean(topbar) && "mt-16 h-[calc(100%-65px)]",
+    showNav && "h-[calc(100%-195px)]",
     !Boolean(topbar) && showNav && "h-[calc(100%-90px)]",
-      className,
-    )}
+    className,
+  )}
   >
     <slot />
   </main>

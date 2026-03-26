@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { getRecentMatches } from "../../../../firebase/match";
 import { getAllUsers } from "../../../../firebase/users";
+import { normalizeMatchDateKey } from "../../../../lib/dates";
 import { calculateRankingByUTR } from "../../../../lib/ranking";
 import { useAuthStore } from "../../../../store/auth";
 
@@ -14,16 +15,24 @@ interface ProfileStat {
 }
 
 const parseMatchDate = (match: MatchRecord): number => {
-  if (match.scheduledAt) {
-    const ts = Date.parse(match.scheduledAt);
+  const parseFlexibleDateTime = (rawDate: string, rawTime: string): number => {
+    const normalizedDate = normalizeMatchDateKey(rawDate, new Date());
+    const normalizedTime = (rawTime || "00:00").trim();
+    const ts = Date.parse(`${normalizedDate}T${normalizedTime}`);
 
-    if (!Number.isNaN(ts)) {
-      return ts;
+    return ts;
+  };
+
+  if (match.scheduledAt) {
+    const [rawDate = "", rawTime = ""] = String(match.scheduledAt).split("T");
+    const scheduledTs = parseFlexibleDateTime(rawDate, rawTime);
+
+    if (!Number.isNaN(scheduledTs)) {
+      return scheduledTs;
     }
   }
 
-  const composed = `${match.dateOfMatch}T${match.timeOfMatch}`;
-  const composedTs = Date.parse(composed);
+  const composedTs = parseFlexibleDateTime(match.dateOfMatch, match.timeOfMatch);
 
   if (!Number.isNaN(composedTs)) {
     return composedTs;

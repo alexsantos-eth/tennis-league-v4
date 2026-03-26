@@ -1,7 +1,9 @@
 import { CheckCheck } from "lucide-react";
 import { es } from "react-day-picker/locale";
 
+import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import BoxContainer from "@/components/ui/container";
 import {
   Select,
   SelectContent,
@@ -18,17 +20,16 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-
-import { Button } from "../../../../../components/ui/button";
-import BoxContainer from "../../../../../components/ui/container";
-import { useNewMatchStore } from "../../../../../store/new-match";
+import { useNewMatchStore } from "@/store/new-match";
 
 const DateSheet: React.FC = () => {
   const open = useNewMatchStore((state) => state.isDateSheetOpen);
   const selectedDate = useNewMatchStore((state) => state.tempDate);
   const selectedTime = useNewMatchStore((state) => state.matchTime);
   const timeOptions = useNewMatchStore((state) => state.timeOptions);
-  const setIsDateSheetOpen = useNewMatchStore((state) => state.setIsDateSheetOpen);
+  const setIsDateSheetOpen = useNewMatchStore(
+    (state) => state.setIsDateSheetOpen,
+  );
   const setTempDate = useNewMatchStore((state) => state.setTempDate);
   const setMatchTime = useNewMatchStore((state) => state.setMatchTime);
   const confirmDate = useNewMatchStore((state) => state.confirmDate);
@@ -48,7 +49,9 @@ const DateSheet: React.FC = () => {
             selected={selectedDate}
             captionLayout="dropdown"
             onSelect={setTempDate}
-            disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+            disabled={(date) =>
+              date < new Date(new Date().setHours(0, 0, 0, 0))
+            }
           />
 
           <Select value={selectedTime} onValueChange={setMatchTime}>

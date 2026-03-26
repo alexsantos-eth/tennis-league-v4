@@ -9,12 +9,17 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { normalizeMatchDateKey } from "../lib/dates";
 import type { CreateMatchInput, MatchRecord } from "../types/match";
 
 const MATCH_COLLECTION = "match";
 
-const buildScheduledAt = (dateOfMatch: string, timeOfMatch: string) =>
-  `${dateOfMatch}T${timeOfMatch}`;
+const buildScheduledAt = (dateOfMatch: string, timeOfMatch: string) => {
+  const normalizedDate = normalizeMatchDateKey(dateOfMatch, new Date());
+  const normalizedTime = (timeOfMatch || "00:00").trim();
+
+  return `${normalizedDate}T${normalizedTime}`;
+};
 
 export const createMatch = async (
   input: CreateMatchInput,

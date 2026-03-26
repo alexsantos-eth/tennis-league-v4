@@ -2,7 +2,7 @@
 import Heads from "../../../layouts/heads.astro";
 import Main from "../../../layouts/main.astro";
 import Page from "../../../layouts/page.astro";
-import Match from "./views/new-match";
+import NewMatch from "./views/new-match";
 
 export const prerender = false;
 ---
@@ -20,7 +20,7 @@ export const prerender = false;
         goBack: true,
       }}
     >
-      <Match client:load />
+      <NewMatch client:load />
     </Main>
   </body>
 </Page>

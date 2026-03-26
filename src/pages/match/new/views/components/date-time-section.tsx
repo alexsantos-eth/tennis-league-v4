@@ -1,9 +1,10 @@
 import { Calendar, Edit2Icon, PlusIcon } from "lucide-react";
 
-import { Button } from "../../../../../components/ui/button";
-import BoxContainer from "../../../../../components/ui/container";
-import { useNewMatchStore } from "../../../../../store/new-match";
-import Text from "../../../../../components/ui/text";
+import { Button } from "@/components/ui/button";
+import BoxContainer from "@/components/ui/container";
+import Text from "@/components/ui/text";
+import { useNewMatchStore } from "@/store/new-match";
+
 import MatchDetailsRow from "./match-details-row";
 
 const DateTimeSection: React.FC = () => {

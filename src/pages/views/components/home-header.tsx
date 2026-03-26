@@ -1,8 +1,8 @@
-import { Button } from "../../../components/ui/button";
-import Text from "../../../components/ui/text";
-import { BellIcon } from "lucide-react";
+import { BellIcon } from 'lucide-react';
 
-import { useAuthStore } from "../../../store/auth";
+import { Button } from '@/components/ui/button';
+import Text from '@/components/ui/text';
+import { useAuthStore } from '@/store/auth';
 
 const HomeHeader: React.FC = () => {
   const { currentUser: user } = useAuthStore();
