@@ -14,6 +14,11 @@ export const ROUTES = {
     pathRgx: "^/perfil",
     public: false,
   },
+  RANKING: {
+    path: "/ranking",
+    pathRgx: "^/ranking",
+    public: false,
+  },
   MATCH: {
     path: "/match",
     pathRgx: "^/match",

@@ -1,0 +1,25 @@
+---
+import Heads from "../../layouts/heads.astro";
+import Main from "../../layouts/main.astro";
+import Page from "../../layouts/page.astro";
+import RankingPage from "./page";
+
+export const prerender = false;
+---
+
+<Page>
+  <Heads>
+    <title>Ranking | Liga de Tenis GT</title>
+  </Heads>
+
+  <body>
+    <Main
+      showNav
+      topbar={{
+        title: "Ranking",
+      }}
+    >
+      <RankingPage client:load />
+    </Main>
+  </body>
+</Page>
