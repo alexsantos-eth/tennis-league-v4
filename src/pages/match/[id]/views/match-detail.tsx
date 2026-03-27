@@ -66,6 +66,8 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
               <MatchCtaBar
                 canJoin={canJoin}
                 isParticipant={isCurrentUserParticipant}
+                matchId={matchId}
+                matchStatus={match.status}
                 isPrivate={match.isPrivate}
               />
             </>

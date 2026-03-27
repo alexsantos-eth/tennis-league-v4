@@ -30,6 +30,18 @@ const MatchCard = ({
   playerOne,
   playerTwo,
 }: MatchCardProps) => {
+  const getStatusBadgeVariant = () => {
+    if (status === "Abierto") {
+      return "outline";
+    }
+
+    if (status === "En apelacion") {
+      return "destructive";
+    }
+
+    return "default";
+  };
+
   return (
     <BoxContainer className="flex flex-col relative gap-4">
       <Stack noPx className="relative">
@@ -62,7 +74,7 @@ const MatchCard = ({
         </div>
 
         <div className="absolute right-0 top-0">
-          <Badge variant={status === "Reservado" ? "default" : "outline"}>
+          <Badge variant={getStatusBadgeVariant()}>
             {status}
           </Badge>
         </div>

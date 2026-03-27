@@ -1,0 +1,27 @@
+---
+import Heads from "../../../../layouts/heads.astro";
+import Main from "../../../../layouts/main.astro";
+import Page from "../../../../layouts/page.astro";
+import ConfirmMatchScoreView from "./views/confirm-match-score";
+
+export const prerender = false;
+
+const { id = "" } = Astro.params;
+---
+
+<Page>
+  <Heads>
+    <title>Confirmar resultado | Liga de Tenis GT</title>
+  </Heads>
+
+  <body>
+    <Main
+      topbar={{
+        title: "Confirmar resultado",
+        goBack: true,
+      }}
+    >
+      <ConfirmMatchScoreView client:load matchId={id} />
+    </Main>
+  </body>
+</Page>

@@ -33,13 +33,13 @@ const Login: React.FC = () => {
             <img src="/images/logo.webp" alt="Logo" width={110} height={110} />
           </div>
 
-          <h1 className="text-3xl font-bold tracking-tight text-white">Bienvenido a la GTL</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Bienvenido a la GTL</h1>
         </div>
 
         <button
           onClick={googleHandler}
           disabled={loading}
-          className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-white px-6 py-3 text-xl font-semibold text-black shadow-lg shadow-black/20 transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-70"
+          className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-white px-6 py-3 text-md font-semibold text-black shadow-lg shadow-black/20 transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-70"
         >
           <img
             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"

@@ -14,8 +14,18 @@ const Matches = () => {
   const { matches, selectedDate, setSelectedDate, isLoading, hasError } =
     useMatches();
 
-  const getStatusLabel = (match: MatchRecord) =>
-    match.isReserved ? "Reservado" : "Abierto";
+  const getStatusLabel = (match: MatchRecord) => {
+    switch (match.status) {
+      case "reserved":
+        return "Reservado";
+      case "disputed":
+        return "En apelacion";
+      case "finished":
+        return "Finalizado";
+      default:
+        return "Abierto";
+    }
+  };
 
   const selectedDateKey = getDateKey(selectedDate);
 

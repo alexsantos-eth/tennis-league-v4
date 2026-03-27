@@ -73,7 +73,7 @@ const ProfileSummaryCard: React.FC<ProfileSummaryCardProps> = ({
           return (
             <BoxContainer
               key={stat.label}
-              className="border"
+              className="border px-0 py-2"
             >
               <Text
                 variant="bodySmall"
@@ -82,7 +82,7 @@ const ProfileSummaryCard: React.FC<ProfileSummaryCardProps> = ({
                 {stat.label}
               </Text>
 
-              <Text variant="h3" className="text-primary text-center">
+              <Text variant="h4" className="text-primary text-center">
                 {stat.value}
               </Text>
             </BoxContainer>

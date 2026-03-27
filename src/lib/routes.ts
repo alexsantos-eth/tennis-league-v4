@@ -34,6 +34,11 @@ export const ROUTES = {
     pathRgx: "^/match/[^/]+/add-players",
     public: false,
   },
+  CONFIRM_MATCH_SCORE: {
+    path: (matchId: string) => `/match/${matchId}/confirm-score`,
+    pathRgx: "^/match/[^/]+/confirm-score",
+    public: false,
+  },
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

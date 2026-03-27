@@ -2,9 +2,10 @@
 export type PublicMatchSport = "Tenis" | "Padel" | "Pickleball";
 export type PublicMatchType = "Doubles" | "Singles";
 export type PublicMatchFormat = "Ranking" | "Friendly";
-export type PublicMatchStatus = "open" | "reserved";
+export type PublicMatchStatus = "open" | "reserved" | "disputed" | "finished";
 export type MatchTeam = "A" | "B";
 export type MatchPlayerPosition = 0 | 1;
+export type MatchAppealStatus = "pending" | "accepted" | "rejected";
 
 export interface MatchCreatorSummary {
   id: string;
@@ -23,6 +24,37 @@ export interface MatchSkillRange {
   max: number;
 }
 
+export interface MatchSetScore {
+  teamA: number;
+  teamB: number;
+}
+
+export interface MatchScorePayload {
+  setsCount: number;
+  sets: MatchSetScore[];
+}
+
+export interface MatchScoreConfirmation extends MatchScorePayload {
+  confirmedAt: string;
+}
+
+export interface MatchScoreAppeal {
+  createdBy: string;
+  reason: string;
+  status: MatchAppealStatus;
+  proposedScore: MatchScorePayload;
+  createdAt: string;
+  resolvedAt?: string;
+  resolvedBy?: string;
+}
+
+export interface MatchScoreBoard {
+  confirmations?: Record<string, MatchScoreConfirmation>;
+  finalScore?: MatchScorePayload;
+  finalizedAt?: string;
+  appeal?: MatchScoreAppeal;
+}
+
 export interface MatchRecord {
   id?: string;
   sport: PublicMatchSport;
@@ -39,6 +71,7 @@ export interface MatchRecord {
   createdBy: MatchCreatorSummary;
   invitedPlayers?: MatchCreatorSummary[];
   status: PublicMatchStatus;
+  scoreBoard?: MatchScoreBoard;
   createdAt: string;
   updatedAt: string;
 }
@@ -56,4 +89,14 @@ export interface CreateMatchInput {
   skillRange: MatchSkillRange;
   createdBy: MatchCreatorSummary;
   invitedPlayers?: MatchCreatorSummary[];
+}
+
+export interface SubmitMatchScoreInput {
+  setsCount: number;
+  sets: MatchSetScore[];
+}
+
+export interface CreateMatchScoreAppealInput {
+  reason: string;
+  proposedScore: SubmitMatchScoreInput;
 }
