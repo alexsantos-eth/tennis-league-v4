@@ -11,7 +11,7 @@ const HomeHeader: React.FC = () => {
 
   return (
     <div className="bg-accent fixed top-0 left-0 w-full z-10">
-      <div className="bg-primary p-6 rounded-b-3xl drop-shadow-lg w-full">
+      <div className="bg-primary p-6 rounded-b-4xl drop-shadow-lg w-full">
         <div className="flex items-center w-full justify-between">
           <div className="flex items-center gap-4">
             <img

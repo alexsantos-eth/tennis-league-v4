@@ -2,15 +2,14 @@
 import Heads from "../layouts/heads.astro";
 import Main from "../layouts/main.astro";
 import Page from "../layouts/page.astro";
-import Home from "./views/home";
-
-export const prerender = false;
+import Home from "./client";
 ---
 
 <Page>
-  <Heads>
-    <title>Home | Liga de Tenis GT</title>
-  </Heads>
+  <Heads
+    title="Home | Liga de Tenis GT"
+    description="Organiza tus partidos, revisa tus encuentros de la semana y gestiona tu actividad en la Liga de Tenis GT."
+  />
 
   <body>
     <Main showNav>

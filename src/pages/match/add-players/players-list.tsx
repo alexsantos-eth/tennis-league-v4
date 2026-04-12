@@ -2,10 +2,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
 import Text from "@/components/ui/text";
-import { PlusIcon, InfoIcon } from "lucide-react";
+import { PlusIcon, InfoIcon, XIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { User } from "@/types/users";
-import { formatGtr, getInitials, getPlayerDisplayName } from "./use-players-list";
+import {
+  formatGtr,
+  getInitials,
+  getPlayerDisplayName,
+} from "./hooks/usePlayersList";
 
 interface PlayersListProps {
   players: User[];
@@ -90,7 +94,10 @@ const PlayersList: React.FC<PlayersListProps> = ({
 
         // Button mode for add-players
         return (
-          <div key={player.uid} className="flex items-center justify-between gap-3">
+          <div
+            key={player.uid}
+            className="flex items-center justify-between gap-3"
+          >
             <div className="flex items-center gap-4 min-w-0">
               <Avatar size="default">
                 <AvatarImage src={player.picture} alt={playerName} />
@@ -127,6 +134,8 @@ const PlayersList: React.FC<PlayersListProps> = ({
                   {buttonLabel}
                 </>
               )}
+
+              {isSelected && <XIcon />}
             </Button>
           </div>
         );

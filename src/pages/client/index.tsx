@@ -3,9 +3,6 @@ import Stack from "@/components/ui/stack";
 import HomeEvents from "./components/home-events";
 import HomeHeader from "./components/home-header";
 import Matches from "./components/matches";
-import { useEffect } from "react";
-import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
 
 const Home: React.FC = () => {
   return (

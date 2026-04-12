@@ -70,8 +70,8 @@ const MatchTeamCol: React.FC<MatchTeamColProps> = ({ title, team }) => {
               </Badge>
             </div>
 
-            <Text variant="bodySmall" className="text-foreground font-medium">
-              {player?.id === hostPlayer?.id ? 'Tu' : 'Invitado'}
+            <Text variant="bodySmall" className="text-foreground font-medium w-20 text-center truncate">
+              {player?.id === hostPlayer?.id ? 'Tu' : `${player.firstName} ${player.lastName}`}
             </Text>
           </div>
         ))}
@@ -82,7 +82,7 @@ const MatchTeamCol: React.FC<MatchTeamColProps> = ({ title, team }) => {
               asChild
               variant="outline"
               size="icon-lg"
-              className="h-14 w-14 rounded-full border-dashed text-muted-foreground"
+              className="h-14 w-14 corner-round rounded-full border-dashed text-muted-foreground"
             >
               <a href={ROUTES.ADD_PLAYERS.path} aria-label="Invitar jugadores">
                 <PlusIcon />

@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/raleway/wght.css";
+@plugin "@toolwind/corner-shape";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -62,7 +63,7 @@ html {
   --transition-timing-function: cubic-bezier(0.9, 0.1, 0.2, 0.9);
   --sonner-bt: 75px;
 
-  --radius: 0.5rem;
+  --radius: 1rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -133,6 +134,7 @@ html {
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    @apply corner-squircle;
   }
   body {
     @apply bg-background text-foreground;

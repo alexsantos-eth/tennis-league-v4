@@ -15,7 +15,7 @@ const Navigation: React.FC = () => {
       style={{ boxShadow: "0px -2px 5px -1px rgba(0,0,0,0.05)" }}
       className="bg-white z-10 fixed bottom-0 left-0 w-full"
     >
-    
+      <Toaster />
       <div data-id="nav-container" className="px-6 pt-4 pb-4 bg-white">
         <div
           data-id="nav-content"
@@ -24,12 +24,10 @@ const Navigation: React.FC = () => {
           <NavItem
             href="/"
             label="Inicio"
-            className="animate-jump-in animate-ease-linear"
             icon={<Home className={`h-6 w-6`} />}
           />
 
           <NavItem
-            className="animate-jump-in animate-delay-200 animate-ease-linear"
             href="/tournaments"
             label="Torneos"
             icon={<Trophy className={`h-6 w-6`} />}
@@ -37,7 +35,7 @@ const Navigation: React.FC = () => {
 
           <NavItem
             justIcon
-            className="bg-primary max-w-15 min-w-0 w-15 max-h-15 h-15 animate-jump-in animate-delay-200 animate-ease-linear rounded-full relative -top-12"
+            className="bg-primary max-w-15 min-w-0 w-15 max-h-15 h-15 corner-round rounded-full relative -top-12"
             href="/match/new"
             label="Nuevo Partido"
             onClick={resetNewMatchStore}
@@ -47,17 +45,14 @@ const Navigation: React.FC = () => {
           <NavItem
             href="/ranking"
             label="Ranking"
-            className="animate-jump-in animate-delay-300 animate-ease-linear"
             icon={<Award className={`h-6 w-6`} />}
           />
 
           <NavItem
             href="/profile"
             label="Perfil"
-            className="animate-jump-in animate-delay-400 animate-ease-linear"
             icon={<User className={`h-6 w-6`} />}
           />
-          
         </div>
       </div>
     </nav>

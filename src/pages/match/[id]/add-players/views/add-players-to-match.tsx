@@ -17,8 +17,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { updateMatchPlayers } from "@/firebase/match";
 import type { MatchCreatorSummary } from "@/types/match";
-import PlayersList from "@/pages/match/add-players-common/players-list";
-import { useFilteredPlayers } from "@/pages/match/add-players-common/use-players-list";
+import PlayersList from "@/pages/match/add-players/players-list";
+import { useFilteredPlayers } from "@/pages/match/add-players/hooks/usePlayersList";
 
 const mapUserToMatchPlayer = (user: any): MatchCreatorSummary => {
   const displayName = user.name || `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || "Jugador";

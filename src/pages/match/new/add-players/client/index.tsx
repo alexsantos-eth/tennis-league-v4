@@ -1,49 +1,38 @@
-import { useEffect } from "react";
 import {
   GlobeIcon,
   InfoIcon,
+  SearchIcon,
   Share2Icon,
   UserRoundIcon,
-  SearchIcon,
 } from "lucide-react";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import Text from "@/components/ui/text";
+import { useFilteredPlayers } from "@/pages/match/add-players/hooks/usePlayersList";
+import PlayersList from "@/pages/match/add-players/players-list";
 import { useNewMatchStore } from "@/store/new-match";
-import { useAuthStore } from "@/store/auth";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import PlayersList from "@/pages/match/add-players-common/players-list";
-import { useFilteredPlayers } from "@/pages/match/add-players-common/use-players-list";
+
+import useLoadAddPlayers from "./hooks/useLoadAddPlayers";
 
 const AddPlayersView: React.FC = () => {
-  const availablePlayers = useNewMatchStore((state) => state.availablePlayers);
-  const friendPlayerIds = useNewMatchStore((state) => state.friendPlayerIds);
-  const invitedPlayers = useNewMatchStore((state) => state.invitedPlayers);
-  const matchType = useNewMatchStore((state) => state.matchType);
-  const playersTab = useNewMatchStore((state) => state.playersTab);
-  const playersSearch = useNewMatchStore((state) => state.playersSearch);
-  const isLoadingPlayers = useNewMatchStore((state) => state.isLoadingPlayers);
-  const setPlayersTab = useNewMatchStore((state) => state.setPlayersTab);
-  const setPlayersSearch = useNewMatchStore((state) => state.setPlayersSearch);
-  const loadAvailablePlayers = useNewMatchStore(
-    (state) => state.loadAvailablePlayers,
-  );
-  const toggleInvitedPlayer = useNewMatchStore(
-    (state) => state.toggleInvitedPlayer,
-  );
-  const isPlayerInvited = useNewMatchStore((state) => state.isPlayerInvited);
-  const bootstrapCurrentUserPlayer = useNewMatchStore(
-    (state) => state.bootstrapCurrentUserPlayer,
-  );
-  const currentUserUid = useAuthStore((state) => state.currentUser?.uid);
+  const {
+    availablePlayers,
+    invitedPlayers,
+    matchType,
+    playersTab,
+    playersSearch,
+    isLoadingPlayers,
+    friendPlayerIds,
+    toggleInvitedPlayer,
+    isPlayerInvited,
+    setPlayersTab,
+    setPlayersSearch,
+  } = useNewMatchStore();
 
-  useEffect(() => {
-    bootstrapCurrentUserPlayer();
-    void loadAvailablePlayers();
-  }, [bootstrapCurrentUserPlayer, loadAvailablePlayers, currentUserUid]);
+  useLoadAddPlayers();
 
   const guestLimit = matchType === "Singles" ? 1 : 3;
   const invitedGuestsCount = Math.max(invitedPlayers.length - 1, 0);

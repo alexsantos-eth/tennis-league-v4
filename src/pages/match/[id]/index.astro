@@ -10,9 +10,11 @@ const { id = "" } = Astro.params;
 ---
 
 <Page>
-  <Heads>
-    <title>Partido | Liga de Tenis GT</title>
-  </Heads>
+  <Heads
+    title="Partido | Liga de Tenis GT"
+    description="Consulta los detalles del partido, jugadores y estado dentro de la Liga de Tenis GT."
+    noIndex
+  />
 
   <body>
     <Main showNav={false}>

@@ -17,6 +17,7 @@
     "@fontsource-variable/geist": "^5.2.8",
     "@fontsource-variable/raleway": "^5.2.8",
     "@tailwindcss/vite": "^4.2.1",
+    "@toolwind/corner-shape": "^0.0.8-3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^6.0.4",

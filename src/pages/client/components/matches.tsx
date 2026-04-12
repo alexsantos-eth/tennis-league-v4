@@ -1,38 +1,22 @@
-import { InfoIcon, LoaderIcon } from "lucide-react";
+import { InfoIcon, LoaderIcon, PlusIcon } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Stack from "@/components/ui/stack";
-import { getDateKey, normalizeMatchDateKey } from "@/lib/dates";
 
 import useMatches from "../hooks/useMatches";
 import MatchCard from "./match-card";
 import WeekPick from "./week-pick";
 
-import type { MatchRecord } from "@/types/match";
+import getStatusLabel from "../tools/labels";
+import { getFilteredMatches } from "../tools/dates";
+import Text from "@/components/ui/text";
+import { Button } from "@/components/ui/button";
 
 const Matches = () => {
   const { matches, selectedDate, setSelectedDate, isLoading, hasError } =
     useMatches();
 
-  const getStatusLabel = (match: MatchRecord) => {
-    switch (match.status) {
-      case "reserved":
-        return "Reservado";
-      case "disputed":
-        return "En apelacion";
-      case "finished":
-        return "Finalizado";
-      default:
-        return "Abierto";
-    }
-  };
-
-  const selectedDateKey = getDateKey(selectedDate);
-
-  const filteredMatches = matches.filter((match) => {
-    const matchDateKey = normalizeMatchDateKey(match.dateOfMatch, selectedDate);
-    return matchDateKey === selectedDateKey;
-  });
+  const filteredMatches = getFilteredMatches({ matches, selectedDate });
 
   return (
     <Stack noPx>
@@ -110,8 +94,24 @@ const Matches = () => {
           matches.length > 0 &&
           filteredMatches.length === 0 && (
             <Alert>
-              <InfoIcon />
-              <AlertDescription>No hay partidos para este día</AlertDescription>
+              <div className="flex gap-2 items-center">
+                <InfoIcon size={15} />
+                <AlertDescription>
+                  No hay partidos para este día
+                </AlertDescription>
+              </div>
+
+              <div className="mt-4 flex flex-col gap-2">
+                <Text variant="body" className="font-semibold">
+                  ¿Te gustaría jugar hoy?
+                </Text>
+                <a href="/match/new" className="w-full">
+                  <Button variant="default" className="w-full" size="lg">
+                    <PlusIcon />
+                    Crea un partido
+                  </Button>
+                </a>
+              </div>
             </Alert>
           )}
       </Stack>

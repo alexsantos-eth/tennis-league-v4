@@ -1,20 +1,62 @@
 ---
 import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
 
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  noIndex?: boolean;
+  type?: "website" | "article";
+}
 
+const {
+  title = "Liga de Tenis GT",
+  description =
+    "Liga de tenis para organizar partidos, registrar resultados y seguir el ranking de jugadores.",
+  canonical,
+  image = "/favicon.ico",
+  noIndex = false,
+  type = "website",
+} = Astro.props as Props;
+
+const canonicalUrl = canonical ?? Astro.url.toString();
+const ogImage = image.startsWith("http")
+  ? image
+  : new URL(image, Astro.url.origin).toString();
+const robotsContent = noIndex ? "noindex, nofollow" : "index, follow";
 ---
 
 <head>
+  <ClientRouter />
   <Font cssVariable="--font-raleway" preload />
+  <title>{title}</title>
   <meta charset="utf-8" />
+  <meta name="description" content={description} />
+  <meta name="robots" content={robotsContent} />
   <meta name="application-name" content="GTL" />
   <meta name="mobile-web-app-capable" content="yes" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="apple-mobile-web-app-status-bar-style"
     content="black-translucent"
   />
+
+  <link rel="canonical" href={canonicalUrl} />
+  <meta property="og:type" content={type} />
+  <meta property="og:locale" content="es_GT" />
+  <meta property="og:site_name" content="Liga de Tenis GT" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
   <link rel="preconnect" href="https://apis.google.com" />
 
   <link
@@ -207,6 +249,4 @@ import { Font } from "astro:assets";
     href="public/images/splash/apple-splash-1136-640.jpg"
     media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
   />
-  
-  <slot />
 </head>

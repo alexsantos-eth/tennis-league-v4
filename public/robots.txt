@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /auth
+Disallow: /profile
+Disallow: /match/new
+Disallow: /match/*/add-players
+Disallow: /match/*/confirm-score

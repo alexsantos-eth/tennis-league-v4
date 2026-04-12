@@ -8,15 +8,17 @@ export const prerender = false;
 ---
 
 <Page>
-  <Heads>
-    <title>Ranking | Liga de Tenis GT</title>
-  </Heads>
+  <Heads
+    title="Ranking | Liga de Tenis GT"
+    description="Revisa el ranking actualizado de jugadores y su rendimiento en la Liga de Tenis GT."
+  />
 
   <body>
     <Main
       showNav
       topbar={{
         title: "Ranking",
+            goBack: true,
       }}
     >
       <RankingPage client:load />

@@ -4,8 +4,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  limit,
-  orderBy,
   query,
   runTransaction,
   updateDoc,
@@ -83,6 +81,16 @@ const buildScheduledAt = (dateOfMatch: string, timeOfMatch: string) => {
   return `${normalizedDate}T${normalizedTime}`;
 };
 
+const getEffectiveScheduledAt = (match: Omit<MatchRecord, "id">) => {
+  const rawScheduledAt = String(match.scheduledAt || "").trim();
+
+  if (/^\d{4}-\d{2}-\d{2}T/.test(rawScheduledAt)) {
+    return rawScheduledAt;
+  }
+
+  return buildScheduledAt(match.dateOfMatch, match.timeOfMatch);
+};
+
 export const createMatch = async (
   input: CreateMatchInput,
 ): Promise<MatchRecord> => {
@@ -109,18 +117,23 @@ export const createMatch = async (
 export const getRecentMatches = async (
   maxResults = 10,
 ): Promise<MatchRecord[]> => {
-  const matchesQuery = query(
-    collection(db, MATCH_COLLECTION),
-    orderBy("scheduledAt", "asc"),
-    limit(maxResults),
-  );
+  const matchesQuery = query(collection(db, MATCH_COLLECTION));
 
   const snapshot = await getDocs(matchesQuery);
 
-  return snapshot.docs.map((matchDoc) => ({
+  const allMatches = snapshot.docs.map((matchDoc) => ({
     id: matchDoc.id,
     ...(matchDoc.data() as Omit<MatchRecord, "id">),
   }));
+
+  return allMatches
+    .sort((a, b) => {
+      const aDate = new Date(getEffectiveScheduledAt(a)).getTime();
+      const bDate = new Date(getEffectiveScheduledAt(b)).getTime();
+
+      return bDate - aDate;
+    })
+    .slice(0, maxResults);
 };
 
 export const getMatchById = async (

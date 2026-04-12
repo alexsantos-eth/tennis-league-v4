@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 export async function shareLink(url: string): Promise<void> {
   try {
     if (navigator.share) {
@@ -10,5 +12,7 @@ export async function shareLink(url: string): Promise<void> {
   } catch (error) {
     console.error("Error sharing link:", error);
     throw error;
+  } finally {
+      toast.success("Link compartido");
   }
 }

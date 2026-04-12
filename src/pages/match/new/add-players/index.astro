@@ -2,15 +2,15 @@
 import Heads from "../../../../layouts/heads.astro";
 import Main from "../../../../layouts/main.astro";
 import Page from "../../../../layouts/page.astro";
-import AddPlayersView from "./views/add-players";
-
-export const prerender = false;
+import AddPlayersView from "./client";
 ---
 
 <Page>
-  <Heads>
-    <title>Añadir jugadores | Liga de Tenis GT</title>
-  </Heads>
+  <Heads
+    title="Añadir jugadores | Liga de Tenis GT"
+    description="Selecciona y añade jugadores para completar la creación de un nuevo partido."
+    noIndex
+  />
 
   <body>
     <Main

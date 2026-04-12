@@ -2,15 +2,16 @@
 import Heads from "../../../layouts/heads.astro";
 import Main from "../../../layouts/main.astro";
 import Page from "../../../layouts/page.astro";
-import NewMatch from "./views/new-match";
+import NewMatch from "./client";
 
-export const prerender = false;
 ---
 
 <Page>
-  <Heads>
-    <title>Nuevo partido | Liga de Tenis GT</title>
-  </Heads>
+  <Heads
+    title="Nuevo partido | Liga de Tenis GT"
+    description="Crea un nuevo partido en la Liga de Tenis GT y define formato, ubicación y horario."
+    noIndex
+  />
 
   <body>
     <Main
