@@ -96,7 +96,7 @@ const PlayersList: React.FC<PlayersListProps> = ({
         return (
           <div
             key={player.uid}
-            className="flex items-center justify-between gap-3"
+            className="flex items-center justify-between gap-4"
           >
             <div className="flex items-center gap-4 min-w-0">
               <Avatar size="default">

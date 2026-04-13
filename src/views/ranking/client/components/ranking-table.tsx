@@ -44,7 +44,7 @@ const RankingTable: React.FC<RankingTableProps> = ({ users }) => {
 
   return (
     <div className="w-full rounded-xl border overflow-hidden">
-      <div className="grid grid-cols-[48px_1fr_72px] bg-muted/40 px-3 py-2">
+      <div className="grid grid-cols-[48px_1fr_72px] bg-muted/40 px-2 py-2">
         <Text variant="bodySmall" className="font-semibold text-muted-foreground">
           #
         </Text>
@@ -65,7 +65,7 @@ const RankingTable: React.FC<RankingTableProps> = ({ users }) => {
             return (
               <div
                 key={player.uid || player.id?.toString()}
-                className={`grid grid-cols-[48px_1fr_72px] items-center px-3 py-3 whitespace-nowrap animate-fade-left ${
+                className={`grid grid-cols-[48px_1fr_72px] items-center px-2 py-2 whitespace-nowrap animate-fade-left ${
                   delays[index] || ""
                 } ${isCurrentUser ? "bg-green-50" : "bg-background"}`}
               >
@@ -73,7 +73,7 @@ const RankingTable: React.FC<RankingTableProps> = ({ users }) => {
                   {index + 1}
                 </Text>
 
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-center gap-4 min-w-0">
                   <Avatar size="sm">
                     <AvatarImage src={player.picture || ""} alt={player.name} />
                     <AvatarFallback>{getInitials(player.name || "Jugador")}</AvatarFallback>

@@ -1,4 +1,10 @@
-import { ArrowRight, Building2, ChevronRight, MapPin } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Check,
+  ChevronRight,
+  MapPin,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
@@ -14,8 +20,6 @@ import { useNewMatchStore } from "@/store/new-match";
 
 import { popularClubs } from "../contants";
 import Stack from "@/components/ui/stack";
-import Icon from "@/components/ui/icon";
-import MatchDetailsRow from "./match-details-row";
 import MatchButtonRow from "./match-button-row";
 
 const LocationSheet: React.FC = () => {
@@ -26,6 +30,11 @@ const LocationSheet: React.FC = () => {
   );
   const setTempLocation = useNewMatchStore((state) => state.setTempLocation);
   const confirmLocation = useNewMatchStore((state) => state.confirmLocation);
+
+  const setLocationAndClose = (location: string) => () => {
+    setTempLocation(location);
+    confirmLocation();
+  }
 
   return (
     <Sheet open={open} onOpenChange={setIsLocationSheetOpen}>
@@ -42,11 +51,17 @@ const LocationSheet: React.FC = () => {
             {popularClubs.map((club) => (
               <MatchButtonRow
                 key={club}
-                onClick={() => setTempLocation(club)}
+                onClick={setLocationAndClose(club)}
                 icon={<Building2 className="h-4 w-4" />}
                 title={club}
               >
-                <ChevronRight className="h-5 w-5 text-primary" />
+                {tempLocation === club ? (
+                  <div className="bg-muted flex items-center justify-center h-8 w-8 rounded-full">
+                    <Check className="h-4 w-4 text-primary" />
+                  </div>
+                ) : (
+                  <ChevronRight className="h-5 w-5 text-primary" />
+                )}
               </MatchButtonRow>
             ))}
           </BoxContainer>

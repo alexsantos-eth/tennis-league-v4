@@ -89,7 +89,7 @@ const UpcomingMatchCard: React.FC<UpcomingMatchCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <Button asChild variant="secondary" >
           <a href={`/match/${match.id}`}>Ver partido</a>
         </Button>

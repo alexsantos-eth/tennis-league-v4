@@ -20,7 +20,10 @@ export const getFilteredMatches = ({
       ? scheduledAtDate
       : normalizeMatchDateKey(match.dateOfMatch, selectedDate);
 
-    return matchDateKey === selectedDateKey;
+    const isPrivateAndNotFinished =
+      match.isPrivate && match.status !== "finished";
+
+    return matchDateKey === selectedDateKey && !isPrivateAndNotFinished;
   });
 
   return filteredMatches;

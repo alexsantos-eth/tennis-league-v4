@@ -24,6 +24,8 @@ const NewMatchPage: React.FC = () => {
   );
   const currentUserUid = useAuthStore((state) => state.currentUser?.uid);
 
+  const isRanked = useNewMatchStore((state) => state.matchFormat === "Ranking");
+
   useEffect(() => {
     bootstrapCurrentUserPlayer();
   }, [currentUserUid]);
@@ -43,9 +45,9 @@ const NewMatchPage: React.FC = () => {
 
             <LocationSection />
 
-            <SkillRangeSection />
-
             <MatchDetailsSection />
+
+            {isRanked && <SkillRangeSection />}
 
             <CommentsSection />
 

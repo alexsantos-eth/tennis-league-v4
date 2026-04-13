@@ -27,7 +27,7 @@ const Login: React.FC = () => {
       >
         <div
           data-id="login-header"
-          className="flex flex-col items-center justify-center space-y-3"
+          className="flex flex-col items-center justify-center space-y-4"
         >
           <div data-id="login-image">
             <img src="/images/logo.webp" alt="Logo" width={110} height={110} />
@@ -39,7 +39,7 @@ const Login: React.FC = () => {
         <button
           onClick={googleHandler}
           disabled={loading}
-          className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-white px-6 py-3 text-md font-semibold text-black shadow-lg shadow-black/20 transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-70"
+          className="mt-6 inline-flex min-h-12 items-center justify-center gap-4 rounded-full bg-white px-6 py-4 text-md font-semibold text-black shadow-lg shadow-black/20 transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-70"
         >
           <img
             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"

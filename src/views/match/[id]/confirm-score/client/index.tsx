@@ -546,7 +546,7 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
             {match.scoreBoard.finalScore.sets.map((setScore, index) => (
               <div
                 key={`final-set-${index + 1}`}
-                className="rounded-lg border border-border px-3 py-2 text-sm text-foreground"
+                className="rounded-lg border border-border px-2 py-2 text-sm text-foreground"
               >
                 Set {index + 1}: A {setScore.teamA} - B {setScore.teamB}
               </div>

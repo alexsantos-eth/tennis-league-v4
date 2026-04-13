@@ -41,7 +41,7 @@ const ProfileSummaryCard: React.FC<ProfileSummaryCardProps> = ({
 }) => {
   return (
     <BoxContainer className="shadow-sm p-6 gap-6 flex flex-col">
-      <div className="flex flex-col items-center text-center gap-3">
+      <div className="flex flex-col items-center text-center gap-4">
         <div className="relative">
           <Avatar size="lg" className="size-26">
             <AvatarImage src={user?.picture || ""} alt={fullName} />

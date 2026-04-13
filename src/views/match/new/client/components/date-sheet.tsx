@@ -42,10 +42,10 @@ const DateSheet: React.FC = () => {
           <SheetTitle>Selecciona una fecha</SheetTitle>
         </SheetHeader>
 
-        <Stack>
+        <Stack className="w-full">
           <CalendarComponent
             locale={es}
-            className="w-full max-w-90 min-h-90"
+            className="w-full mx-auto max-w-90 min-h-90"
             mode="single"
             selected={selectedDate}
             captionLayout="dropdown"

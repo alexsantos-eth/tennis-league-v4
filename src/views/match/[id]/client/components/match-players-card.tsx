@@ -71,7 +71,7 @@ const MatchPlayersCard: React.FC<MatchPlayersCardProps> = ({
         </Badge>
       </div>
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-4">
         {slots.map((player, index) => {
           if (!player) {
             return (
