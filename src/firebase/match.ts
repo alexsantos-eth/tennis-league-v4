@@ -419,3 +419,44 @@ export const resolveMatchScoreAppeal = async (
     transaction.update(matchRef, payload as Record<string, unknown>);
   });
 };
+
+export const confirmParticipant = async (
+  matchId: string,
+  participantId: string,
+): Promise<void> => {
+  const participantIdentifier = String(participantId || "").trim();
+
+  if (!participantIdentifier) {
+    throw new Error("Participant id is required");
+  }
+
+  const matchRef = doc(db, MATCH_COLLECTION, matchId);
+  const matchDoc = await getDoc(matchRef);
+
+  if (!matchDoc.exists()) {
+    throw new Error("Match not found");
+  }
+
+  const currentMatch = matchDoc.data() as Omit<MatchRecord, "id">;
+  const invitedPlayers = currentMatch.invitedPlayers || [];
+
+  const playerIndex = invitedPlayers.findIndex((p) => {
+    const pId = p.uid || p.id;
+    return pId === participantIdentifier;
+  });
+
+  if (playerIndex === -1) {
+    throw new Error("Participant not found in invited players");
+  }
+
+  const updatedInvitedPlayers = [...invitedPlayers];
+  updatedInvitedPlayers[playerIndex] = {
+    ...updatedInvitedPlayers[playerIndex],
+    confirmed: true,
+  };
+
+  await updateDoc(matchRef, {
+    invitedPlayers: updatedInvitedPlayers,
+    updatedAt: new Date().toISOString(),
+  });
+};

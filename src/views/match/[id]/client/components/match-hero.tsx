@@ -19,7 +19,7 @@ const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
   return (
     <section className="relative h-60 overflow-hidden">
       <img
-        src="/images/events/background.png"
+        src={`/images/match/${match.sport.toLowerCase()}.png`}
         alt="Cancha"
         className="w-full object-cover h-60 fixed top-0"
       />

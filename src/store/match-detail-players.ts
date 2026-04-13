@@ -18,6 +18,7 @@ const mapUserToMatchPlayer = (user: Partial<User>): MatchCreatorSummary => {
     lastName: user.lastName,
     picture: user.picture,
     gtr: Number(user.utr) || 0,
+    confirmed: false,
   };
 };
 

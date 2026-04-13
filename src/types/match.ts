@@ -17,6 +17,7 @@ export interface MatchCreatorSummary {
   gtr: number;
   team?: MatchTeam;
   position?: MatchPlayerPosition;
+  confirmed?: boolean;
 }
 
 export interface MatchSkillRange {

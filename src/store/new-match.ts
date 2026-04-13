@@ -63,6 +63,7 @@ const mapUserToMatchPlayer = (user: Partial<User>): MatchCreatorSummary => ({
   lastName: user.lastName,
   picture: user.picture,
   gtr: Number(user.utr) || 0,
+  confirmed: false,
 });
 
 const getInitialNewMatchState = () => ({
@@ -226,7 +227,10 @@ export const useNewMatchStore = create<NewMatchState>()((set, get) => ({
       return;
     }
 
-    const currentUserPlayer = mapUserToMatchPlayer(currentUser);
+    const currentUserPlayer = {
+      ...mapUserToMatchPlayer(currentUser),
+      confirmed: true,
+    };
 
     const matchDocRef = await createMatchDoc()
     

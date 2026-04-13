@@ -6,6 +6,7 @@ import Text from "@/components/ui/text";
 import { getInitials, getPlayerName } from "../tools/labels";
 
 import type { MatchCreatorSummary } from "@/types/match";
+import { cn } from "@/lib/styles";
 interface MatchPlayersCardProps {
   players: MatchCreatorSummary[];
   playersCapacity: number;
@@ -43,7 +44,10 @@ const MatchPlayersCard: React.FC<MatchPlayersCardProps> = ({
           return (
             <div
               key={`${player.id || player.uid}-${index}`}
-              className="flex flex-col items-center gap-4"
+              className={cn(
+                "flex flex-col items-center gap-4",
+                !player.confirmed && !isCurrentUser && "opacity-50",
+              )}
             >
               <div className="relative">
                 <Avatar size="lg">

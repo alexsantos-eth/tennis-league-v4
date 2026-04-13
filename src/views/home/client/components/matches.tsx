@@ -11,12 +11,18 @@ import getStatusLabel from "../tools/labels";
 import { getFilteredMatches } from "../tools/dates";
 import Text from "@/components/ui/text";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store/auth";
 
 const Matches = () => {
   const { matches, selectedDate, setSelectedDate, isLoading, hasError } =
     useMatches();
+  const { currentUser } = useAuthStore();
 
-  const filteredMatches = getFilteredMatches({ matches, selectedDate });
+  const filteredMatches = getFilteredMatches({
+    matches,
+    selectedDate,
+    currentUserId: currentUser?.uid,
+  });
 
   return (
     <Stack noPx>

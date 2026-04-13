@@ -83,7 +83,25 @@ const useMatchDetail = (matchId: string) => {
     return players.some((player) => isPlayerInMatch(player, currentUser?.uid));
   }, [currentUser?.uid, players]);
 
-  const canJoin = Boolean(match && match.status === "open" && !isCurrentUserParticipant);
+  const isCurrentUserInvitedButNotConfirmed = useMemo(() => {
+    if (!match || !currentUser?.uid) {
+      return false;
+    }
+
+    const invitedPlayers = match.invitedPlayers || [];
+    const invitedPlayer = invitedPlayers.find(
+      (player) => player.uid === currentUser.uid || player.id === currentUser.uid,
+    );
+
+    return Boolean(invitedPlayer && !invitedPlayer.confirmed);
+  }, [match, currentUser?.uid]);
+
+  const canJoin = Boolean(
+    match &&
+      !isCurrentUserParticipant &&
+      ((match.isPrivate && isCurrentUserInvitedButNotConfirmed) ||
+        (!match.isPrivate && match.status === "open")),
+  );
 
   return {
     match,
@@ -93,6 +111,7 @@ const useMatchDetail = (matchId: string) => {
     players,
     playersCapacity,
     isCurrentUserParticipant,
+    isCurrentUserInvitedButNotConfirmed,
     canJoin,
   };
 };

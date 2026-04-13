@@ -4,11 +4,13 @@ import type { MatchRecord } from "@/types/match";
 export interface GetFilteredMatchesParams {
   matches: MatchRecord[];
   selectedDate: Date;
+  currentUserId?: string;
 }
 
 export const getFilteredMatches = ({
   matches,
   selectedDate,
+  currentUserId,
 }: GetFilteredMatchesParams) => {
   const selectedDateKey = getDateKey(selectedDate);
 
@@ -20,10 +22,22 @@ export const getFilteredMatches = ({
       ? scheduledAtDate
       : normalizeMatchDateKey(match.dateOfMatch, selectedDate);
 
-    const isPrivateAndNotFinished =
-      match.isPrivate && match.status !== "finished";
+    const isCurrentUserInMatch =
+      Boolean(currentUserId) &&
+      (match.createdBy.uid === currentUserId ||
+        match.createdBy.id === currentUserId ||
+        (match.invitedPlayers || []).some(
+          (player) =>
+            player.uid === currentUserId || player.id === currentUserId,
+        ));
 
-    return matchDateKey === selectedDateKey && !isPrivateAndNotFinished;
+    const isPrivateAndNotFinishedForNonParticipant =
+      match.isPrivate && match.status !== "finished" && !isCurrentUserInMatch;
+
+    return (
+      matchDateKey === selectedDateKey &&
+      !isPrivateAndNotFinishedForNonParticipant
+    );
   });
 
   return filteredMatches;
