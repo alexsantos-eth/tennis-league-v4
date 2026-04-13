@@ -19,7 +19,7 @@ Use this comparison to decide which implementation style to copy.
 References:
 - [src/pages/index.astro](../src/pages/index.astro)
 - [src/views/home/client/index.tsx](../src/views/home/client/index.tsx)
-- [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
+- [src/views/home/client/hooks/useMatches.ts](../src/views/home/client/hooks/useMatches.ts)
 
 Why it works:
 - Simple screen orchestration.

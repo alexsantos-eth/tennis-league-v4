@@ -8,7 +8,7 @@ import Text from "@/components/ui/text";
 import { useNewMatchStore } from "@/store/new-match";
 
 import { matchFormatLabels } from "../contants";
-import MatchDetailsRow from "./match-details-row";
+import InfoRow from "@/components/ui/info-row";
 
 const MatchDetailsSection: React.FC = () => {
   const matchFormat = useNewMatchStore((state) => state.matchFormat);
@@ -23,7 +23,7 @@ const MatchDetailsSection: React.FC = () => {
 
   return (
     <BoxContainer className="flex flex-col gap-4" title="Detalles de partido">
-      <MatchDetailsRow
+      <InfoRow
         title="Tipo"
         icon={<Users2 className="w-4 h-4 text-muted-foreground" />}
       >
@@ -38,7 +38,7 @@ const MatchDetailsSection: React.FC = () => {
           </Text>
           <ChevronRight className="w-4 h-4 text-primary" />
         </Button>
-      </MatchDetailsRow>
+      </InfoRow>
 
       {isCompetitive && (
         <Alert>
@@ -49,7 +49,7 @@ const MatchDetailsSection: React.FC = () => {
         </Alert>
       )}
 
-      <MatchDetailsRow
+      <InfoRow
         icon={<SlidersHorizontal className="w-4 h-4 text-muted-foreground" />}
         title="¿La cancha esta reservada?"
       >
@@ -58,9 +58,9 @@ const MatchDetailsSection: React.FC = () => {
           checked={isReserved}
           onClick={() => setIsReserved(!isReserved)}
         />
-      </MatchDetailsRow>
+      </InfoRow>
 
-      <MatchDetailsRow
+      <InfoRow
         icon={<Lock className="w-4 h-4 text-muted-foreground" />}
         title="¿El partido es privado?"
       >
@@ -69,7 +69,7 @@ const MatchDetailsSection: React.FC = () => {
           checked={isPrivate}
           onClick={() => setIsPrivate(!isPrivate)}
         />
-      </MatchDetailsRow>
+      </InfoRow>
     </BoxContainer>
   );
 };

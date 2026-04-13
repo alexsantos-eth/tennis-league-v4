@@ -5,7 +5,7 @@ import BoxContainer from "@/components/ui/container";
 import Text from "@/components/ui/text";
 import { useNewMatchStore } from "@/store/new-match";
 
-import MatchDetailsRow from "./match-details-row";
+import InfoRow from "@/components/ui/info-row";
 
 const LocationSection: React.FC = () => {
   const location = useNewMatchStore((state) => state.location);
@@ -15,7 +15,7 @@ const LocationSection: React.FC = () => {
 
   return (
     <BoxContainer className="flex flex-col gap-4">
-      <MatchDetailsRow
+      <InfoRow
         title="Ubicacion"
         icon={<MapPin className="w-4 h-4 text-muted-foreground" />}
       >
@@ -38,7 +38,7 @@ const LocationSection: React.FC = () => {
             <PlusIcon />
           </Button>
         )}
-      </MatchDetailsRow>
+      </InfoRow>
     </BoxContainer>
   );
 };

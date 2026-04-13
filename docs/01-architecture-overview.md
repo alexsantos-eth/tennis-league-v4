@@ -27,7 +27,7 @@ Route request
 
 - Entry page: [src/pages/index.astro](../src/pages/index.astro)
 - Container: [src/views/home/client/index.tsx](../src/views/home/client/index.tsx)
-- Data hook: [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
+- Data hook: [src/views/home/client/hooks/useMatches.ts](../src/views/home/client/hooks/useMatches.ts)
 - Section composition: [src/views/home/client/components/matches.tsx](../src/views/home/client/components/matches.tsx)
 
 Short route setup snippet from Home:

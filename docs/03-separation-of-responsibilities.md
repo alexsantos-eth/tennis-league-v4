@@ -10,7 +10,7 @@ This guide defines where logic belongs and where it must not go.
 | Layout | Shell, global spacing, navigation/topbar composition | Feature form logic, data loading | [src/layouts/main.astro](../src/layouts/main.astro) |
 | View container | Screen orchestration and section ordering | Raw DB access and low-level APIs | [src/views/match/new/client/index.tsx](../src/views/match/new/client/index.tsx) |
 | Feature components | Focused UI sections, input wiring | Route decisions and direct remote I/O | [src/views/match/new/client/components/sport-tabs.tsx](../src/views/match/new/client/components/sport-tabs.tsx) |
-| Hook | Side effects, local async loading state, cleanup | Global app shell concerns | [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx) |
+| Hook | Side effects, local async loading state, cleanup | Global app shell concerns | [src/views/home/client/hooks/useMatches.ts](../src/views/home/client/hooks/useMatches.ts) |
 | Store | Cross-section shared state, transitions, submit orchestration | JSX rendering | [src/store/new-match.ts](../src/store/new-match.ts) |
 | Firebase module | Query/write functions and data mapping | UI-level state and form concerns | [src/firebase/match.ts](../src/firebase/match.ts) |
 | Types | Domain contracts and payload shapes | Runtime side effects | [src/types/match.ts](../src/types/match.ts) |

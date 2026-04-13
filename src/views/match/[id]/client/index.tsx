@@ -1,12 +1,14 @@
 import { InfoIcon } from "lucide-react";
 
-import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
-import MatchCtaBar from "./components/match-cta-bar.tsx";
-import MatchHero from "./components/match-hero.tsx";
-import MatchInfoCard from "./components/match-info-card.tsx";
-import MatchPlayersCard from "./components/match-players-card.tsx";
-import MatchSkillCard from "./components/match-skill-card.tsx";
-import useMatchDetail from "./hooks/use-match-detail.tsx";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import Stack from "@/components/ui/stack";
+
+import MatchCtaBar from "./components/match-cta-bar";
+import MatchHero from "./components/match-hero";
+import MatchInfoCard from "./components/match-info-card";
+import MatchPlayersCard from "./components/match-players-card";
+import MatchSkillCard from "./components/match-skill-card";
+import useMatchDetail from "./hooks/useMatchDetail.ts";
 
 interface MatchDetailPageProps {
   matchId: string;
@@ -27,61 +29,60 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
   return (
     <div className="w-full h-full overflow-scroll pb-28">
       {isLoading && (
-        <div className="p-6">
+        <Stack className="py-6">
           <Alert>
             <InfoIcon />
             <AlertDescription>Cargando partido...</AlertDescription>
           </Alert>
-        </div>
+        </Stack>
       )}
 
       {!isLoading && hasError && (
-        <div className="p-6">
+        <Stack className="py-6">
           <Alert>
             <InfoIcon />
             <AlertDescription>
               No pudimos cargar los datos del partido.
             </AlertDescription>
           </Alert>
-        </div>
+        </Stack>
       )}
 
-      {!isLoading && !hasError && Boolean(match) && (
+      {!isLoading && !hasError && Boolean(match) && match && (
         <>
-          {match && (
-            <>
-              <MatchHero match={match} />
+          <MatchHero match={match} />
 
-              <div className="px-6 py-6 flex bg-muted flex-col gap-4 relative z-2">
-                <MatchInfoCard match={match} />
-                <MatchPlayersCard
-                  players={players}
-                  playersCapacity={playersCapacity}
-                  currentUserUid={currentUser?.uid}
-                  matchId={matchId}
-                />
-                <MatchSkillCard match={match} />
-              </div>
+          <Stack className="py-6 bg-muted relative z-2">
+            <MatchInfoCard match={match} />
+            <MatchPlayersCard
+              players={players}
+              playersCapacity={playersCapacity}
+              currentUserUid={currentUser?.uid}
+              matchId={matchId}
+            />
 
-              <MatchCtaBar
-                canJoin={canJoin}
-                isParticipant={isCurrentUserParticipant}
-                matchId={matchId}
-                matchStatus={match.status}
-                isPrivate={match.isPrivate}
-              />
-            </>
-          )}
+            {match.matchFormat === "Ranking" && (
+              <MatchSkillCard match={match} />
+            )}
+          </Stack>
+
+          <MatchCtaBar
+            canJoin={canJoin}
+            isParticipant={isCurrentUserParticipant}
+            matchId={matchId}
+            matchStatus={match.status}
+            isPrivate={match.isPrivate}
+          />
         </>
       )}
 
       {!isLoading && !hasError && !match && (
-        <div className="p-6">
+        <Stack className="py-6">
           <Alert>
             <InfoIcon />
             <AlertDescription>Partido no encontrado.</AlertDescription>
           </Alert>
-        </div>
+        </Stack>
       )}
     </div>
   );

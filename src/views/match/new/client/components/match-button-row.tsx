@@ -1,4 +1,4 @@
-import MatchDetailsRow from "./match-details-row";
+import InfoRow from "@/components/ui/info-row";
 
 interface MatchButtonRowProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   title?: string;
@@ -18,9 +18,9 @@ const MatchButtonRow = ({
       className="p-4 border-b border-border/70 last:border-b-0 justify-between w-full"
       {...btnProps}
     >
-      <MatchDetailsRow icon={icon} title={title}>
+      <InfoRow icon={icon} title={title}>
         {children}
-      </MatchDetailsRow>
+      </InfoRow>
     </button>
   );
 };

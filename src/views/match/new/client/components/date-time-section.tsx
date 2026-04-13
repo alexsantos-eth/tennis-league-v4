@@ -5,7 +5,7 @@ import BoxContainer from "@/components/ui/container";
 import Text from "@/components/ui/text";
 import { useNewMatchStore } from "@/store/new-match";
 
-import MatchDetailsRow from "./match-details-row";
+import InfoRow from "@/components/ui/info-row";
 
 const DateTimeSection: React.FC = () => {
   const matchDate = useNewMatchStore((state) => state.matchDate);
@@ -14,7 +14,7 @@ const DateTimeSection: React.FC = () => {
 
   return (
     <BoxContainer>
-      <MatchDetailsRow
+      <InfoRow
         title="Fecha y hora"
         icon={<Calendar className="w-4 h-4 text-muted-foreground" />}
       >
@@ -37,7 +37,7 @@ const DateTimeSection: React.FC = () => {
             <PlusIcon />
           </Button>
         )}
-      </MatchDetailsRow>
+      </InfoRow>
     </BoxContainer>
   );
 };

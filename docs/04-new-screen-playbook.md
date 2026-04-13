@@ -54,7 +54,7 @@ Decision tree:
 - If both are needed, separate concerns cleanly: hook for remote query state, store for form workflow.
 
 Hook reference:
-- [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
+- [src/views/home/client/hooks/useMatches.ts](../src/views/home/client/hooks/useMatches.ts)
 
 Store reference:
 - [src/store/new-match.ts](../src/store/new-match.ts)

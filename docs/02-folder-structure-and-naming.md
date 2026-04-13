@@ -76,7 +76,7 @@ Examples:
 - One file per screen-level hook unless there is a clear split.
 
 Example:
-- [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
+- [src/views/home/client/hooks/useMatches.ts](../src/views/home/client/hooks/useMatches.ts)
 
 ## Store files
 

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Text from "@/components/ui/text";
 
 import type { MatchRecord } from "@/types/match";
+import { shareLink } from "@/lib/share";
 
 interface MatchHeroProps {
   match: MatchRecord;
@@ -12,27 +13,7 @@ interface MatchHeroProps {
 
 const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
   const onShare = async () => {
-    const title = `${match.matchType} ${match.sport}`;
-    const text = `${match.matchFormat} en ${match.location}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title,
-          text,
-          url: window.location.href,
-        });
-        return;
-      } catch {
-        return;
-      }
-    }
-
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-    } catch {
-      // no-op
-    }
+    shareLink(window.location.href, "Partido compartido");
   };
 
   return (
@@ -48,9 +29,9 @@ const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
       <div className="absolute top-4 left-0 w-full px-6 flex items-center justify-between">
         <Button
           type="button"
-   variant="outline"
-              size="icon"
-              className="bg-transparent animate-fade-right text-primary-foreground"
+          variant="outline"
+          size="icon"
+          className="bg-transparent animate-fade-right text-primary-foreground"
           onClick={() => history.back()}
         >
           <ArrowLeft />
@@ -58,9 +39,9 @@ const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
 
         <Button
           type="button"
-    variant="outline"
-              size="icon"
-              className="bg-transparent animate-fade-left text-primary-foreground"
+          variant="outline"
+          size="icon"
+          className="bg-transparent animate-fade-left text-primary-foreground"
           onClick={onShare}
         >
           <Share2 />
@@ -68,7 +49,10 @@ const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
       </div>
 
       <div className="absolute bottom-10 left-0 w-full px-6 flex flex-col    ">
-        <Badge variant="secondary" className="w-fit bg-white/20 text-white border-white/20">
+        <Badge
+          variant="secondary"
+          className="w-fit bg-white/20 text-white border-white/20"
+        >
           {match.sport}
         </Badge>
 
@@ -77,7 +61,7 @@ const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
         </Text>
 
         <Text variant="bodyLarge" className="text-white/90 font-medium -mt-2">
-          Organizado por {match.location}
+          Organizado en {match.location}
         </Text>
       </div>
     </section>

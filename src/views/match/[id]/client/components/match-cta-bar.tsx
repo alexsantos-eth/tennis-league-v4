@@ -1,5 +1,6 @@
 import type { PublicMatchStatus } from "@/types/match";
 import { Button } from "@/components/ui/button";
+import { CheckCircleIcon, CheckIcon, PlayIcon, ScaleIcon } from "lucide-react";
 
 interface MatchCtaBarProps {
   canJoin: boolean;
@@ -21,7 +22,7 @@ const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 w-full p-5 bg-background border-t border-border z-10">
+    <div className="fixed bottom-0 left-0 w-full p-6 bg-background border-t border-border z-10">
       {isParticipant && matchStatus !== "finished" ? (
         <Button
           type="button"
@@ -29,20 +30,28 @@ const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
           className="w-full text-lg h-12 rounded-2xl"
           onClick={goToScoreConfirmation}
         >
-          {matchStatus === "disputed" ? "Ver apelación de score" : "Confirmar score"}
+          {matchStatus === "disputed" ? <ScaleIcon /> : <CheckCircleIcon />}
+
+          {matchStatus === "disputed"
+            ? "Ver apelación de score"
+            : "Confirmar score"}
         </Button>
       ) : isParticipant && matchStatus === "finished" ? (
         <Button
           type="button"
           size="lg"
           className="w-full text-lg h-12 rounded-2xl"
-          variant="secondary"
           disabled
         >
           Partido finalizado
         </Button>
       ) : canJoin ? (
-        <Button type="button" size="lg" className="w-full text-lg h-12 rounded-2xl">
+        <Button
+          type="button"
+          size="lg"
+          className="w-full text-lg h-12 rounded-2xl"
+        >
+          <PlayIcon />
           Unirse al partido
         </Button>
       ) : (
@@ -50,7 +59,6 @@ const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
           type="button"
           size="lg"
           className="w-full text-lg h-12 rounded-2xl"
-          variant="secondary"
           disabled
         >
           {!isParticipant && isPrivate && "Este partido es privado"}
