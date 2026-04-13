@@ -8,9 +8,9 @@ This guide defines where logic belongs and where it must not go.
 |---|---|---|---|
 | Astro page | Route entry, layout composition, page-level props | Business logic, Firebase calls, heavy state transitions | [src/pages/index.astro](../src/pages/index.astro) |
 | Layout | Shell, global spacing, navigation/topbar composition | Feature form logic, data loading | [src/layouts/main.astro](../src/layouts/main.astro) |
-| View container | Screen orchestration and section ordering | Raw DB access and low-level APIs | [src/pages/match/new/views/new-match.tsx](../src/pages/match/new/views/new-match.tsx) |
-| Feature components | Focused UI sections, input wiring | Route decisions and direct remote I/O | [src/pages/match/new/views/components/sport-tabs.tsx](../src/pages/match/new/views/components/sport-tabs.tsx) |
-| Hook | Side effects, local async loading state, cleanup | Global app shell concerns | [src/pages/views/hooks/useMatches.ts](../src/pages/views/hooks/useMatches.ts) |
+| View container | Screen orchestration and section ordering | Raw DB access and low-level APIs | [src/views/match/new/client/index.tsx](../src/views/match/new/client/index.tsx) |
+| Feature components | Focused UI sections, input wiring | Route decisions and direct remote I/O | [src/views/match/new/client/components/sport-tabs.tsx](../src/views/match/new/client/components/sport-tabs.tsx) |
+| Hook | Side effects, local async loading state, cleanup | Global app shell concerns | [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx) |
 | Store | Cross-section shared state, transitions, submit orchestration | JSX rendering | [src/store/new-match.ts](../src/store/new-match.ts) |
 | Firebase module | Query/write functions and data mapping | UI-level state and form concerns | [src/firebase/match.ts](../src/firebase/match.ts) |
 | Types | Domain contracts and payload shapes | Runtime side effects | [src/types/match.ts](../src/types/match.ts) |
@@ -36,7 +36,7 @@ Use a store when:
 - modal/sheet state must be coordinated globally inside one screen flow.
 
 Observed examples:
-- Hook approach: [src/pages/views/hooks/useMatches.ts](../src/pages/views/hooks/useMatches.ts)
+- Hook approach: [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
 - Store approach: [src/store/new-match.ts](../src/store/new-match.ts)
 
 ## Firebase Boundary Rule

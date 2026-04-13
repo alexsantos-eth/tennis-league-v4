@@ -9,13 +9,16 @@ This guide standardizes folder organization and naming for all new work.
 ```text
 src/pages/<feature>/
   index.astro
-  views/
-    <feature>.tsx
+src/views/<feature>/
+  client/
+    index.tsx
     components/
       <feature>-header.tsx
       <feature>-list.tsx
     hooks/
-      use<Feature>.ts
+      use<Feature>.tsx
+    tools/
+      <utility>.ts
 ```
 
 ### Complex Screen (form-heavy or multi-section)
@@ -23,16 +26,18 @@ src/pages/<feature>/
 ```text
 src/pages/<feature>/
   index.astro
-  views/
-    <feature>.tsx
+src/views/<feature>/
+  client/
+    index.tsx
     contants.ts
-    tools.ts
     components/
       <section-a>-section.tsx
       <section-b>-section.tsx
       <modal-a>-sheet.tsx
     hooks/
-      use<Feature>.ts
+      use<Feature>.tsx
+    tools/
+      <utility>.ts
 ```
 
 ### Shared Modules
@@ -61,9 +66,9 @@ src/lib/<utility>.ts
   - -row.tsx and -col.tsx for explicit structural chunks.
 
 Examples:
-- [src/pages/match/new/views/components/match-type-section.tsx](../src/pages/match/new/views/components/match-type-section.tsx)
-- [src/pages/match/new/views/components/date-sheet.tsx](../src/pages/match/new/views/components/date-sheet.tsx)
-- [src/pages/views/components/match-card.tsx](../src/pages/views/components/match-card.tsx)
+- [src/views/match/new/client/components/match-type-section.tsx](../src/views/match/new/client/components/match-type-section.tsx)
+- [src/views/match/new/client/components/date-sheet.tsx](../src/views/match/new/client/components/date-sheet.tsx)
+- [src/views/home/client/components/match-card.tsx](../src/views/home/client/components/match-card.tsx)
 
 ## Hook files
 
@@ -71,7 +76,7 @@ Examples:
 - One file per screen-level hook unless there is a clear split.
 
 Example:
-- [src/pages/views/hooks/useMatches.ts](../src/pages/views/hooks/useMatches.ts)
+- [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
 
 ## Store files
 
@@ -83,8 +88,8 @@ Example:
 
 ## Constants and tools
 
-- Keep feature-only static options inside views/contants.ts.
-- Keep feature-only pure helpers inside views/tools.ts.
+- Keep feature-only static options inside src/views/<feature>/client/contants.ts.
+- Keep feature-only pure helpers inside src/views/<feature>/client/tools/*.ts.
 - Promote to src/lib only when reused across multiple features.
 
 ## Types
@@ -104,8 +109,8 @@ Example:
 ## Allowed Dependency Direction
 
 ```text
-pages -> views -> components
-views -> hooks/store
+pages -> views/client -> components
+views/client -> hooks/store
 hooks/store -> firebase/types/lib
 components -> store/hooks/ui/types
 firebase -> types/config

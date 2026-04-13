@@ -16,7 +16,7 @@ Template:
 import Heads from "../../../layouts/heads.astro";
 import Main from "../../../layouts/main.astro";
 import Page from "../../../layouts/page.astro";
-import FeatureView from "./views/feature-view";
+import FeatureView from "@/views/<feature>/client";
 
 export const prerender = false;
 ---
@@ -37,13 +37,13 @@ Reference:
 
 ## Phase 2: View Container
 
-1. Create views/<feature>.tsx as orchestrator.
+1. Create src/views/<feature>/client/index.tsx as orchestrator.
 2. Keep it focused on section ordering and top-level submit wiring.
 3. Avoid direct Firestore calls in this file.
 
 Reference:
-- [src/pages/views/home.tsx](../src/pages/views/home.tsx)
-- [src/pages/match/new/views/new-match.tsx](../src/pages/match/new/views/new-match.tsx)
+- [src/views/home/client/index.tsx](../src/views/home/client/index.tsx)
+- [src/views/match/new/client/index.tsx](../src/views/match/new/client/index.tsx)
 
 ## Phase 3: Decide State Strategy
 
@@ -54,21 +54,21 @@ Decision tree:
 - If both are needed, separate concerns cleanly: hook for remote query state, store for form workflow.
 
 Hook reference:
-- [src/pages/views/hooks/useMatches.ts](../src/pages/views/hooks/useMatches.ts)
+- [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
 
 Store reference:
 - [src/store/new-match.ts](../src/store/new-match.ts)
 
 ## Phase 4: Build Feature Sections
 
-1. Create views/components and split by visual responsibility.
+1. Create src/views/<feature>/client/components and split by visual responsibility.
 2. Use suffixes for intent (-section, -sheet, -row, -card).
 3. Use UI primitives from src/components/ui.
 
 Good examples:
-- [src/pages/match/new/views/components/date-time-section.tsx](../src/pages/match/new/views/components/date-time-section.tsx)
-- [src/pages/match/new/views/components/location-sheet.tsx](../src/pages/match/new/views/components/location-sheet.tsx)
-- [src/pages/views/components/match-card.tsx](../src/pages/views/components/match-card.tsx)
+- [src/views/match/new/client/components/date-time-section.tsx](../src/views/match/new/client/components/date-time-section.tsx)
+- [src/views/match/new/client/components/location-sheet.tsx](../src/views/match/new/client/components/location-sheet.tsx)
+- [src/views/home/client/components/match-card.tsx](../src/views/home/client/components/match-card.tsx)
 
 ## Phase 5: Data And Type Contracts
 
@@ -115,7 +115,7 @@ References:
 
 ## Anti-Patterns To Explicitly Reject
 
-1. Creating a feature with no views folder and all logic in index.astro.
+1. Creating a feature with no src/views/<feature>/client folder and all logic in index.astro.
 2. Adding untyped payload assembly directly in submit button component.
 3. Copy-pasting existing store code without trimming irrelevant fields.
 4. Hardcoding routes in multiple components instead of using route config.

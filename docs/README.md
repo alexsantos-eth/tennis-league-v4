@@ -27,9 +27,9 @@ This folder contains the style and architecture guides to keep screen work consi
 
 - [../src/pages/index.astro](../src/pages/index.astro)
 - [../src/pages/match/new/index.astro](../src/pages/match/new/index.astro)
-- [../src/pages/views/home.tsx](../src/pages/views/home.tsx)
-- [../src/pages/views/hooks/useMatches.ts](../src/pages/views/hooks/useMatches.ts)
-- [../src/pages/match/new/views/new-match.tsx](../src/pages/match/new/views/new-match.tsx)
+- [../src/views/home/client/index.tsx](../src/views/home/client/index.tsx)
+- [../src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
+- [../src/views/match/new/client/index.tsx](../src/views/match/new/client/index.tsx)
 - [../src/store/new-match.ts](../src/store/new-match.ts)
 - [../src/firebase/match.ts](../src/firebase/match.ts)
 - [../src/types/match.ts](../src/types/match.ts)

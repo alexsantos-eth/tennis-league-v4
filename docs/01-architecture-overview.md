@@ -16,8 +16,8 @@ The most important rule is simple:
 Route request
   -> Astro page (src/pages/**/index.astro)
     -> Layouts (src/layouts/*.astro)
-      -> React view container (src/pages/**/views/*.tsx)
-        -> Feature components (src/pages/**/views/components/*.tsx)
+      -> React view container (src/views/**/client/index.tsx)
+        -> Feature components (src/views/**/client/components/*.tsx)
           -> Hooks / Stores
             -> Firebase data modules
               -> Firestore/Auth APIs
@@ -26,9 +26,9 @@ Route request
 ## Reference Implementation: Home
 
 - Entry page: [src/pages/index.astro](../src/pages/index.astro)
-- Container: [src/pages/views/home.tsx](../src/pages/views/home.tsx)
-- Data hook: [src/pages/views/hooks/useMatches.ts](../src/pages/views/hooks/useMatches.ts)
-- Section composition: [src/pages/views/components/matches.tsx](../src/pages/views/components/matches.tsx)
+- Container: [src/views/home/client/index.tsx](../src/views/home/client/index.tsx)
+- Data hook: [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
+- Section composition: [src/views/home/client/components/matches.tsx](../src/views/home/client/components/matches.tsx)
 
 Short route setup snippet from Home:
 
@@ -37,7 +37,7 @@ Short route setup snippet from Home:
 import Heads from "../layouts/heads.astro";
 import Main from "../layouts/main.astro";
 import Page from "../layouts/page.astro";
-import Home from "./views/home";
+import Home from "@/views/home/client";
 ---
 
 <Page>
@@ -53,10 +53,10 @@ import Home from "./views/home";
 ## Reference Implementation: Match/New
 
 - Entry page: [src/pages/match/new/index.astro](../src/pages/match/new/index.astro)
-- Container: [src/pages/match/new/views/new-match.tsx](../src/pages/match/new/views/new-match.tsx)
+- Container: [src/views/match/new/client/index.tsx](../src/views/match/new/client/index.tsx)
 - Store: [src/store/new-match.ts](../src/store/new-match.ts)
-- Feature data constants: [src/pages/match/new/views/contants.ts](../src/pages/match/new/views/contants.ts)
-- Feature helpers: [src/pages/match/new/views/tools.ts](../src/pages/match/new/views/tools.ts)
+- Feature data constants: [src/views/match/new/client/contants.ts](../src/views/match/new/client/contants.ts)
+- Feature helpers: [src/views/match/new/client/tools/dates.ts](../src/views/match/new/client/tools/dates.ts)
 
 Short orchestration snippet from Match/New:
 
@@ -91,6 +91,12 @@ const NewMatchPage: React.FC = () => {
 - Feature folders keep code discoverable.
 - Shared UI primitives avoid duplicated visual logic.
 - State and data concerns stay testable and replaceable.
+
+## Current Codebase Note
+
+- The standard for new React screens is `src/views/<feature>/client/*`.
+- There is one legacy auth entry that still mounts from `src/views/auth/components/login.tsx`.
+- Recommended migration path for auth: add `src/views/auth/client/index.tsx` and keep `components/*` + `hooks/*` below that client boundary.
 
 ## Cross-Cutting Modules
 

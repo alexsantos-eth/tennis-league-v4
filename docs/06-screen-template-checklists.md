@@ -8,9 +8,9 @@ Use when the screen mostly displays data.
 
 ```text
 src/pages/<feature>/index.astro
-src/pages/<feature>/views/<feature>.tsx
-src/pages/<feature>/views/components/<feature>-header.tsx
-src/pages/<feature>/views/hooks/use<Feature>.ts
+src/views/<feature>/client/index.tsx
+src/views/<feature>/client/components/<feature>-header.tsx
+src/views/<feature>/client/hooks/use<Feature>.tsx
 src/firebase/<feature>.ts
 src/types/<feature>.ts
 ```
@@ -26,11 +26,11 @@ Use when many sections build one payload.
 
 ```text
 src/pages/<feature>/index.astro
-src/pages/<feature>/views/<feature>.tsx
-src/pages/<feature>/views/components/*-section.tsx
-src/pages/<feature>/views/components/*-sheet.tsx
-src/pages/<feature>/views/contants.ts
-src/pages/<feature>/views/tools.ts
+src/views/<feature>/client/index.tsx
+src/views/<feature>/client/components/*-section.tsx
+src/views/<feature>/client/components/*-sheet.tsx
+src/views/<feature>/client/contants.ts
+src/views/<feature>/client/tools/*.ts
 src/store/<feature>.ts
 src/firebase/<feature>.ts
 src/types/<feature>.ts
@@ -47,10 +47,10 @@ Checklist:
 Use when a screen combines display and controlled edits.
 
 ```text
-src/pages/<feature>/views/hooks/use<FeatureList>.ts
+src/views/<feature>/client/hooks/use<FeatureList>.tsx
 src/store/<feature>-draft.ts
-src/pages/<feature>/views/components/<feature>-list.tsx
-src/pages/<feature>/views/components/<feature>-editor-sheet.tsx
+src/views/<feature>/client/components/<feature>-list.tsx
+src/views/<feature>/client/components/<feature>-editor-sheet.tsx
 ```
 
 Checklist:

@@ -18,8 +18,8 @@ Use this comparison to decide which implementation style to copy.
 
 References:
 - [src/pages/index.astro](../src/pages/index.astro)
-- [src/pages/views/home.tsx](../src/pages/views/home.tsx)
-- [src/pages/views/hooks/useMatches.ts](../src/pages/views/hooks/useMatches.ts)
+- [src/views/home/client/index.tsx](../src/views/home/client/index.tsx)
+- [src/views/home/client/hooks/useMatches.tsx](../src/views/home/client/hooks/useMatches.tsx)
 
 Why it works:
 - Simple screen orchestration.
@@ -35,7 +35,7 @@ When to copy Home style:
 
 References:
 - [src/pages/match/new/index.astro](../src/pages/match/new/index.astro)
-- [src/pages/match/new/views/new-match.tsx](../src/pages/match/new/views/new-match.tsx)
+- [src/views/match/new/client/index.tsx](../src/views/match/new/client/index.tsx)
 - [src/store/new-match.ts](../src/store/new-match.ts)
 
 Why it works:
