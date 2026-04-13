@@ -11,6 +11,7 @@ import DateTimeSection from "./components/date-time-section";
 import LocationSection from "./components/location-section";
 import LocationSheet from "./components/location-sheet";
 import MatchDetailsSection from "./components/match-details-section";
+import MatchFormatSheet from "./components/match-format-sheet";
 import MatchTypeSection from "./components/match-type-section";
 import SkillRangeSection from "./components/skill-range-section";
 import SportTabs from "./components/sport-tabs";
@@ -56,6 +57,8 @@ const NewMatchPage: React.FC = () => {
       <DateSheet />
 
       <LocationSheet />
+
+      <MatchFormatSheet />
     </>
   );
 };

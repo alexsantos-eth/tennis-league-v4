@@ -93,7 +93,7 @@ const Matches = () => {
           !hasError &&
           matches.length > 0 &&
           filteredMatches.length === 0 && (
-            <Alert>
+            <Alert variant="default">
               <div className="flex gap-2 items-center">
                 <InfoIcon size={15} />
                 <AlertDescription>

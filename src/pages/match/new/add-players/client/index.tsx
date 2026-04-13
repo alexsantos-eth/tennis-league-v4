@@ -17,6 +17,7 @@ import { useNewMatchStore } from "@/store/new-match";
 
 import useLoadAddPlayers from "./hooks/useLoadAddPlayers";
 import { shareLink } from "@/lib/share";
+import Stack from "@/components/ui/stack";
 
 const AddPlayersView: React.FC = () => {
   const {
@@ -56,12 +57,12 @@ const AddPlayersView: React.FC = () => {
   };
 
   const shareInvitation = () => {
-    shareLink(`${window.location.origin}/match/${matchDocRef?.id}`);
-  }
+    shareLink(`${window.location.origin}/match/${matchDocRef?.id}`, "Invitación compartida");
+  };
 
   return (
-    <div className="w-full h-full flex flex-col gap-6 overflow-scroll">
-      <div className="w-full flex flex-col gap-6 px-6 py-4 bg-background">
+    <Stack className="h-full overflow-scroll" noPx>
+      <Stack className="py-4 bg-background">
         <div className="relative">
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
           <Input
@@ -92,12 +93,12 @@ const AddPlayersView: React.FC = () => {
             </TabsTrigger>
           </TabsList>
         </Tabs>
-      </div>
+      </Stack>
 
-      <div className="px-6 flex flex-col gap-6 mb-8">
+      <Stack className="mb-8">
         {hasReachedGuestLimit && (
           <Alert>
-            <InfoIcon />
+            <InfoIcon className="h-4 w-4 text-primary" />
             <AlertDescription>
               {matchType === "Singles"
                 ? "En Singles solo puedes invitar 1 jugador."
@@ -135,8 +136,8 @@ const AddPlayersView: React.FC = () => {
           <Share2Icon />
           Compartir invitacion
         </Button>
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 };
 

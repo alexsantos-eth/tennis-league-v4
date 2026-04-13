@@ -80,6 +80,7 @@ const getInitialNewMatchState = () => ({
   isSubmitting: false,
   isDateSheetOpen: false,
   isLocationSheetOpen: false,
+  isMatchFormatSheetOpen: false,
   tempDate: undefined as Date | undefined,
   tempLocation: "",
   timeOptions: buildHalfHourTimeOptions(),
@@ -107,6 +108,7 @@ interface NewMatchState {
   isSubmitting: boolean;
   isDateSheetOpen: boolean;
   isLocationSheetOpen: boolean;
+  isMatchFormatSheetOpen: boolean;
   tempDate?: Date;
   tempLocation: string;
   timeOptions: string[];
@@ -125,12 +127,15 @@ interface NewMatchState {
   setMatchTime: (matchTime: string) => void;
   setIsDateSheetOpen: (isDateSheetOpen: boolean) => void;
   setIsLocationSheetOpen: (isLocationSheetOpen: boolean) => void;
+  setIsMatchFormatSheetOpen: (isMatchFormatSheetOpen: boolean) => void;
   setTempDate: (tempDate: Date | undefined) => void;
   setTempLocation: (tempLocation: string) => void;
   openDateSheet: () => void;
   confirmDate: () => void;
   openLocationSheet: () => void;
   confirmLocation: () => void;
+  openMatchFormatSheet: () => void;
+  confirmMatchFormat: (matchFormat: PublicMatchFormat) => void;
   setSkillRange: (values: number[]) => void;
   setPlayersTab: (playersTab: PlayersTab) => void;
   setPlayersSearch: (playersSearch: string) => void;
@@ -167,6 +172,8 @@ export const useNewMatchStore = create<NewMatchState>()((set, get) => ({
   setMatchTime: (matchTime) => set({ matchTime }),
   setIsDateSheetOpen: (isDateSheetOpen) => set({ isDateSheetOpen }),
   setIsLocationSheetOpen: (isLocationSheetOpen) => set({ isLocationSheetOpen }),
+  setIsMatchFormatSheetOpen: (isMatchFormatSheetOpen) =>
+    set({ isMatchFormatSheetOpen }),
   setTempDate: (tempDate) => set({ tempDate }),
   setTempLocation: (tempLocation) => set({ tempLocation }),
   openDateSheet: () => {
@@ -193,6 +200,12 @@ export const useNewMatchStore = create<NewMatchState>()((set, get) => ({
   confirmLocation: () => {
     const { tempLocation } = get();
     set({ location: tempLocation.trim(), isLocationSheetOpen: false });
+  },
+  openMatchFormatSheet: () => {
+    set({ isMatchFormatSheetOpen: true });
+  },
+  confirmMatchFormat: (matchFormat) => {
+    set({ matchFormat, isMatchFormatSheetOpen: false });
   },
   setSkillRange: (values) => {
     const [nextMin, nextMax] = values;

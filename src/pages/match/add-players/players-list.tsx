@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
 import Text from "@/components/ui/text";
-import { PlusIcon, InfoIcon, XIcon } from "lucide-react";
+import { PlusIcon, InfoIcon, XIcon, LoaderIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { User } from "@/types/users";
 import {
@@ -35,7 +35,7 @@ const PlayersList: React.FC<PlayersListProps> = ({
   if (isLoading) {
     return (
       <Alert>
-        <InfoIcon />
+        <LoaderIcon />
         <AlertDescription>Cargando jugadores...</AlertDescription>
       </Alert>
     );

@@ -1,28 +1,25 @@
-import { Lock, SlidersHorizontal, Users2 } from "lucide-react";
+import { AlertCircle, ChevronRight, Lock, SlidersHorizontal, Users2 } from "lucide-react";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch as SwitchButton } from "@/components/ui/switch";
+import Text from "@/components/ui/text";
 import { useNewMatchStore } from "@/store/new-match";
 
-import { matchFormatLabels, matchFormats } from "../contants";
+import { matchFormatLabels } from "../contants";
 import MatchDetailsRow from "./match-details-row";
 
-import type { PublicMatchFormat } from "@/types/match";
 const MatchDetailsSection: React.FC = () => {
   const matchFormat = useNewMatchStore((state) => state.matchFormat);
   const isReserved = useNewMatchStore((state) => state.isReserved);
   const isPrivate = useNewMatchStore((state) => state.isPrivate);
-  const setMatchFormat = useNewMatchStore((state) => state.setMatchFormat);
+  const openMatchFormatSheet = useNewMatchStore(
+    (state) => state.openMatchFormatSheet,
+  );
   const setIsReserved = useNewMatchStore((state) => state.setIsReserved);
   const setIsPrivate = useNewMatchStore((state) => state.setIsPrivate);
+  const isCompetitive = matchFormat === "Ranking";
 
   return (
     <BoxContainer className="flex flex-col gap-4" title="Detalles de partido">
@@ -30,28 +27,31 @@ const MatchDetailsSection: React.FC = () => {
         title="Tipo"
         icon={<Users2 className="w-4 h-4 text-muted-foreground" />}
       >
-        <Select
-          value={matchFormat}
-          onValueChange={(value) => setMatchFormat(value as PublicMatchFormat)}
+        <Button
+          type="button"
+          variant="link"
+          className="h-auto px-0 py-1"
+          onClick={openMatchFormatSheet}
         >
-          <SelectTrigger className="text-primary font-medium">
-            <SelectValue className="text-primary" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {matchFormats.map((item) => (
-                <SelectItem key={item} value={item}>
-                  {matchFormatLabels[item]}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+          <Text variant="body" className="text-primary font-medium">
+            {matchFormatLabels[matchFormat]}
+          </Text>
+          <ChevronRight className="w-4 h-4 text-primary" />
+        </Button>
       </MatchDetailsRow>
+
+      {isCompetitive && (
+        <Alert>
+          <AlertCircle className="h-4 w-4 text-primary" />
+          <AlertDescription>
+            En competitivo tu score (GTR) se vera afectado.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <MatchDetailsRow
         icon={<SlidersHorizontal className="w-4 h-4 text-muted-foreground" />}
-        title="Marcar como reservado"
+        title="¿La cancha esta reservada?"
       >
         <SwitchButton
           size="lg"
@@ -62,7 +62,7 @@ const MatchDetailsSection: React.FC = () => {
 
       <MatchDetailsRow
         icon={<Lock className="w-4 h-4 text-muted-foreground" />}
-        title="Partido privado"
+        title="¿El partido es privado?"
       >
         <SwitchButton
           size="lg"

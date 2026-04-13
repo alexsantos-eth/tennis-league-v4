@@ -9,8 +9,23 @@ const alertVariants = cva(
     variants: {
       variant: {
         default: "bg-card text-card-foreground",
+        primary: "border-primary/20 bg-primary/5",
         destructive:
           "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+    },
+  },
+);
+
+const alertDescriptionVariants = cva(
+  "font-medium text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+  {
+    variants: {
+      variant: {
+        default: "text-primary/90",
       },
     },
     defaultVariants: {
@@ -49,16 +64,15 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
 
 function AlertDescription({
   className,
+  variant = "default",
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> &
+  Pick<VariantProps<typeof alertDescriptionVariants>, "variant">) {
   return (
     <Text
       variant="bodySmall"
       data-slot="alert-description"
-      className={cn(
-        "text-muted-foreground font-medium text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
-        className,
-      )}
+      className={cn(alertDescriptionVariants({ variant }), className)}
       {...props}
     />
   );
