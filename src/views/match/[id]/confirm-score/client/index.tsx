@@ -2,8 +2,6 @@ import {
   CheckCheckIcon,
   InfoIcon,
   LoaderIcon,
-  MinusCircleIcon,
-  PlusCircleIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -11,12 +9,6 @@ import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { Separator } from "@/components/ui/separator";
 import Stack from "@/components/ui/stack";
 import Text from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,16 +20,14 @@ import {
 } from "@/firebase/match";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth";
+import MatchScoreSetsCard from "@/views/match/[id]/components/match-score-sets-card";
 
 import type {
   MatchCreatorSummary,
   MatchRecord,
   MatchSetScore,
-  PublicMatchType,
   SubmitMatchScoreInput,
 } from "@/types/match";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getInitials } from "@/views/match/new/add-players/client/hooks/usePlayersList";
 interface ConfirmMatchScoreViewProps {
   matchId: string;
 }
@@ -323,17 +313,6 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
     }
   };
 
-  const userTeamOnMatch = players.find(
-    (player) => getPlayerId(player) === currentUserId,
-  );
-
-  const firstEnemyPlayer = players.find(
-    (player) =>
-      getPlayerId(player) !== currentUserId &&
-      ((userTeamOnMatch?.team === "A" && player.team === "B") ||
-        (userTeamOnMatch?.team === "B" && player.team === "A")),
-  );
-
   if (isLoading) {
     return (
       <Stack>
@@ -458,148 +437,17 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
         )}
       </BoxContainer>
 
-      <BoxContainer
-        className="gap-4"
+      <MatchScoreSetsCard
         title="Cantidad de sets"
         description={isFinalScoreAvailable ? "Resultado final" : undefined}
-      >
-        <div className="flex justify-between w-full">
-          <div className="flex flex-col gap-1">
-            {!isFinalScoreAvailable ? (
-              <div className="flex items-center gap-2 h-max">
-                {displayedSetsCount > 1 && (
-                  <Button
-                    size="icon-sm"
-                    variant="outline"
-                    className="text-muted-foreground"
-                    onClick={() => onChangeSetsCount(displayedSetsCount - 1)}
-                    disabled={isFinalScoreAvailable}
-                  >
-                    <MinusCircleIcon />
-                  </Button>
-                )}
-
-                <div>
-                  <Text variant="bodySmall" className="text-center font-medium">
-                    {displayedSetsCount}
-                  </Text>
-                </div>
-
-                {displayedSetsCount < 5 && (
-                  <Button
-                    size="icon-sm"
-                    variant="outline"
-                    className="text-muted-foreground"
-                    onClick={() => onChangeSetsCount(displayedSetsCount + 1)}
-                    disabled={isFinalScoreAvailable}
-                  >
-                    <PlusCircleIcon />
-                  </Button>
-                )}
-              </div>
-            ): (
-              <div className="h-7"/>
-            )}
-
-            <div className="flex flex-col gap-1">
-              <div className="h-9 gap-2 flex items-center">
-                <Avatar size="sm">
-                  <AvatarImage
-                    src={userTeamOnMatch?.picture || ""}
-                    alt={getPlayerName(userTeamOnMatch)}
-                  />
-                  <AvatarFallback>
-                    {getInitials(userTeamOnMatch?.firstName)}
-                  </AvatarFallback>
-                </Avatar>
-                <Text
-                  variant="bodySmall"
-                  className={cn(
-                    userTeamOnMatch?.team === "A" ? "font-bold" : "font-medium",
-                  )}
-                >
-                  {userTeamOnMatch?.team === "A" ? "(Tú)" : ""}
-                </Text>
-              </div>
-
-              <Separator />
-
-              <div className="h-9 gap-2 flex items-center">
-                <Avatar size="sm">
-                  <AvatarImage
-                    src={firstEnemyPlayer?.picture || ""}
-                    alt={getPlayerName(firstEnemyPlayer)}
-                  />
-                  <AvatarFallback>
-                    {getInitials(firstEnemyPlayer?.firstName)}
-                  </AvatarFallback>
-                </Avatar>
-
-                <Text
-                  variant="bodySmall"
-                  className={cn(
-                    firstEnemyPlayer?.team === "B"
-                      ? "font-bold"
-                      : "font-medium",
-                  )}
-                >
-                  B {firstEnemyPlayer?.team === "B" ? "(Tú)" : ""}
-                </Text>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            {displayedSets.map((setScore, index) => (
-              <Stack
-                noPx
-                key={`set-${index + 1}`}
-                className="gap-2 items-center w-10"
-              >
-                <Text variant="bodySmall" className="font-medium text-center">
-                  Set {index + 1}
-                </Text>
-
-                <div className="flex flex-col gap-2">
-                  <InputOTP
-                    maxLength={1}
-                    type="number"
-                    value={String(setScore.teamA || 0)}
-                    onChange={(value) =>
-                      onChangeSetScore(index, "teamA", value)
-                    }
-                    disabled={isFinalScoreAvailable}
-                  >
-                    <InputOTPGroup>
-                      <InputOTPSlot
-                        className="font-bold w-10 h-10 text-2xl border-primary text-primary"
-                        index={0}
-                      />
-                    </InputOTPGroup>
-                  </InputOTP>
-
-                  <InputOTP
-                    maxLength={1}
-                    type="number"
-                    value={String(setScore.teamB || 0)}
-                    onChange={(value) =>
-                      onChangeSetScore(index, "teamB", value)
-                    }
-                    disabled={isFinalScoreAvailable}
-                  >
-                    <InputOTPGroup>
-                      <InputOTPSlot
-                        className="font-bold w-10 h-10 text-2xl border-primary text-primary"
-                        index={0}
-                      />
-                    </InputOTPGroup>
-                  </InputOTP>
-                </div>
-              </Stack>
-            ))}
-          </div>
-        </div>
-      </BoxContainer>
+        setsCount={displayedSetsCount}
+        sets={displayedSets}
+        players={players}
+        currentUserUid={currentUserId}
+        isReadOnly={isFinalScoreAvailable}
+        onChangeSetsCount={onChangeSetsCount}
+        onChangeSetScore={onChangeSetScore}
+      />
 
       {hasMismatch && !appeal && match.status !== "finished" && (
         <BoxContainer

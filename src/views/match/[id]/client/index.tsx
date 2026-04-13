@@ -7,6 +7,7 @@ import MatchCtaBar from "./components/match-cta-bar";
 import MatchHero from "./components/match-hero";
 import MatchInfoCard from "./components/match-info-card";
 import MatchPlayersCard from "./components/match-players-card";
+import MatchScoreSetsCard from "../components/match-score-sets-card";
 import MatchSkillCard from "./components/match-skill-card";
 import useMatchDetail from "./hooks/useMatchDetail.ts";
 
@@ -63,6 +64,18 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
 
             {match.matchFormat === "Ranking" && (
               <MatchSkillCard match={match} />
+            )}
+
+            {match.status === "finished" && match.scoreBoard?.finalScore && (
+              <MatchScoreSetsCard
+                title="Resultado final"
+                description="Este partido ya fue finalizado."
+                setsCount={match.scoreBoard.finalScore.setsCount}
+                sets={match.scoreBoard.finalScore.sets}
+                players={players}
+                currentUserUid={currentUser?.uid}
+                isReadOnly
+              />
             )}
           </Stack>
 
