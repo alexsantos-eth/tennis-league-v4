@@ -21,6 +21,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useNewMatchStore } from "@/store/new-match";
+import Stack from "@/components/ui/stack";
 
 const DateSheet: React.FC = () => {
   const open = useNewMatchStore((state) => state.isDateSheetOpen);
@@ -41,10 +42,10 @@ const DateSheet: React.FC = () => {
           <SheetTitle>Selecciona una fecha</SheetTitle>
         </SheetHeader>
 
-        <div className="flex flex-col items-center justify-center w-full px-6 gap-6">
+        <Stack>
           <CalendarComponent
             locale={es}
-            className="w-full max-w-90"
+            className="w-full max-w-90 min-h-90"
             mode="single"
             selected={selectedDate}
             captionLayout="dropdown"
@@ -71,7 +72,7 @@ const DateSheet: React.FC = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-        </div>
+        </Stack>
 
         <SheetFooter>
           <Button

@@ -68,9 +68,9 @@ const mapUserToMatchPlayer = (user: Partial<User>): MatchCreatorSummary => ({
 const getInitialNewMatchState = () => ({
   sport: "Tenis" as PublicMatchSport,
   matchType: "Singles" as PublicMatchType,
-  matchFormat: "Ranking" as PublicMatchFormat,
+  matchFormat: "Friendly" as PublicMatchFormat,
   isReserved: false,
-  isPrivate: true,
+  isPrivate: false,
   comments: "",
   location: "",
   matchDate: "",

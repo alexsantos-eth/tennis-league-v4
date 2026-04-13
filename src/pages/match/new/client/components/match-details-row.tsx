@@ -18,7 +18,10 @@ const MatchDetailsRow: React.FC<MatchDetailsRowProps> = ({
           {icon}
         </div>
 
-        <Text variant="body" className="text-foreground font-medium">
+        <Text
+          variant="body"
+          className="flex-1 text-left font-medium text-foreground"
+        >
           {title}
         </Text>
       </div>
@@ -27,6 +30,5 @@ const MatchDetailsRow: React.FC<MatchDetailsRowProps> = ({
     </div>
   );
 };
-
 
 export default MatchDetailsRow;

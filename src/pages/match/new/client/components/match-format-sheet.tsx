@@ -15,6 +15,7 @@ import { matchFormatLabels, matchFormats } from "../contants";
 import type { PublicMatchFormat } from "@/types/match";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Stack from "@/components/ui/stack";
+import MatchButtonRow from "./match-button-row";
 
 const MatchFormatSheet: React.FC = () => {
   const open = useNewMatchStore((state) => state.isMatchFormatSheetOpen);
@@ -53,23 +54,12 @@ const MatchFormatSheet: React.FC = () => {
               const isSelected = item === matchFormat;
 
               return (
-                <button
+                <MatchButtonRow
                   key={item}
-                  type="button"
-                  className="w-full px-4 py-4 flex items-center gap-4 border-b border-border/70 last:border-b-0"
                   onClick={() => handleSelectFormat(item)}
+                  icon={<Users2 className="h-4 w-4" />}
+                  title={matchFormatLabels[item]}
                 >
-                  <div className="bg-muted flex items-center justify-center h-8 w-8 rounded-full">
-                    <Users2 className="h-4 w-4 text-muted-foreground" />
-                  </div>
-
-                  <Text
-                    variant="body"
-                    className="text-foreground font-medium flex-1 text-left"
-                  >
-                    {matchFormatLabels[item]}
-                  </Text>
-
                   {isSelected ? (
                     <div className="bg-muted flex items-center justify-center h-8 w-8 rounded-full">
                       <Check className="h-4 w-4 text-primary" />
@@ -77,7 +67,7 @@ const MatchFormatSheet: React.FC = () => {
                   ) : (
                     <ChevronRight className="h-5 w-5 text-primary" />
                   )}
-                </button>
+                </MatchButtonRow>
               );
             })}
           </BoxContainer>
