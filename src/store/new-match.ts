@@ -4,12 +4,12 @@ import { create } from "zustand";
 
 import { createMatch, createMatchDoc } from "../firebase/match";
 import { getAllUsers } from "../firebase/users";
-import { rangeStep } from "../pages/match/new/client/contants";
+import { rangeStep } from "@/views/match/new/client/contants";
 import {
   buildHalfHourTimeOptions,
   formatDateForMatch,
   getClosestHalfHourTime,
-} from "../pages/match/new/client/tools/dates";
+} from "@/views/match/new/client/tools/dates";
 import { useAuthStore } from "./auth";
 
 import type {
