@@ -20,14 +20,15 @@ const { topbar, className, showNav } = Astro.props;
 <div class="h-dvh gap-0">
   {Boolean(topbar) && <Topbar {...topbar} client:load />}
   <main
-  class={cn(
-    "bg-accent max-h-dvh h-full",
-    Boolean(topbar) && "mt-16 h-[calc(100%-65px)]",
-    showNav && "h-[calc(100%-195px)]",
-    !Boolean(topbar) && showNav && "h-[calc(100%-90px)]",
-    className,
-  )}
+    class={cn(
+      "bg-accent max-h-dvh h-full",
+      Boolean(topbar) && "mt-16 h-[calc(100%-65px)]",
+      showNav && "h-[calc(100%-195px)]",
+      !Boolean(topbar) && showNav && "h-[calc(100%-90px)]",
+      className,
+    )}
   >
+    <Toaster client:load />
     <slot />
   </main>
   {showNav && <Navigation />}

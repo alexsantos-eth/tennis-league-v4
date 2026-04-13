@@ -15,7 +15,6 @@ import MatchTypeSection from "./components/match-type-section";
 import SkillRangeSection from "./components/skill-range-section";
 import SportTabs from "./components/sport-tabs";
 import TeamsSection from "./components/teams-section";
-import { Toaster } from "@/components/ui/sonner";
 
 const NewMatchPage: React.FC = () => {
   const handleSubmit = useNewMatchStore((state) => state.handleSubmit);
@@ -26,11 +25,10 @@ const NewMatchPage: React.FC = () => {
 
   useEffect(() => {
     bootstrapCurrentUserPlayer();
-  }, [bootstrapCurrentUserPlayer, currentUserUid]);
+  }, [currentUserUid]);
 
   return (
     <>
-      <Toaster/>
       <Stack className="w-full pb-8 overflow-scroll h-full no-scrollbar" noPx>
         <form onSubmit={handleSubmit}>
           <SportTabs />

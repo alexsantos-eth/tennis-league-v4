@@ -1,12 +1,16 @@
 import {
   addDoc,
   collection,
+  CollectionReference,
   doc,
+  DocumentReference,
   getDoc,
   getDocs,
   query,
   runTransaction,
+  setDoc,
   updateDoc,
+  type DocumentData,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { normalizeMatchDateKey } from "../lib/dates";
@@ -41,7 +45,9 @@ const sanitizeSetValue = (value: number) => {
   return Math.max(0, Math.trunc(numericValue));
 };
 
-const normalizeScoreInput = (scoreInput: SubmitMatchScoreInput): MatchScorePayload => {
+const normalizeScoreInput = (
+  scoreInput: SubmitMatchScoreInput,
+): MatchScorePayload => {
   const setsCount = clampSetsCount(scoreInput.setsCount);
   const inputSets = Array.isArray(scoreInput.sets) ? scoreInput.sets : [];
 
@@ -91,8 +97,16 @@ const getEffectiveScheduledAt = (match: Omit<MatchRecord, "id">) => {
   return buildScheduledAt(match.dateOfMatch, match.timeOfMatch);
 };
 
+export const createMatchDoc = async (): Promise<
+  DocumentReference<DocumentData, DocumentData>
+> => {
+  const matchRef = doc(collection(db, MATCH_COLLECTION));
+  return matchRef;
+};
+
 export const createMatch = async (
   input: CreateMatchInput,
+  docRef?: DocumentReference<DocumentData>,
 ): Promise<MatchRecord> => {
   const now = new Date().toISOString();
 
@@ -106,10 +120,13 @@ export const createMatch = async (
     updatedAt: now,
   };
 
-  const matchRef = await addDoc(collection(db, MATCH_COLLECTION), payload);
+  const matchDoc: DocumentReference<DocumentData, DocumentData> =
+    docRef ?? doc(collection(db, MATCH_COLLECTION));
+
+  await setDoc(matchDoc, payload);
 
   return {
-    id: matchRef.id,
+    id: matchDoc.id,
     ...payload,
   };
 };
@@ -167,7 +184,9 @@ export const updateMatchPlayers = async (
   const allPlayers = [...existingPlayers];
   for (const newPlayer of newPlayers) {
     const playerExists = allPlayers.some(
-      (p) => (p.id === newPlayer.id || p.uid === newPlayer.uid) && p.id !== currentMatch.createdBy.id
+      (p) =>
+        (p.id === newPlayer.id || p.uid === newPlayer.uid) &&
+        p.id !== currentMatch.createdBy.id,
     );
     if (!playerExists) {
       allPlayers.push(newPlayer);
@@ -224,7 +243,9 @@ export const submitMatchScoreConfirmation = async (
       },
     };
 
-    const confirmedParticipants = participants.filter((id) => Boolean(nextConfirmations[id]));
+    const confirmedParticipants = participants.filter((id) =>
+      Boolean(nextConfirmations[id]),
+    );
     const uniqueSignatures = Array.from(
       new Set(
         confirmedParticipants.map((id) =>
@@ -237,7 +258,8 @@ export const submitMatchScoreConfirmation = async (
     );
 
     const isUnanimous =
-      confirmedParticipants.length === participants.length && uniqueSignatures.length === 1;
+      confirmedParticipants.length === participants.length &&
+      uniqueSignatures.length === 1;
 
     const nextScoreBoard = {
       ...currentScoreBoard,
@@ -397,4 +419,3 @@ export const resolveMatchScoreAppeal = async (
     transaction.update(matchRef, payload as Record<string, unknown>);
   });
 };
-

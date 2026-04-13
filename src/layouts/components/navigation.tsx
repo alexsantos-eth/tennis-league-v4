@@ -2,7 +2,6 @@ import { Award, Home, PlusIcon, Trophy, User } from "lucide-react";
 
 import { useNewMatchStore } from "../../store/new-match";
 import NavItem from "./nav-item";
-import { Toaster } from "@/components/ui/sonner";
 
 const Navigation: React.FC = () => {
   const resetNewMatchStore = useNewMatchStore(
@@ -15,7 +14,6 @@ const Navigation: React.FC = () => {
       style={{ boxShadow: "0px -2px 5px -1px rgba(0,0,0,0.05)" }}
       className="bg-white z-10 fixed bottom-0 left-0 w-full"
     >
-      <Toaster />
       <div data-id="nav-container" className="px-6 pt-4 pb-4 bg-white">
         <div
           data-id="nav-content"

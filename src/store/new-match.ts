@@ -2,7 +2,7 @@ import { type FormEvent } from "react";
 import { toast } from "sonner";
 import { create } from "zustand";
 
-import { createMatch } from "../firebase/match";
+import { createMatch, createMatchDoc } from "../firebase/match";
 import { getAllUsers } from "../firebase/users";
 import { rangeStep } from "../pages/match/new/client/contants";
 import {
@@ -22,6 +22,7 @@ import type {
   PublicMatchType,
 } from "../types/match";
 import type { User } from "../types/users";
+import type { DocumentData, DocumentReference } from "firebase/firestore";
 type PlayersTab = "Amigos" | "Global";
 
 const getMaxGuestInvitesByMatchType = (matchType: PublicMatchType) =>
@@ -98,6 +99,7 @@ interface NewMatchState {
   isPrivate: boolean;
   comments: string;
   location: string;
+  matchDocRef?: DocumentReference<DocumentData, DocumentData>;
   matchDate: string;
   matchTime: string;
   rangeMin: number;
@@ -203,7 +205,7 @@ export const useNewMatchStore = create<NewMatchState>()((set, get) => ({
   },
   setPlayersTab: (playersTab) => set({ playersTab }),
   setPlayersSearch: (playersSearch) => set({ playersSearch }),
-  bootstrapCurrentUserPlayer: () => {
+  bootstrapCurrentUserPlayer: async () => {
     const currentUser = useAuthStore.getState().currentUser;
     const currentUserId = String(currentUser?.uid ?? "");
 
@@ -213,6 +215,8 @@ export const useNewMatchStore = create<NewMatchState>()((set, get) => ({
 
     const currentUserPlayer = mapUserToMatchPlayer(currentUser);
 
+    const matchDocRef = await createMatchDoc()
+    
     set((state) => {
       const existing = state.invitedPlayers.some(
         (player) => player.id === currentUserId,
@@ -227,6 +231,7 @@ export const useNewMatchStore = create<NewMatchState>()((set, get) => ({
       }
 
       return {
+        matchDocRef,
         invitedPlayers: [currentUserPlayer, ...state.invitedPlayers],
       };
     });
@@ -369,7 +374,11 @@ export const useNewMatchStore = create<NewMatchState>()((set, get) => ({
 
     try {
       set({ isSubmitting: true });
-      await createMatch(payload);
+
+
+      const matchDocRef  = get().matchDocRef;
+
+      await createMatch(payload, matchDocRef);
       toast.success("Partido creado exitosamente.");
 
       window.location.href = "/";

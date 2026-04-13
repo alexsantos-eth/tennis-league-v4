@@ -16,6 +16,7 @@ import PlayersList from "@/pages/match/add-players/players-list";
 import { useNewMatchStore } from "@/store/new-match";
 
 import useLoadAddPlayers from "./hooks/useLoadAddPlayers";
+import { shareLink } from "@/lib/share";
 
 const AddPlayersView: React.FC = () => {
   const {
@@ -30,6 +31,7 @@ const AddPlayersView: React.FC = () => {
     isPlayerInvited,
     setPlayersTab,
     setPlayersSearch,
+    matchDocRef,
   } = useNewMatchStore();
 
   useLoadAddPlayers();
@@ -52,6 +54,10 @@ const AddPlayersView: React.FC = () => {
       toggleInvitedPlayer(player);
     }
   };
+
+  const shareInvitation = () => {
+    shareLink(`${window.location.origin}/match/${matchDocRef?.id}`);
+  }
 
   return (
     <div className="w-full h-full flex flex-col gap-6 overflow-scroll">
@@ -123,6 +129,7 @@ const AddPlayersView: React.FC = () => {
         <Button
           type="button"
           size="lg"
+          onClick={shareInvitation}
           className="h-12 rounded-2xl w-full text-base font-semibold"
         >
           <Share2Icon />
