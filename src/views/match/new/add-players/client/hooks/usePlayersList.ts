@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import type { User } from "@/types/users";
 
-export const getInitials = (name: string) => {
-  const [first = "", second = ""] = name.trim().split(" ");
+export const getInitials = (name?: string) => {
+  const [first = "", second = ""] = name?.trim().split(" ") || [];
   return `${first.charAt(0)}${second.charAt(0)}`.toUpperCase() || "PL";
 };
 

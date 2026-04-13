@@ -16,6 +16,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { Separator } from "@/components/ui/separator";
 import Stack from "@/components/ui/stack";
 import Text from "@/components/ui/text";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +26,7 @@ import {
   resolveMatchScoreAppeal,
   submitMatchScoreConfirmation,
 } from "@/firebase/match";
+import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth";
 
 import type {
@@ -34,8 +36,8 @@ import type {
   PublicMatchType,
   SubmitMatchScoreInput,
 } from "@/types/match";
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/views/match/new/add-players/client/hooks/usePlayersList";
 interface ConfirmMatchScoreViewProps {
   matchId: string;
 }
@@ -45,14 +47,14 @@ const DEFAULT_SETS_COUNT = 3;
 const getPlayerId = (player: MatchCreatorSummary) =>
   String(player.uid || player.id || "").trim();
 
-const getPlayerName = (player: MatchCreatorSummary) => {
-  const byNames = `${player.firstName || ""} ${player.lastName || ""}`.trim();
+const getPlayerName = (player?: MatchCreatorSummary) => {
+  const byNames = `${player?.firstName || ""} ${player?.lastName || ""}`.trim();
 
   if (byNames.length > 0) {
     return byNames;
   }
 
-  return player.name || "Jugador";
+  return player?.name || "Jugador";
 };
 
 const clampSetsCount = (value: number) => {
@@ -114,8 +116,6 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
   const [isResolvingAppeal, setIsResolvingAppeal] = useState(false);
 
   const currentUserId = String(currentUser?.uid || "").trim();
-
-  const matchType: PublicMatchType = match?.matchType || "Singles";
 
   const loadMatch = useCallback(async () => {
     if (!matchId) {
@@ -189,13 +189,16 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
   const hasMismatch = confirmationSignatures.length > 1;
   const appeal = match?.scoreBoard?.appeal;
   const hasPendingAppeal = appeal?.status === "pending";
+  const ownConfirmation =
+    currentUserId && match?.scoreBoard?.confirmations
+      ? match.scoreBoard.confirmations[currentUserId]
+      : undefined;
 
   useEffect(() => {
     if (!match || !currentUserId) {
       return;
     }
 
-    const ownConfirmation = match.scoreBoard?.confirmations?.[currentUserId];
     const fallbackScore = ownConfirmation || match.scoreBoard?.finalScore;
 
     if (!fallbackScore) {
@@ -209,7 +212,7 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
         teamB: Number(fallbackScore.sets[index]?.teamB || 0),
       })),
     );
-  }, [currentUserId, match]);
+  }, [currentUserId, match, ownConfirmation]);
 
   const onChangeSetsCount = (nextCount: number) => {
     const normalizedCount = clampSetsCount(nextCount);
@@ -322,57 +325,80 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
 
   const userTeamOnMatch = players.find(
     (player) => getPlayerId(player) === currentUserId,
-  )?.team;
+  );
+
+  const firstEnemyPlayer = players.find(
+    (player) =>
+      getPlayerId(player) !== currentUserId &&
+      ((userTeamOnMatch?.team === "A" && player.team === "B") ||
+        (userTeamOnMatch?.team === "B" && player.team === "A")),
+  );
 
   if (isLoading) {
     return (
-      <div className="p-6">
+      <Stack>
         <Alert>
           <LoaderIcon />
           <AlertDescription>
             Cargando confirmación de partido...
           </AlertDescription>
         </Alert>
-      </div>
+      </Stack>
     );
   }
 
   if (hasError) {
     return (
-      <div className="p-6">
+      <Stack>
         <Alert>
           <InfoIcon />
           <AlertDescription>
             No pudimos cargar los datos del partido.
           </AlertDescription>
         </Alert>
-      </div>
+      </Stack>
     );
   }
 
   if (!match) {
     return (
-      <div className="p-6">
+      <Stack>
         <Alert>
           <InfoIcon />
           <AlertDescription>Partido no encontrado.</AlertDescription>
         </Alert>
-      </div>
+      </Stack>
     );
   }
 
   if (!isParticipant) {
     return (
-      <div className="p-6">
+      <Stack>
         <Alert>
           <InfoIcon />
           <AlertDescription>
             Solo los jugadores de este partido pueden confirmar resultados.
           </AlertDescription>
         </Alert>
-      </div>
+      </Stack>
     );
   }
+
+  const confirmButtonDisabled =
+    isSubmittingConfirmation ||
+    hasPendingAppeal ||
+    match.status === "finished" ||
+    Boolean(ownConfirmation);
+
+  const isFinalScoreAvailable = Boolean(
+    match.status === "finished" && match.scoreBoard?.finalScore,
+  );
+  const displayedSetsCount = isFinalScoreAvailable
+    ? match.scoreBoard!.finalScore!.setsCount
+    : setsCount;
+  const displayedSets = isFinalScoreAvailable
+    ? match.scoreBoard!.finalScore!.sets
+    : sets;
 
   return (
     <Stack className="h-full overflow-y-auto py-6 bg-muted">
@@ -411,70 +437,120 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
             );
           })}
         </div>
+
+        {ownConfirmation && !isFinalScoreAvailable && (
+          <div className="rounded-lg border border-primary/30 bg-primary/5 p-2">
+            <Text variant="bodySmall" className="font-semibold">
+              Tu resultado enviado
+            </Text>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {ownConfirmation.sets.map((setScore, index) => (
+                <Text
+                  variant="bodySmall"
+                  key={`own-confirmed-set-${index + 1}`}
+                  className="rounded-md border border-border px-2 py-1 text-foreground"
+                >
+                  <b>Set {index + 1}</b>: {setScore.teamA} - {setScore.teamB}
+                </Text>
+              ))}
+            </div>
+          </div>
+        )}
       </BoxContainer>
 
-      <BoxContainer className="gap-4" title="Cantidad de sets">
+      <BoxContainer
+        className="gap-4"
+        title="Cantidad de sets"
+        description={isFinalScoreAvailable ? "Resultado final" : undefined}
+      >
         <div className="flex justify-between w-full">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2 h-max">
-              {setsCount > 1 && (
-                <Button
-                  size="icon-sm"
-                  variant="outline"
+            {!isFinalScoreAvailable ? (
+              <div className="flex items-center gap-2 h-max">
+                {displayedSetsCount > 1 && (
+                  <Button
+                    size="icon-sm"
+                    variant="outline"
                     className="text-muted-foreground"
-                  onClick={() => onChangeSetsCount(setsCount - 1)}
-                >
-                  <MinusCircleIcon />
-                </Button>
-              )}
+                    onClick={() => onChangeSetsCount(displayedSetsCount - 1)}
+                    disabled={isFinalScoreAvailable}
+                  >
+                    <MinusCircleIcon />
+                  </Button>
+                )}
 
-              <div>
-                <Text variant="bodySmall" className="text-center font-medium">
-                  {setsCount}
-                </Text>
+                <div>
+                  <Text variant="bodySmall" className="text-center font-medium">
+                    {displayedSetsCount}
+                  </Text>
+                </div>
+
+                {displayedSetsCount < 5 && (
+                  <Button
+                    size="icon-sm"
+                    variant="outline"
+                    className="text-muted-foreground"
+                    onClick={() => onChangeSetsCount(displayedSetsCount + 1)}
+                    disabled={isFinalScoreAvailable}
+                  >
+                    <PlusCircleIcon />
+                  </Button>
+                )}
               </div>
-
-              {setsCount < 5 && (
-                <Button
-                  size="icon-sm"
-                  variant="outline"
-                  className="text-muted-foreground"
-                  onClick={() => onChangeSetsCount(setsCount + 1)}
-                >
-                  <PlusCircleIcon />
-                </Button>
-              )}
-            </div>
+            ): (
+              <div className="h-7"/>
+            )}
 
             <div className="flex flex-col gap-1">
-              <div className="h-9 flex items-center">
+              <div className="h-9 gap-2 flex items-center">
+                <Avatar size="sm">
+                  <AvatarImage
+                    src={userTeamOnMatch?.picture || ""}
+                    alt={getPlayerName(userTeamOnMatch)}
+                  />
+                  <AvatarFallback>
+                    {getInitials(userTeamOnMatch?.firstName)}
+                  </AvatarFallback>
+                </Avatar>
                 <Text
                   variant="bodySmall"
                   className={cn(
-                    userTeamOnMatch === "A" ? "font-bold" : "font-medium",
+                    userTeamOnMatch?.team === "A" ? "font-bold" : "font-medium",
                   )}
                 >
-                  A {userTeamOnMatch === "A" ? "(Tú)" : ""}
+                  {userTeamOnMatch?.team === "A" ? "(Tú)" : ""}
                 </Text>
               </div>
 
-              <Separator/>
+              <Separator />
 
-              <div className="h-9 flex items-center mt-1">
+              <div className="h-9 gap-2 flex items-center">
+                <Avatar size="sm">
+                  <AvatarImage
+                    src={firstEnemyPlayer?.picture || ""}
+                    alt={getPlayerName(firstEnemyPlayer)}
+                  />
+                  <AvatarFallback>
+                    {getInitials(firstEnemyPlayer?.firstName)}
+                  </AvatarFallback>
+                </Avatar>
+
                 <Text
                   variant="bodySmall"
                   className={cn(
-                    userTeamOnMatch === "B" ? "font-bold" : "font-medium",
+                    firstEnemyPlayer?.team === "B"
+                      ? "font-bold"
+                      : "font-medium",
                   )}
                 >
-                  B {userTeamOnMatch === "B" ? "(Tú)" : ""}
+                  B {firstEnemyPlayer?.team === "B" ? "(Tú)" : ""}
                 </Text>
               </div>
             </div>
           </div>
 
           <div className="flex gap-2">
-            {sets.map((_, index) => (
+            {displayedSets.map((setScore, index) => (
               <Stack
                 noPx
                 key={`set-${index + 1}`}
@@ -488,9 +564,11 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
                   <InputOTP
                     maxLength={1}
                     type="number"
+                    value={String(setScore.teamA || 0)}
                     onChange={(value) =>
                       onChangeSetScore(index, "teamA", value)
                     }
+                    disabled={isFinalScoreAvailable}
                   >
                     <InputOTPGroup>
                       <InputOTPSlot
@@ -503,9 +581,11 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
                   <InputOTP
                     maxLength={1}
                     type="number"
+                    value={String(setScore.teamB || 0)}
                     onChange={(value) =>
                       onChangeSetScore(index, "teamB", value)
                     }
+                    disabled={isFinalScoreAvailable}
                   >
                     <InputOTPGroup>
                       <InputOTPSlot
@@ -521,47 +601,12 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
         </div>
       </BoxContainer>
 
-      <Button
-        type="button"
-        size="lg"
-        className="h-12 rounded-2xl text-base font-semibold"
-        onClick={submitConfirmation}
-        disabled={
-          isSubmittingConfirmation ||
-          hasPendingAppeal ||
-          match.status === "finished"
-        }
-      >
-        {isSubmittingConfirmation ? <LoaderIcon /> : <CheckCheckIcon />}
-        {isSubmittingConfirmation ? "Confirmando..." : "Confirmar resultado"}
-      </Button>
-
-      {match.status === "finished" && match.scoreBoard?.finalScore && (
-        <BoxContainer
-          className="gap-4"
-          title="Resultado final"
-          description="El partido ya fue finalizado."
-        >
-          <div className="mt-3 flex flex-col gap-2">
-            {match.scoreBoard.finalScore.sets.map((setScore, index) => (
-              <div
-                key={`final-set-${index + 1}`}
-                className="rounded-lg border border-border px-2 py-2 text-sm text-foreground"
-              >
-                Set {index + 1}: A {setScore.teamA} - B {setScore.teamB}
-              </div>
-            ))}
-          </div>
-        </BoxContainer>
-      )}
-
       {hasMismatch && !appeal && match.status !== "finished" && (
         <BoxContainer
           className="gap-4"
           title="Crear apelación"
           description="Se detectaron resultados diferentes. Solo se permite una apelación por partido."
         >
-
           <Textarea
             value={appealReason}
             onChange={(event) => setAppealReason(event.target.value)}
@@ -581,7 +626,6 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
 
       {appeal && (
         <BoxContainer className="gap-4" title="Estado de apelación">
-
           <div className="text-sm text-muted-foreground">
             Estado:{" "}
             <span className="font-semibold text-foreground">
@@ -621,6 +665,23 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
           )}
         </BoxContainer>
       )}
+
+      <Button
+        type="button"
+        size="lg"
+        className="h-12 rounded-2xl text-base font-semibold"
+        onClick={submitConfirmation}
+        disabled={confirmButtonDisabled}
+        variant={confirmButtonDisabled ? "secondary" : "default"}
+      >
+        {isSubmittingConfirmation ? <LoaderIcon /> : <CheckCheckIcon />}
+
+        {ownConfirmation
+          ? "Resultado enviado"
+          : isSubmittingConfirmation
+            ? "Confirmando..."
+            : "Confirmar resultado"}
+      </Button>
     </Stack>
   );
 };
