@@ -1,8 +1,4 @@
-import {
-  CheckCheckIcon,
-  InfoIcon,
-  LoaderIcon,
-} from "lucide-react";
+import { CheckCheckIcon, InfoIcon, LoaderIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -315,7 +311,7 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
 
   if (isLoading) {
     return (
-      <Stack>
+      <Stack className="py-6">
         <Alert>
           <LoaderIcon />
           <AlertDescription>
@@ -328,7 +324,7 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
 
   if (hasError) {
     return (
-      <Stack>
+      <Stack className="py-6">
         <Alert>
           <InfoIcon />
           <AlertDescription>
@@ -341,7 +337,7 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
 
   if (!match) {
     return (
-      <Stack>
+      <Stack className="py-6">
         <Alert>
           <InfoIcon />
           <AlertDescription>Partido no encontrado.</AlertDescription>
@@ -352,7 +348,7 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
 
   if (!isParticipant) {
     return (
-      <Stack>
+      <Stack className="py-6">
         <Alert>
           <InfoIcon />
           <AlertDescription>
@@ -418,36 +414,46 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
         </div>
 
         {ownConfirmation && !isFinalScoreAvailable && (
-          <div className="rounded-lg border border-primary/30 bg-primary/5 p-2">
+          <BoxContainer className="rounded-xl border border-primary/30 bg-primary/5">
             <Text variant="bodySmall" className="font-semibold">
-              Tu resultado enviado
+              Tu resultado enviado:
             </Text>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-2 grid grid-cols-3 gap-2">
               {ownConfirmation.sets.map((setScore, index) => (
-                <Text
-                  variant="bodySmall"
+                <BoxContainer
+                  className="border border-border rounded-lg p-2"
                   key={`own-confirmed-set-${index + 1}`}
-                  className="rounded-md border border-border px-2 py-1 text-foreground"
                 >
-                  <b>Set {index + 1}</b>: {setScore.teamA} - {setScore.teamB}
-                </Text>
+                  <Text
+                    variant="bodySmall"
+                    className="text-foreground text-center"
+                  >
+                    <b>Set {index + 1}</b>
+                  </Text>
+
+                  <Text variant="bodySmall" className="text-center">
+                    {setScore.teamA} - {setScore.teamB}
+                  </Text>
+                </BoxContainer>
               ))}
             </div>
-          </div>
+          </BoxContainer>
         )}
       </BoxContainer>
 
-      <MatchScoreSetsCard
-        title="Cantidad de sets"
-        description={isFinalScoreAvailable ? "Resultado final" : undefined}
-        setsCount={displayedSetsCount}
-        sets={displayedSets}
-        players={players}
-        currentUserUid={currentUserId}
-        isReadOnly={isFinalScoreAvailable}
-        onChangeSetsCount={onChangeSetsCount}
-        onChangeSetScore={onChangeSetScore}
-      />
+      {(!ownConfirmation || isFinalScoreAvailable) && (
+        <MatchScoreSetsCard
+          title="Cantidad de sets"
+          description={isFinalScoreAvailable ? "Resultado final" : undefined}
+          setsCount={displayedSetsCount}
+          sets={displayedSets}
+          players={players}
+          currentUserUid={currentUserId}
+          isReadOnly={isFinalScoreAvailable}
+          onChangeSetsCount={onChangeSetsCount}
+          onChangeSetScore={onChangeSetScore}
+        />
+      )}
 
       {hasMismatch && !appeal && match.status !== "finished" && (
         <BoxContainer

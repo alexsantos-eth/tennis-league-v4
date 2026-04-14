@@ -66,12 +66,12 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
               <MatchSkillCard match={match} />
             )}
 
-            {match.status === "finished" && match.scoreBoard?.finalScore && (
+            {match.status === "finished"  && (
               <MatchScoreSetsCard
                 title="Resultado final"
                 description="Este partido ya fue finalizado."
-                setsCount={match.scoreBoard.finalScore.setsCount}
-                sets={match.scoreBoard.finalScore.sets}
+                setsCount={match.scoreBoard?.finalScore?.setsCount || 0}
+                sets={match.scoreBoard?.finalScore?.sets || []}
                 players={players}
                 currentUserUid={currentUser?.uid}
                 isReadOnly

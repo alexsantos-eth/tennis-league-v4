@@ -124,7 +124,7 @@ const MatchScoreSetsCard: React.FC<MatchScoreSetsCardProps> = ({
                   userTeamOnMatch?.team === "A" ? "font-bold" : "font-medium",
                 )}
               >
-                A {userTeamOnMatch?.team === "A" ? "(Tú)" : ""}
+                A
               </Text>
             </div>
 
@@ -147,7 +147,7 @@ const MatchScoreSetsCard: React.FC<MatchScoreSetsCardProps> = ({
                   firstEnemyPlayer?.team === "B" ? "font-bold" : "font-medium",
                 )}
               >
-                B {firstEnemyPlayer?.team === "B" ? "(Tú)" : ""}
+                B
               </Text>
             </div>
           </div>
@@ -163,7 +163,6 @@ const MatchScoreSetsCard: React.FC<MatchScoreSetsCardProps> = ({
               <div className="flex flex-col gap-2">
                 <InputOTP
                   maxLength={1}
-                  type="number"
                   value={String(setScore.teamA || 0)}
                   onChange={(value) => onChangeSetScore?.(index, "teamA", value)}
                   disabled={isReadOnly}
@@ -178,7 +177,6 @@ const MatchScoreSetsCard: React.FC<MatchScoreSetsCardProps> = ({
 
                 <InputOTP
                   maxLength={1}
-                  type="number"
                   value={String(setScore.teamB || 0)}
                   onChange={(value) => onChangeSetScore?.(index, "teamB", value)}
                   disabled={isReadOnly}
