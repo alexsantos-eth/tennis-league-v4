@@ -3,12 +3,16 @@ import { CalendarDays, MapPin, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
 import Text from "@/components/ui/text";
+import { cn } from "@/lib/utils";
 
 import type { MatchCreatorSummary, MatchRecord } from "@/types/match";
 
 interface UpcomingMatchCardProps {
   match: MatchRecord;
   currentUserUid?: string;
+  className?: string;
+  title?: React.ReactNode;
+  showTitle?: boolean;
 }
 
 const getDisplayName = (player?: MatchCreatorSummary) => {
@@ -64,11 +68,17 @@ const getFormattedDate = (match: MatchRecord) => {
 const UpcomingMatchCard: React.FC<UpcomingMatchCardProps> = ({
   match,
   currentUserUid,
+  className,
+  title = "Proximo partido",
+  showTitle = true,
 }) => {
   const opponent = getOpponent(match, currentUserUid);
 
   return (
-    <BoxContainer className="p-5 gap-4 flex flex-col shadow-sm" title="Proximo partido">
+    <BoxContainer
+      className={cn("p-5 gap-4 flex flex-col shadow-sm", className)}
+      title={showTitle ? title : undefined}
+    >
       <div className="flex flex-col gap-1">
         <Text variant="bodyLarge" className="text-primary font-bold uppercase tracking-wide">
           vs. {getDisplayName(opponent)}

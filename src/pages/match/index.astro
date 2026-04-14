@@ -1,0 +1,27 @@
+---
+import Heads from "../../layouts/heads.astro";
+import Main from "../../layouts/main.astro";
+import Page from "../../layouts/page.astro";
+import MatchHistory from "@/views/match/history/client";
+
+export const prerender = false;
+---
+
+<Page>
+  <Heads
+    title="Historial de partidos | Liga de Tenis GT"
+    description="Consulta todos los partidos registrados en la Liga de Tenis GT."
+    noIndex
+  />
+
+  <body>
+    <Main
+      topbar={{
+        title: "Historial de partidos",
+        goBack: true,
+      }}
+    >
+      <MatchHistory client:load />
+    </Main>
+  </body>
+</Page>

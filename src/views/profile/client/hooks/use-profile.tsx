@@ -72,7 +72,7 @@ const useProfile = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [upcomingMatch, setUpcomingMatch] = useState<MatchRecord | null>(null);
+  const [upcomingMatches, setUpcomingMatches] = useState<MatchRecord[]>([]);
   const [stats, setStats] = useState<ProfileStat[]>([
     { label: "Ranking", value: "-" },
     { label: "Partidos", value: "0" },
@@ -105,11 +105,11 @@ const useProfile = () => {
           isUserInMatch(match, currentUser.uid as string),
         );
 
-        const nextMatch = userMatches
+        const nextMatches = userMatches
           .filter((match) => parseMatchDate(match) >= Date.now())
-          .sort((a, b) => parseMatchDate(a) - parseMatchDate(b))[0];
+          .sort((a, b) => parseMatchDate(a) - parseMatchDate(b));
 
-        setUpcomingMatch(nextMatch || null);
+        setUpcomingMatches(nextMatches);
         setStats(buildStats(currentUser, users, userMatches.length));
       } catch (error) {
         console.error("Error loading profile data:", error);
@@ -150,7 +150,7 @@ const useProfile = () => {
     isLoading,
     hasError,
     stats,
-    upcomingMatch,
+    upcomingMatches,
   };
 };
 

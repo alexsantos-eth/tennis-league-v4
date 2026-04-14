@@ -97,6 +97,24 @@ const getEffectiveScheduledAt = (match: Omit<MatchRecord, "id">) => {
   return buildScheduledAt(match.dateOfMatch, match.timeOfMatch);
 };
 
+const getSortedMatches = async (): Promise<MatchRecord[]> => {
+  const matchesQuery = query(collection(db, MATCH_COLLECTION));
+
+  const snapshot = await getDocs(matchesQuery);
+
+  return snapshot.docs
+    .map((matchDoc) => ({
+      id: matchDoc.id,
+      ...(matchDoc.data() as Omit<MatchRecord, "id">),
+    }))
+    .sort((a, b) => {
+      const aDate = new Date(getEffectiveScheduledAt(a)).getTime();
+      const bDate = new Date(getEffectiveScheduledAt(b)).getTime();
+
+      return bDate - aDate;
+    });
+};
+
 export const createMatchDoc = async (): Promise<
   DocumentReference<DocumentData, DocumentData>
 > => {
@@ -134,23 +152,13 @@ export const createMatch = async (
 export const getRecentMatches = async (
   maxResults = 10,
 ): Promise<MatchRecord[]> => {
-  const matchesQuery = query(collection(db, MATCH_COLLECTION));
+  const allMatches = await getSortedMatches();
 
-  const snapshot = await getDocs(matchesQuery);
+  return allMatches.slice(0, maxResults);
+};
 
-  const allMatches = snapshot.docs.map((matchDoc) => ({
-    id: matchDoc.id,
-    ...(matchDoc.data() as Omit<MatchRecord, "id">),
-  }));
-
-  return allMatches
-    .sort((a, b) => {
-      const aDate = new Date(getEffectiveScheduledAt(a)).getTime();
-      const bDate = new Date(getEffectiveScheduledAt(b)).getTime();
-
-      return bDate - aDate;
-    })
-    .slice(0, maxResults);
+export const getAllMatches = async (): Promise<MatchRecord[]> => {
+  return getSortedMatches();
 };
 
 export const getMatchById = async (
