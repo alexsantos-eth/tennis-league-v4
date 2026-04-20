@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { normalizeMatchDateKey } from "../lib/dates";
+import { updatePlayersUTRAfterMatch } from "./utr";
 import type {
   CreateMatchInput,
   CreateMatchScoreAppealInput,
@@ -211,7 +212,7 @@ export const submitMatchScoreConfirmation = async (
   matchId: string,
   participantId: string,
   scoreInput: SubmitMatchScoreInput,
-): Promise<void> => {
+): Promise<boolean> => {
   const participant = String(participantId || "").trim();
 
   if (!participant) {
@@ -219,6 +220,9 @@ export const submitMatchScoreConfirmation = async (
   }
 
   const matchRef = doc(db, MATCH_COLLECTION, matchId);
+
+  let isUnanimous = false;
+  let finalizedMatch: MatchRecord | undefined;
 
   await runTransaction(db, async (transaction) => {
     const matchDoc = await transaction.get(matchRef);
@@ -265,7 +269,7 @@ export const submitMatchScoreConfirmation = async (
       ),
     );
 
-    const isUnanimous =
+    isUnanimous =
       confirmedParticipants.length === participants.length &&
       uniqueSignatures.length === 1;
 
@@ -289,10 +293,40 @@ export const submitMatchScoreConfirmation = async (
       };
       nextScoreBoard.finalizedAt = now;
       payload.status = "finished";
+
+      // Capture the finalized match for UTR calculation
+      finalizedMatch = {
+        id: matchId,
+        ...currentMatch,
+        scoreBoard: nextScoreBoard,
+        status: "finished",
+      } as MatchRecord;
     }
 
     transaction.update(matchRef, payload as Record<string, unknown>);
   });
+
+  // After transaction completes, calculate UTR if match was finalized
+  if (isUnanimous && finalizedMatch) {
+    try {
+      const playerAIds = (finalizedMatch.invitedPlayers || [])
+        .filter((p): p is MatchCreatorSummary & { team: "A" } => p.team === "A")
+        .map((p) => p.uid || p.id)
+        .filter((id): id is string => Boolean(id));
+
+      const playerBIds = (finalizedMatch.invitedPlayers || [])
+        .filter((p): p is MatchCreatorSummary & { team: "B" } => p.team === "B")
+        .map((p) => p.uid || p.id)
+        .filter((id): id is string => Boolean(id));
+
+      await updatePlayersUTRAfterMatch(finalizedMatch, playerAIds, playerBIds);
+    } catch (error) {
+      console.error("Error updating player UTR:", error);
+      // Don't throw - UTR calculation is secondary to match finalization
+    }
+  }
+
+  return isUnanimous;
 };
 
 export const createMatchScoreAppeal = async (
