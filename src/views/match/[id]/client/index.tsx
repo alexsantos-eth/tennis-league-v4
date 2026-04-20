@@ -25,6 +25,8 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
     currentUser,
     canJoin,
     isCurrentUserParticipant,
+    isCurrentUserCreator,
+    isCurrentUserConfirmed,
   } = useMatchDetail(matchId);
 
   return (
@@ -85,6 +87,8 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
             matchId={matchId}
             matchStatus={match.status}
             isPrivate={match.isPrivate}
+            isCreator={isCurrentUserCreator}
+            isConfirmed={isCurrentUserConfirmed}
           />
         </>
       )}

@@ -52,6 +52,12 @@ export const DELETE: APIRoute = async ({ cookies }) => {
     secure: import.meta.env.PROD,
   });
 
+  cookies.delete("USER_ID", {
+    path: "/",
+    sameSite: "lax",
+    secure: import.meta.env.PROD,
+  });
+
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,
     headers: { "Content-Type": "application/json" },

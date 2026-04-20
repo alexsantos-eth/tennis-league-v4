@@ -7,7 +7,7 @@ import {
   logoutUser as logoutUserFirebase,
 } from "../firebase/auth";
 
-import { getUserById } from "../firebase/users";
+import { createOrUpdateUser, getUserById } from "../firebase/users";
 import { getCategory } from "../lib/category";
 import { USER_ROLE, type User } from "../types/users";
 
@@ -83,6 +83,12 @@ export const useAuthStore = create<AuthState>()(
         set({ loading: true, error: null });
 
         try {
+          const displayName = (firebaseCredentialUser?.displayName || "").trim();
+          const [firstName = "", ...lastNameParts] = displayName
+            .split(/\s+/)
+            .filter(Boolean);
+          const lastName = lastNameParts.join(" ");
+
           const userData = await getUserById(uid);
 
           if (userData) {
@@ -120,14 +126,58 @@ export const useAuthStore = create<AuthState>()(
 
             return fullCurrentUser;
           } else {
+            const seedUserData: Partial<User> = {
+              uid,
+              name: displayName,
+              firstName,
+              lastName,
+              email: firebaseCredentialUser?.email || "",
+              phone: firebaseCredentialUser?.phoneNumber || "",
+              picture: firebaseCredentialUser?.photoURL || "",
+              provider: firebaseCredentialUser?.providerData?.[0]?.providerId || "google.com",
+              role: USER_ROLE.PLAYER,
+              utr: 0,
+              category: "D",
+            };
+
+            const wasCreated = await createOrUpdateUser(uid, seedUserData);
+
+            if (!wasCreated) {
+              set({
+                loading: false,
+                error: "No se pudo crear el usuario",
+                isAuthenticated: false,
+                currentUser: null,
+                firebaseUserData: null,
+              });
+
+              return null;
+            }
+
+            const fullCurrentUser: User = {
+              uid,
+              name: seedUserData.name || `${firstName} ${lastName}`.trim(),
+              firstName,
+              lastName,
+              email: seedUserData.email || "",
+              phone: seedUserData.phone || "",
+              picture: seedUserData.picture || "",
+              provider: seedUserData.provider || "google.com",
+              role: USER_ROLE.PLAYER,
+              utr: 0,
+              category: getCategory({ utr: 0 }),
+            };
+
             set({
               loading: false,
-              error: "No se encontraron datos del usuario",
-              isAuthenticated: false,
-              currentUser: null,
-              firebaseUserData: null,
+              error: null,
+              currentUser: fullCurrentUser,
+              firebaseUserData: firebaseCredentialUser,
+              phoneNumber: fullCurrentUser.phone,
+              isAuthenticated: true,
             });
-            return null;
+
+            return fullCurrentUser;
           }
         } catch (error) {
           console.error("Error fetching current user data:", error);
@@ -146,7 +196,7 @@ export const useAuthStore = create<AuthState>()(
         set({ loading: true, error: null });
         try {
           const result = await logoutUserFirebase();
-          await fetch("/api/auth/session", {
+          await fetch("/api/auth", {
             method: "DELETE",
           });
 

@@ -153,6 +153,11 @@ const useScoreEvents = ({ matchId }: UseScoreEventsProps) => {
       return;
     }
 
+    if (isMatchOwner) {
+      toast.error("El creador del partido no puede crear apelaciones.");
+      return;
+    }
+
     try {
       setIsSubmittingAppeal(true);
 

@@ -1,4 +1,4 @@
-import { Edit3 } from "lucide-react";
+import { LogOut } from "lucide-react";
 
 import {
   Avatar,
@@ -19,6 +19,8 @@ interface ProfileSummaryCardProps {
     label: string;
     value: string;
   }[];
+  onLogout: () => void;
+  isLoggingOut?: boolean;
 }
 
 const getInitials = (name: string) => {
@@ -38,6 +40,8 @@ const ProfileSummaryCard: React.FC<ProfileSummaryCardProps> = ({
   user,
   fullName,
   stats,
+  onLogout,
+  isLoggingOut = false,
 }) => {
   return (
     <BoxContainer className="shadow-sm p-6 gap-6 flex flex-col">
@@ -62,9 +66,15 @@ const ProfileSummaryCard: React.FC<ProfileSummaryCardProps> = ({
           </Text>
         </div>
 
-        <Button type="button" size="lg" className="min-w-44">
-          <Edit3 />
-          Editar perfil
+        <Button
+          type="button"
+          size="lg"
+          className="min-w-44"
+          onClick={onLogout}
+          disabled={isLoggingOut}
+        >
+          <LogOut />
+          {isLoggingOut ? "Cerrando sesión..." : "Cerrar sesión"}
         </Button>
       </div>
 

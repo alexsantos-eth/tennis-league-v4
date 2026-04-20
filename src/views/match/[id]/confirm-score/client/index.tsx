@@ -1,4 +1,4 @@
-import { CheckCheckIcon, InfoIcon, LoaderIcon } from "lucide-react";
+import { CheckCheckIcon, InfoIcon, LoaderIcon, SendIcon } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -179,48 +179,66 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
         />
       )}
 
-      {hasMismatch && !appeal && match.status !== "finished" && (
-        <BoxContainer
-          className="gap-4"
-          title="Crear apelación"
-          description="Se detectaron resultados diferentes. Solo se permite una apelación por partido."
-        >
-          <Textarea
-            value={appealReason}
-            onChange={(event) => setAppealReason(event.target.value)}
-            placeholder="Describe por qué el resultado no coincide"
-          />
-
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={submitAppeal}
-            disabled={isSubmittingAppeal || !appealReason.trim()}
+      {hasMismatch &&
+        !appeal &&
+        match.status !== "finished" &&
+        !isMatchOwner && (
+          <BoxContainer
+            className="gap-4"
+            title="Crear apelación"
+            description="Se detectaron resultados diferentes. Solo se permite una apelación por partido."
           >
-            {isSubmittingAppeal ? "Enviando apelación..." : "Enviar apelación"}
-          </Button>
-        </BoxContainer>
-      )}
+            <Textarea
+              value={appealReason}
+              onChange={(event) => setAppealReason(event.target.value)}
+              placeholder="Describe por qué el resultado no coincide"
+            />
+
+            <Button
+              type="button"
+              size="lg"
+              variant="default"
+              onClick={submitAppeal}
+              disabled={isSubmittingAppeal || !appealReason.trim()}
+            >
+              <SendIcon />
+              {isSubmittingAppeal
+                ? "Enviando apelación..."
+                : "Enviar apelación"}
+            </Button>
+          </BoxContainer>
+        )}
+
+      {hasMismatch &&
+        !appeal &&
+        match.status !== "finished" &&
+        isMatchOwner && (
+          <BoxContainer
+            className="gap-4 border border-amber-200 bg-amber-50"
+            title="Resultados en conflicto"
+          >
+            <Text variant="bodySmall">
+              Espera a que un participante cree una apelación para resolver el
+              conflicto.
+            </Text>
+          </BoxContainer>
+        )}
 
       {appeal && (
         <BoxContainer className="gap-4" title="Estado de apelación">
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-foreground">
             Estado:{" "}
             <span className="font-semibold text-foreground">
-              {appeal.status}
+              {(() => {
+                if (appeal.status === "pending") return "Pendiente";
+                if (appeal.status === "accepted") return "Aceptada";
+                if (appeal.status === "rejected") return "Rechazada";
+                return appeal.status;
+              })()}
             </span>
           </div>
-          <p className="text-sm text-foreground">{appeal.reason}</p>
 
-          <div className="text-sm text-muted-foreground">
-            Resultado propuesto:{" "}
-            {appeal.proposedScore.sets
-              .map(
-                (setScore, index) =>
-                  `Set ${index + 1} (${setScore.teamA}-${setScore.teamB})`,
-              )
-              .join(" · ")}
-          </div>
+          <p className="text-sm text-foreground">Comentarios: {appeal.reason}</p>
 
           {hasPendingAppeal && isMatchOwner && (
             <div className="grid grid-cols-2 gap-4">

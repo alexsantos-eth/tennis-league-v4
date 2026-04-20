@@ -12,6 +12,8 @@ interface MatchCtaBarProps {
   matchId: string;
   matchStatus: PublicMatchStatus;
   isPrivate?: boolean;
+  isCreator?: boolean;
+  isConfirmed?: boolean;
 }
 
 const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
@@ -20,6 +22,8 @@ const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
   matchId,
   matchStatus,
   isPrivate,
+  isCreator,
+  isConfirmed,
 }) => {
   const [isConfirming, setIsConfirming] = useState(false);
   const { currentUser } = useAuthStore();
@@ -51,7 +55,18 @@ const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
 
   return (
     <div className="fixed bottom-0 left-0 w-full p-6 bg-background border-t border-border z-10">
-      {isParticipant && matchStatus !== "finished" ? (
+      {isParticipant && !isConfirmed ? (
+        <Button
+          type="button"
+          size="lg"
+          className="w-full text-lg h-12 rounded-2xl"
+          onClick={handleJoinMatch}
+          disabled={isConfirming}
+        >
+          <PlayIcon />
+          {isConfirming ? "Confirmando..." : "Unirse al partido"}
+        </Button>
+      ) : isParticipant && isConfirmed && matchStatus !== "finished" ? (
         <Button
           type="button"
           size="lg"
@@ -64,7 +79,7 @@ const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
             ? "Ver apelación de score"
             : "Confirmar score"}
         </Button>
-      ) : isParticipant && matchStatus === "finished" ? (
+      ) : isParticipant && isConfirmed && matchStatus === "finished" ? (
         <Button
           type="button"
           size="lg"

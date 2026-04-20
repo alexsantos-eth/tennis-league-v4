@@ -96,6 +96,29 @@ const useMatchDetail = (matchId: string) => {
     return Boolean(invitedPlayer && !invitedPlayer.confirmed);
   }, [match, currentUser?.uid]);
 
+  const isCurrentUserCreator = useMemo(() => {
+    if (!match || !currentUser?.uid) {
+      return false;
+    }
+
+    return (
+      match.createdBy.uid === currentUser.uid ||
+      match.createdBy.id === currentUser.uid
+    );
+  }, [match, currentUser?.uid]);
+
+  const isCurrentUserConfirmed = useMemo(() => {
+    if (!match || !currentUser?.uid) {
+      return false;
+    }
+
+    const currentPlayerInMatch = players.find(
+      (player) => player.uid === currentUser.uid || player.id === currentUser.uid,
+    );
+
+    return Boolean(currentPlayerInMatch?.confirmed);
+  }, [match, currentUser?.uid, players]);
+
   const canJoin = Boolean(
     match &&
       !isCurrentUserParticipant &&
@@ -112,6 +135,8 @@ const useMatchDetail = (matchId: string) => {
     playersCapacity,
     isCurrentUserParticipant,
     isCurrentUserInvitedButNotConfirmed,
+    isCurrentUserCreator,
+    isCurrentUserConfirmed,
     canJoin,
   };
 };
