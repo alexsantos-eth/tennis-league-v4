@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { getRecentMatches } from "@/firebase/match";
-import { getAllUsers } from "@/firebase/users";
+import { getUser } from "@/firebase/users";
 import { normalizeMatchDateKey } from "@/lib/dates";
-import { calculateRankingByUTR } from "@/lib/ranking";
 import { useAuthStore } from "@/store/auth";
 
 import type { MatchRecord } from "@/types/match";
@@ -32,7 +31,10 @@ const parseMatchDate = (match: MatchRecord): number => {
     }
   }
 
-  const composedTs = parseFlexibleDateTime(match.dateOfMatch, match.timeOfMatch);
+  const composedTs = parseFlexibleDateTime(
+    match.dateOfMatch,
+    match.timeOfMatch,
+  );
 
   if (!Number.isNaN(composedTs)) {
     return composedTs;
@@ -50,18 +52,12 @@ const isUserInMatch = (match: MatchRecord, uid: string) => {
   return isCreator || isInvited;
 };
 
-const buildStats = (user: User | null, users: User[], totalMatches: number): ProfileStat[] => {
+const buildStats = (user: User | null, totalMatches: number): ProfileStat[] => {
   const userUtr = String(Number(user?.utr || 0));
-  const ranking =
-    users.length > 0
-      ? calculateRankingByUTR(
-          userUtr,
-          users.map((entry) => ({ utr: String(Number(entry.utr || 0)) })),
-        )
-      : "-";
+  const category = user?.category;
 
   return [
-    { label: "Ranking", value: ranking },
+    { label: "Categoria", value: category || "-" },
     { label: "Partidos", value: String(totalMatches) },
     { label: "UTR", value: Number(user?.utr || 0).toFixed(2) },
   ];
@@ -79,6 +75,8 @@ const useProfile = () => {
     { label: "UTR", value: "0.00" },
   ]);
 
+  const [userMatches, setUserMatches] = useState<MatchRecord[]>([]);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -92,9 +90,9 @@ const useProfile = () => {
         setIsLoading(true);
         setHasError(false);
 
-        const [recentMatches, users] = await Promise.all([
+        const [recentMatches, profileUser] = await Promise.all([
           getRecentMatches(100),
-          getAllUsers(),
+          getUser(currentUser.uid as string),
         ]);
 
         if (!isMounted) {
@@ -105,12 +103,16 @@ const useProfile = () => {
           isUserInMatch(match, currentUser.uid as string),
         );
 
+        setUserMatches(userMatches);
+
         const nextMatches = userMatches
           .filter((match) => parseMatchDate(match) >= Date.now())
           .sort((a, b) => parseMatchDate(a) - parseMatchDate(b));
 
         setUpcomingMatches(nextMatches);
-        setStats(buildStats(currentUser, users, userMatches.length));
+        setStats(
+          buildStats((profileUser as User) || currentUser, userMatches.length),
+        );
       } catch (error) {
         console.error("Error loading profile data:", error);
 
@@ -132,7 +134,8 @@ const useProfile = () => {
   }, [currentUser?.uid]);
 
   const fullName = useMemo(() => {
-    const byNames = `${currentUser?.firstName || ""} ${currentUser?.lastName || ""}`.trim();
+    const byNames =
+      `${currentUser?.firstName || ""} ${currentUser?.lastName || ""}`.trim();
     if (byNames.length > 0) {
       return byNames;
     }
@@ -144,13 +147,24 @@ const useProfile = () => {
     return "Jugador";
   }, [currentUser?.firstName, currentUser?.lastName, currentUser?.name]);
 
+  const friendlyMatches = useMemo(() => {
+    return userMatches.filter((match) => match.matchFormat === "Friendly");
+  }, [userMatches]);
+
+  const rankingMatches = useMemo(() => {
+    return userMatches.filter((match) => match.matchFormat === "Ranking");
+  }, [userMatches]);
+
   return {
     user: currentUser,
     fullName,
     isLoading,
+    userMatches,
     hasError,
     stats,
     upcomingMatches,
+    friendlyMatches,
+    rankingMatches,
   };
 };
 

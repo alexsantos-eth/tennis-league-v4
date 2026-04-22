@@ -9,12 +9,15 @@ import { shareLink } from "@/lib/share";
 
 interface MatchHeroProps {
   match: MatchRecord;
+  scrollOpacity: number;
 }
 
-const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
+const MatchHero: React.FC<MatchHeroProps> = ({ match, scrollOpacity }) => {
   const onShare = async () => {
     shareLink(window.location.href, "Partido compartido");
   };
+
+  const invertedForegroundColor = 255 - scrollOpacity * 255;
 
   return (
     <section className="relative h-60 overflow-hidden">
@@ -26,12 +29,21 @@ const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
 
       <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/35 to-black/20" />
 
-      <div className="absolute top-4 left-0 w-full px-6 flex items-center justify-between">
+      <div
+        className="fixed top-0 left-0 w-full px-6 py-4 flex items-center justify-between z-50"
+        style={{
+          backgroundColor: `rgba(255, 255, 255, ${scrollOpacity * 0.99})`,
+          boxShadow: "0px 5px 5px -1px rgba(0,0,0,0.02)",
+        }}
+      >
         <Button
           type="button"
           variant="outline"
           size="icon"
-          className="bg-transparent animate-fade-right text-primary-foreground"
+          className="bg-transparent animate-fade-right text-primary-foreground transition-none"
+          style={{
+            color: `rgba(${invertedForegroundColor}, ${invertedForegroundColor}, ${invertedForegroundColor}, 1)`,
+          }}
           onClick={() => history.back()}
         >
           <ArrowLeft />
@@ -41,14 +53,17 @@ const MatchHero: React.FC<MatchHeroProps> = ({ match }) => {
           type="button"
           variant="outline"
           size="icon"
-          className="bg-transparent animate-fade-left text-primary-foreground"
+          className="bg-transparent animate-fade-left text-primary-foreground transition-none"
+          style={{
+            color: `rgba(${invertedForegroundColor}, ${invertedForegroundColor}, ${invertedForegroundColor}, 1)`,
+          }}
           onClick={onShare}
         >
           <Share2 />
         </Button>
       </div>
 
-      <div className="absolute bottom-10 left-0 w-full px-6 flex flex-col    ">
+      <div className="absolute bottom-10 left-0 w-full px-6 flex flex-col">
         <Badge
           variant="secondary"
           className="w-fit bg-white/20 text-white border-white/20"

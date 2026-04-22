@@ -155,7 +155,11 @@ const MatchScoreSetsCard: React.FC<MatchScoreSetsCardProps> = ({
 
         <div className="flex gap-2">
           {sets.map((setScore, index) => (
-            <Stack noPx key={`set-${index + 1}`} className="gap-2 items-center w-10">
+            <Stack
+              noPx
+              key={`set-${index + 1}`}
+              className="gap-2 items-center w-10"
+            >
               <Text variant="bodySmall" className="font-medium text-center">
                 Set {index + 1}
               </Text>
@@ -164,8 +168,11 @@ const MatchScoreSetsCard: React.FC<MatchScoreSetsCardProps> = ({
                 <InputOTP
                   maxLength={1}
                   value={String(setScore.teamA || 0)}
-                  onChange={(value) => onChangeSetScore?.(index, "teamA", value)}
-                  disabled={isReadOnly}
+                  onChange={(value) =>
+                    isReadOnly
+                      ? undefined
+                      : onChangeSetScore?.(index, "teamA", value)
+                  }
                 >
                   <InputOTPGroup>
                     <InputOTPSlot
@@ -178,8 +185,11 @@ const MatchScoreSetsCard: React.FC<MatchScoreSetsCardProps> = ({
                 <InputOTP
                   maxLength={1}
                   value={String(setScore.teamB || 0)}
-                  onChange={(value) => onChangeSetScore?.(index, "teamB", value)}
-                  disabled={isReadOnly}
+                  onChange={(value) =>
+                    isReadOnly
+                      ? undefined
+                      : onChangeSetScore?.(index, "teamB", value)
+                  }
                 >
                   <InputOTPGroup>
                     <InputOTPSlot

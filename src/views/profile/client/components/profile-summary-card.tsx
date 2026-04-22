@@ -44,7 +44,7 @@ const ProfileSummaryCard: React.FC<ProfileSummaryCardProps> = ({
   isLoggingOut = false,
 }) => {
   return (
-    <BoxContainer className="shadow-sm p-6 gap-6 flex flex-col">
+    <BoxContainer className="shadow-sm p-4 gap-6 flex flex-col">
       <div className="flex flex-col items-center text-center gap-4">
         <div className="relative">
           <Avatar size="lg" className="size-26">
@@ -83,7 +83,7 @@ const ProfileSummaryCard: React.FC<ProfileSummaryCardProps> = ({
           return (
             <BoxContainer
               key={stat.label}
-              className="border px-0 py-2"
+              className="border px-0 py-2 rounded-xl"
             >
               <Text
                 variant="bodySmall"

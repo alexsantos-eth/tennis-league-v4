@@ -1,4 +1,7 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Share2Icon } from "lucide-react";
+
+import { shareLink } from "@/lib/share";
+
 import { Button } from "../../components/ui/button";
 import Text from "../../components/ui/text";
 
@@ -7,16 +10,23 @@ export interface TopbarProps {
   className?: string;
   goBack?: boolean | (() => void);
   rightButton?: React.ReactNode;
+  shareButton?: boolean;
 }
 
-const Topbar = ({ title, className, goBack, rightButton }: TopbarProps) => {
+const Topbar = ({
+  title,
+  className,
+  goBack,
+  rightButton,
+  shareButton = false,
+}: TopbarProps) => {
   const onGoBack = () => {
     if (typeof goBack === "function") {
       goBack();
     } else {
       history.back();
     }
-  }
+  };
 
   return (
     <header
@@ -48,6 +58,18 @@ const Topbar = ({ title, className, goBack, rightButton }: TopbarProps) => {
         </div>
 
         {rightButton}
+        {shareButton && (
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => {
+              shareLink(window.location.href);
+            }}
+            className="bg-transparent text-foreground animate-fade-right"
+          >
+            <Share2Icon className="h-4 w-4" />
+          </Button>
+        )}
       </div>
     </header>
   );

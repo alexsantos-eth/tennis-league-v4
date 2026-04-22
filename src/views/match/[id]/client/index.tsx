@@ -1,13 +1,14 @@
 import { InfoIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Stack from "@/components/ui/stack";
 
+import MatchScoreSetsCard from "../components/match-score-sets-card";
 import MatchCtaBar from "./components/match-cta-bar";
 import MatchHero from "./components/match-hero";
 import MatchInfoCard from "./components/match-info-card";
 import MatchPlayersCard from "./components/match-players-card";
-import MatchScoreSetsCard from "../components/match-score-sets-card";
 import MatchSkillCard from "./components/match-skill-card";
 import useMatchDetail from "./hooks/useMatchDetail.ts";
 
@@ -29,8 +30,28 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
     isCurrentUserConfirmed,
   } = useMatchDetail(matchId);
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollOpacity, setScrollOpacity] = useState(0);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollY = container.scrollTop;
+      const opacity = Math.min(scrollY / 120, 1);
+      setScrollOpacity(opacity);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="w-full h-full overflow-scroll pb-28">
+    <div
+      className="w-full h-full overflow-scroll pb-28"
+      ref={scrollContainerRef}
+    >
       {isLoading && (
         <Stack className="py-6">
           <Alert>
@@ -53,22 +74,12 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
 
       {!isLoading && !hasError && Boolean(match) && match && (
         <>
-          <MatchHero match={match} />
+          <MatchHero match={match} scrollOpacity={scrollOpacity} />
 
-          <Stack className="py-6 bg-muted relative z-2">
+          <Stack className="py-6 bg-muted relative z-2 -mb-4">
             <MatchInfoCard match={match} />
-            <MatchPlayersCard
-              players={players}
-              playersCapacity={playersCapacity}
-              currentUserUid={currentUser?.uid}
-              matchId={matchId}
-            />
 
-            {match.matchFormat === "Ranking" && (
-              <MatchSkillCard match={match} />
-            )}
-
-            {match.status === "finished"  && (
+            {match.status === "finished" && (
               <MatchScoreSetsCard
                 title="Resultado final"
                 description="Este partido ya fue finalizado."
@@ -78,6 +89,17 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
                 currentUserUid={currentUser?.uid}
                 isReadOnly
               />
+            )}
+
+            <MatchPlayersCard
+              players={players}
+              playersCapacity={playersCapacity}
+              currentUserUid={currentUser?.uid}
+              matchId={matchId}
+            />
+
+            {match.matchFormat === "Ranking" && (
+              <MatchSkillCard match={match} />
             )}
           </Stack>
 

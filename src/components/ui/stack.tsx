@@ -6,6 +6,7 @@ interface StackProps {
   noPx?: boolean;
   size?: "sm" | "default";
   orientation?: "vertical" | "horizontal";
+  innerRef?: React.Ref<HTMLDivElement | null>;
 }
 
 const Stack: React.FC<StackProps> = ({
@@ -14,9 +15,11 @@ const Stack: React.FC<StackProps> = ({
   size = "default",
   orientation = "vertical",
   noPx = false,
+  innerRef,
 }) => {
   return (
     <div
+      ref={innerRef}
       className={cn(
         "flex",
         size === "default" ? "gap-6" : "gap-4",

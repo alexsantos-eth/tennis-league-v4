@@ -2,13 +2,15 @@
 import Navigation from "./components/navigation";
 import Topbar from "./components/topbar";
 import { cn } from "../lib/styles";
-import { Toaster } from "@/components/ui/sonner";
+import ClientProvider from "./client";
 
 interface Props {
   topbar?: {
     title: string;
     subtitle?: string;
     goBack?: boolean;
+    rightButton?: React.ReactNode;
+    shareButton?: boolean;
   };
   className?: string;
   showNav?: boolean;
@@ -28,8 +30,9 @@ const { topbar, className, showNav } = Astro.props;
       className,
     )}
   >
-    <Toaster client:load />
-    <slot />
+    <ClientProvider client:load>
+      <slot />
+    </ClientProvider>
   </main>
-  {showNav && <Navigation />}
+  {showNav && <Navigation client:load />}
 </div>

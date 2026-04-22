@@ -1,4 +1,9 @@
-import { CalendarDays, MapPin, MessageCircle } from "lucide-react";
+import {
+  CalendarDays,
+  ExternalLinkIcon,
+  MapPin,
+  MessageCircle,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
@@ -52,7 +57,8 @@ const getOpponent = (match: MatchRecord, uid?: string) => {
 
 const getFormattedDate = (match: MatchRecord) => {
   const fallback = `${match.dateOfMatch} ${match.timeOfMatch}`;
-  const dateToFormat = match.scheduledAt || `${match.dateOfMatch}T${match.timeOfMatch}`;
+  const dateToFormat =
+    match.scheduledAt || `${match.dateOfMatch}T${match.timeOfMatch}`;
   const parsedDate = new Date(dateToFormat);
 
   if (Number.isNaN(parsedDate.getTime())) {
@@ -80,7 +86,10 @@ const UpcomingMatchCard: React.FC<UpcomingMatchCardProps> = ({
       title={showTitle ? title : undefined}
     >
       <div className="flex flex-col gap-1">
-        <Text variant="bodyLarge" className="text-primary font-bold uppercase tracking-wide">
+        <Text
+          variant="bodyLarge"
+          className="text-primary font-bold uppercase tracking-wide"
+        >
           vs. {getDisplayName(opponent)}
         </Text>
 
@@ -99,17 +108,20 @@ const UpcomingMatchCard: React.FC<UpcomingMatchCardProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Button asChild variant="secondary" >
-          <a href={`/match/${match.id}`}>Ver partido</a>
-        </Button>
+      <div className="flex gap-2">
+        <a href={`/match/${match.id}`}>
+          <Button variant="secondary">
+            <ExternalLinkIcon />
+            Ver partido
+          </Button>
+        </a>
 
-        <Button asChild >
-          <a href={`/match/${match.id}`}>
+        <a href={`/match/${match.id}`}>
+          <Button>
             <MessageCircle />
             Contactar
-          </a>
-        </Button>
+          </Button>
+        </a>
       </div>
     </BoxContainer>
   );
