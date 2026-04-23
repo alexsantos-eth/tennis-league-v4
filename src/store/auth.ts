@@ -113,6 +113,7 @@ export const useAuthStore = create<AuthState>()(
                 firebaseCredentialUser?.providerData?.[0]?.providerId ||
                 "google.com",
               category: userData.category || getCategory(userData),
+              kycCompleted: Boolean(userData.kycCompleted),
             };
 
             set({
@@ -166,6 +167,7 @@ export const useAuthStore = create<AuthState>()(
               role: USER_ROLE.PLAYER,
               utr: 0,
               category: getCategory({ utr: 0 }),
+              kycCompleted: false,
             };
 
             set({

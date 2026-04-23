@@ -1,0 +1,29 @@
+---
+import Heads from "../../../layouts/heads.astro";
+import Main from "../../../layouts/main.astro";
+import Page from "../../../layouts/page.astro";
+import KycView from "@/views/auth/kyc/client";
+
+export const prerender = false;
+---
+
+<Page>
+  <Heads
+    title="Crear cuenta | Liga de Tenis GT"
+    description="Regístrate para unirte a la Liga de Tenis GT y comenzar a administrar tus partidos y resultados."
+    noIndex
+  />
+
+  <body>
+    <Main
+      topbar={{
+        goBack: true,
+        className: "bg-accent",
+      }}
+      showNav={false}
+    >
+      <KycView client:load />
+    </Main>
+  </body>
+</Page>
+

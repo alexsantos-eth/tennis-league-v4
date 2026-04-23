@@ -4,6 +4,11 @@ export const ROUTES = {
     pathRgx: "^/auth",
     public: true,
   },
+  AUTH_KYC: {
+    path: "/auth/kyc",
+    pathRgx: "^/auth/kyc",
+    public: true,
+  },
   HOME: {
     path: "/",
     pathRgx: "^/$",

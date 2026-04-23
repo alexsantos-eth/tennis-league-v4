@@ -87,7 +87,7 @@ const UpcomingMatchCard: React.FC<UpcomingMatchCardProps> = ({
     >
       <div className="flex flex-col gap-1">
         <Text
-          variant="bodyLarge"
+          variant="body"
           className="text-primary font-bold uppercase tracking-wide"
         >
           vs. {getDisplayName(opponent)}
@@ -95,14 +95,14 @@ const UpcomingMatchCard: React.FC<UpcomingMatchCardProps> = ({
 
         <div className="flex items-center gap-2 text-muted-foreground">
           <CalendarDays className="size-4" />
-          <Text variant="body" className="text-muted-foreground">
+          <Text variant="bodySmall" className="text-muted-foreground">
             {getFormattedDate(match)}
           </Text>
         </div>
 
         <div className="flex items-center gap-2 text-muted-foreground">
           <MapPin className="size-4" />
-          <Text variant="body" className="text-muted-foreground">
+          <Text variant="bodySmall" className="text-muted-foreground">
             {match.location}
           </Text>
         </div>

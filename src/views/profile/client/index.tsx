@@ -1,4 +1,4 @@
-import { HistoryIcon, InfoIcon } from "lucide-react";
+import { HistoryIcon, InfoIcon, LogOut } from "lucide-react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -56,105 +56,101 @@ const ProfilePage: React.FC = () => {
 
         {!isLoading && !hasError && (
           <Stack noPx>
-            <ProfileSummaryCard
-              user={user}
-              fullName={fullName}
-              stats={stats}
-              onLogout={handleLogout}
-              isLoggingOut={authLoading}
-            />
+            <ProfileSummaryCard user={user} fullName={fullName} />
 
-            <Stack noPx>
-              {upcomingMatches.length > 0 ? (
-                <UpcomingMatchesSlider
-                  matches={upcomingMatches}
-                  currentUserUid={user?.uid}
-                />
-              ) : (
-                <div className="flex flex-col gap-4 mt-6">
-                  <Alert>
-                    <InfoIcon />
-                    <AlertDescription>
-                      Aun no tienes proximos partidos programados.
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              )}
+            {upcomingMatches.length > 0 ? (
+              <UpcomingMatchesSlider
+                matches={upcomingMatches}
+                currentUserUid={user?.uid}
+              />
+            ) : (
+              <div className="flex flex-col gap-4">
+                <Alert>
+                  <InfoIcon />
+                  <AlertDescription>
+                    Aun no tienes proximos partidos programados.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
 
-              <BoxContainer title="Estadisticas" className="pt-2 pb-4">
-                <Stack noPx>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="flex gap-0 flex-col -ml-4">
-                      <div className="flex items-center">
-                        <CircularProgress
-                          circleStrokeWidth={6}
-                          labelClassName="text-xl font-bold"
-                          progressStrokeWidth={10}
-                          renderLabel={(progress) =>
-                            `${(progress / 10).toFixed(2)}`
-                          }
-                          showLabel
-                          size={120}
-                          value={Number(stats?.[2]?.value) * 10 || 0}
-                        />
-                      </div>
-
-                      <Text
-                        variant="bodySmall"
-                        className="font-bold text-primary text-center w-full -mt-2"
-                      >
-                        UTR
-                      </Text>
+            <BoxContainer title="Estadisticas" className="pt-2 pb-4">
+              <Stack noPx>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="flex gap-0 flex-col -ml-4">
+                    <div className="flex items-center">
+                      <CircularProgress
+                        circleStrokeWidth={6}
+                        labelClassName="text-xl font-bold"
+                        progressStrokeWidth={10}
+                        renderLabel={(progress) =>
+                          `${(progress / 10).toFixed(2)}`
+                        }
+                        showLabel
+                        size={120}
+                        value={Number(stats?.[2]?.value) * 10 || 0}
+                      />
                     </div>
 
-                    <div className="max-w-max">
-                      <div className="flex items-center gap-2">
-                        <Text variant="bodySmall" className="text-foreground">
-                          Categoria:
-                        </Text>
-                        <Text variant="body" className="text-primary font-bold">
-                          {stats?.[0]?.value}
-                        </Text>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Text variant="bodySmall" className="text-foreground">
-                          Total amistosos:
-                        </Text>
-                        <Text variant="body" className="text-primary font-bold">
-                          {friendlyMatches.length}
-                        </Text>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Text variant="bodySmall" className="text-foreground">
-                          Total competitivos:
-                        </Text>
-                        <Text variant="body" className="text-primary font-bold">
-                          {rankingMatches.length}
-                        </Text>
-                      </div>
-
-                      <Text
-                        variant="bodyXs"
-                        className="mt-2 text-muted-foreground max-w-30"
-                      >
-                        * La categoria se asigna segun tu UTR.
-                      </Text>
-                    </div>
+                    <Text
+                      variant="bodySmall"
+                      className="font-bold text-primary text-center w-full -mt-2"
+                    >
+                      UTR
+                    </Text>
                   </div>
 
-                  <a href="/match" className="w-full">
-                    <Button variant="outline" className="w-full" size="lg">
-                      <HistoryIcon />
-                      Historial de partidos
-                    </Button>
-                  </a>
-                </Stack>
-              </BoxContainer>
-            </Stack>
+                  <div className="max-w-max">
+                    <div className="flex items-center gap-2">
+                      <Text variant="bodySmall" className="text-foreground">
+                        Categoria:
+                      </Text>
+                      <Text variant="body" className="text-primary font-bold">
+                        {stats?.[0]?.value}
+                      </Text>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Text variant="bodySmall" className="text-foreground">
+                        Total amistosos:
+                      </Text>
+                      <Text variant="body" className="text-primary font-bold">
+                        {friendlyMatches.length}
+                      </Text>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Text variant="bodySmall" className="text-foreground">
+                        Total competitivos:
+                      </Text>
+                      <Text variant="body" className="text-primary font-bold">
+                        {rankingMatches.length}
+                      </Text>
+                    </div>
+
+                    <Text
+                      variant="bodyXs"
+                      className="mt-2 text-muted-foreground max-w-30"
+                    >
+                      * La categoria se asigna segun tu UTR.
+                    </Text>
+                  </div>
+                </div>
+              </Stack>
+            </BoxContainer>
           </Stack>
         )}
+
+        <Button
+          type="button"
+          size="lg"
+          variant="destructive"
+          onClick={handleLogout}
+          disabled={authLoading}
+        >
+          <LogOut />
+          {authLoading ? "Cerrando sesión..." : "Cerrar sesión"}
+        </Button>
       </div>
     </div>
   );

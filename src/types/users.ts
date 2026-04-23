@@ -9,6 +9,7 @@ export interface AuthUser {
   lastName?: string;
   firstName?: string;
   gender?: "hombre" | "mujer";
+  kycCompleted?: boolean;
 }
 
 export enum USER_ROLE {

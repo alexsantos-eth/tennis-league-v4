@@ -28,13 +28,34 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const isPublicPath = Boolean(foundRoute?.public);
 
   const userUID = context.cookies.get("USER_UID")?.value;
+  const hasCompletedKyc = context.cookies.get("USER_KYC_COMPLETED")?.value === "1";
+
+  if (pathname === "/auth/kyc" && !userUID) {
+    return context.redirect("/auth");
+  }
+
+  if (pathname === "/auth/kyc" && userUID && hasCompletedKyc) {
+    return context.redirect("/");
+  }
 
   if (pathname === "/auth" && Boolean(userUID)) {
+    return context.redirect(hasCompletedKyc ? "/" : "/auth/kyc");
+  }
+
+  if (userUID && !hasCompletedKyc && pathname !== "/auth/kyc") {
+    return context.redirect("/auth/kyc");
+  }
+
+  if (userUID && hasCompletedKyc && pathname === "/auth/kyc") {
     return context.redirect("/");
   }
 
   if (foundRoute && !isPublicPath && !SKIP_AUTH && !userUID) {
     return context.redirect("/auth");
+  }
+
+  if (foundRoute && !isPublicPath && !SKIP_AUTH && userUID && !hasCompletedKyc) {
+    return context.redirect("/auth/kyc");
   }
 
   return next();

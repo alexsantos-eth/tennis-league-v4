@@ -4,6 +4,7 @@ import { shareLink } from "@/lib/share";
 
 import { Button } from "../../components/ui/button";
 import Text from "../../components/ui/text";
+import { cn } from "@/lib/styles";
 
 export interface TopbarProps {
   title?: string;
@@ -31,7 +32,7 @@ const Topbar = ({
   return (
     <header
       style={{ boxShadow: "0px 5px 5px -1px rgba(0,0,0,0.02)" }}
-      className={`fixed top-0 left-0 right-0 z-10 bg-background ${className}`}
+      className={cn( "fixed top-0 left-0 right-0 z-10 bg-background", className)}
     >
       <div
         data-id="container"
@@ -53,7 +54,7 @@ const Topbar = ({
             variant="bodyLarge"
             className="text-foreground font-semibold animate-fade-down"
           >
-            {title || "GTL"}
+            {title}
           </Text>
         </div>
 

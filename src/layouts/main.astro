@@ -1,17 +1,11 @@
 ---
 import Navigation from "./components/navigation";
-import Topbar from "./components/topbar";
+import Topbar, { type TopbarProps } from "./components/topbar";
 import { cn } from "../lib/styles";
 import ClientProvider from "./client";
 
 interface Props {
-  topbar?: {
-    title: string;
-    subtitle?: string;
-    goBack?: boolean;
-    rightButton?: React.ReactNode;
-    shareButton?: boolean;
-  };
+  topbar?: TopbarProps;
   className?: string;
   showNav?: boolean;
 }

@@ -61,6 +61,7 @@ export async function getAllUsers(): Promise<User[]> {
         gender: userData.gender || "",
         role: userData.role || USER_ROLE.PLAYER,
         category: userData.category || "A",
+        kycCompleted: Boolean(userData.kycCompleted),
       });
     });
 
@@ -91,6 +92,7 @@ export async function getUserById(userId: string): Promise<User | null> {
       email: userData.email,
       gender: userData.gender,
       category: userData.category,
+      kycCompleted: Boolean(userData.kycCompleted),
     } as User;
   } catch (error) {
     console.error("Error al obtener usuario:", error);
@@ -110,12 +112,14 @@ export async function createOrUpdateUser(
       await setDoc(userRef, {
         ...userData,
         role: USER_ROLE.PLAYER,
+        kycCompleted: Boolean(userData.kycCompleted),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
     } else {
       await updateDoc(userRef, {
         ...userData,
+        kycCompleted: Boolean(userData.kycCompleted),
         updatedAt: new Date().toISOString(),
       });
     }
