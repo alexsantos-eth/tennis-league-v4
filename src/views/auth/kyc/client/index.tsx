@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from "react";
 
 import Stack from "@/components/ui/stack";
-import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/store/auth";
 
 import PersonalInfoStep from "./components/kyc-personal-info";
@@ -21,18 +20,14 @@ const KycView = () => {
   );
   const [step, setStep] = useState<KycStep>("personal-info");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const personalInfo = useUserDefaultData();
 
   const handleFinish = async (answers: KycAnswers) => {
     if (!currentUser) {
-      setError("Necesitas iniciar sesión para completar tu cuenta");
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
       await submitKycProfile({
@@ -50,7 +45,6 @@ const KycView = () => {
       window.location.href = "/";
     } catch (submissionError) {
       console.error("Error al completar el registro:", submissionError);
-      setError("No pudimos guardar tu información. Intenta de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -95,7 +89,7 @@ const KycView = () => {
   return (
     <Stack className="overflow-scroll h-full py-6">
       <Text variant="h2" className="text-muted-foreground">
-        Queremos conocerte mejor {" "}
+        Queremos conocerte mejor{" "}
         <span className="font-bold text-foreground">
           {currentUser.firstName || "tenista"}
         </span>
