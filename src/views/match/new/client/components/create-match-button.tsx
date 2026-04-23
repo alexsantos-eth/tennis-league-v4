@@ -9,7 +9,7 @@ const CreateMatchButton: React.FC = () => {
   return (
     <Button
       type="submit"
-      className="h-12 rounded-2xl text-base font-semibold"
+      className="h-12 rounded-2xl text-base font-semibold w-full"
       disabled={isSubmitting}
     >
       <PlayIcon />

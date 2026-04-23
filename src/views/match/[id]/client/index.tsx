@@ -1,5 +1,4 @@
 import { InfoIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Stack from "@/components/ui/stack";
@@ -30,28 +29,8 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
     isCurrentUserConfirmed,
   } = useMatchDetail(matchId);
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [scrollOpacity, setScrollOpacity] = useState(0);
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      const scrollY = container.scrollTop;
-      const opacity = Math.min(scrollY / 120, 1);
-      setScrollOpacity(opacity);
-    };
-
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <div
-      className="w-full h-full overflow-scroll pb-28"
-      ref={scrollContainerRef}
-    >
+    <div className="w-full h-full pb-28 -mt-16">
       {isLoading && (
         <Stack className="py-6">
           <Alert>
@@ -74,7 +53,7 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
 
       {!isLoading && !hasError && Boolean(match) && match && (
         <>
-          <MatchHero match={match} scrollOpacity={scrollOpacity} />
+          <MatchHero match={match} />
 
           <Stack className="py-6 bg-muted relative z-2 -mb-4">
             <MatchInfoCard match={match} />

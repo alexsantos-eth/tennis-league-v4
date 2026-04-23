@@ -51,9 +51,15 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-html {
-  overflow: hidden;
+html,
+body {
   overscroll-behavior: none;
+  background-color: var(--accent);
+}
+
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 :root {

@@ -57,11 +57,14 @@ const AddPlayersView: React.FC = () => {
   };
 
   const shareInvitation = () => {
-    shareLink(`${window.location.origin}/match/${matchDocRef?.id}`, "Invitación compartida");
+    shareLink(
+      `${window.location.origin}/match/${matchDocRef?.id}`,
+      "Invitación compartida",
+    );
   };
 
   return (
-    <Stack className="h-full overflow-scroll" noPx>
+    <Stack className="h-full overflow-scroll pb-22" noPx>
       <Stack className="py-4 bg-background">
         <div className="relative">
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -127,15 +130,17 @@ const AddPlayersView: React.FC = () => {
           />
         </BoxContainer>
 
-        <Button
-          type="button"
-          size="lg"
-          onClick={shareInvitation}
-          className="h-12 rounded-2xl w-full text-base font-semibold"
-        >
-          <Share2Icon />
-          Compartir invitacion
-        </Button>
+        <div className="fixed bottom-0 left-0 w-full p-6 bg-background border-t border-border z-10">
+          <Button
+            type="button"
+            size="lg"
+            onClick={shareInvitation}
+            className="h-12 rounded-2xl w-full text-base font-semibold"
+          >
+            <Share2Icon />
+            Compartir invitacion
+          </Button>
+        </div>
       </Stack>
     </Stack>
   );

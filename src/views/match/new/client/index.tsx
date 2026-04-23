@@ -32,7 +32,7 @@ const NewMatchPage: React.FC = () => {
 
   return (
     <>
-      <Stack className="w-full pb-8 overflow-scroll h-full no-scrollbar" noPx>
+      <Stack className="w-full pb-30 overflow-scroll h-full no-scrollbar" noPx>
         <form onSubmit={handleSubmit}>
           <SportTabs />
 
@@ -51,7 +51,9 @@ const NewMatchPage: React.FC = () => {
 
             <CommentsSection />
 
-            <CreateMatchButton />
+            <div className="fixed bottom-0 left-0 w-full p-6 bg-background border-t border-border z-10">
+              <CreateMatchButton />
+            </div>
           </Stack>
         </form>
       </Stack>

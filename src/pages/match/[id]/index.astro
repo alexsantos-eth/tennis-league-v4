@@ -16,9 +16,14 @@ const { id = "" } = Astro.params;
     noIndex
   />
 
-  <body>
-    <Main showNav={false}>
+    <Main
+      showNav={false}
+      topbar={{
+        goBack: true,
+        shareButton: true,
+      }}
+    >
       <MatchDetail client:load matchId={id} />
     </Main>
-  </body>
+
 </Page>

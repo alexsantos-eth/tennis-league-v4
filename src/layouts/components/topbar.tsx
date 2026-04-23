@@ -12,6 +12,7 @@ export interface TopbarProps {
   goBack?: boolean | (() => void);
   rightButton?: React.ReactNode;
   shareButton?: boolean;
+  style?: React.CSSProperties;
 }
 
 const Topbar = ({
@@ -19,6 +20,7 @@ const Topbar = ({
   className,
   goBack,
   rightButton,
+  style,
   shareButton = false,
 }: TopbarProps) => {
   const onGoBack = () => {
@@ -31,7 +33,7 @@ const Topbar = ({
 
   return (
     <header
-      style={{ boxShadow: "0px 5px 5px -1px rgba(0,0,0,0.02)" }}
+      style={{ boxShadow: "0px 5px 5px -1px rgba(0,0,0,0.02)", ...style }}
       className={cn( "fixed top-0 left-0 right-0 z-10 bg-background", className)}
     >
       <div

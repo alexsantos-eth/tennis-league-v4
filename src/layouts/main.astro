@@ -1,8 +1,7 @@
 ---
 import Navigation from "./components/navigation";
-import Topbar, { type TopbarProps } from "./components/topbar";
-import { cn } from "../lib/styles";
-import ClientProvider from "./client";
+import { type TopbarProps } from "./components/topbar";
+import MainProvider from "./components/main";
 
 interface Props {
   topbar?: TopbarProps;
@@ -13,20 +12,14 @@ interface Props {
 const { topbar, className, showNav } = Astro.props;
 ---
 
-<div class="h-dvh gap-0">
-  {Boolean(topbar) && <Topbar {...topbar} client:load />}
-  <main
-    class={cn(
-      "bg-accent max-h-dvh h-full",
-      Boolean(topbar) && "mt-16 h-[calc(100%-65px)]",
-      showNav && "h-[calc(100%-195px)]",
-      !Boolean(topbar) && showNav && "h-[calc(100%-90px)]",
-      className,
-    )}
+<body>
+  <MainProvider
+    topbar={topbar}
+    className={className}
+    showNav={showNav}
+    client:load
   >
-    <ClientProvider client:load>
-      <slot />
-    </ClientProvider>
-  </main>
+    <slot />
+  </MainProvider>
   {showNav && <Navigation client:load />}
-</div>
+</body>
