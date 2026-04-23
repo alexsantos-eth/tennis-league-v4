@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/store/auth";
-import type { PersonalInfoDraft, PersonalInfoErrors, PersonalInfoField } from "@/types/kyc";
-import { buildPersonalInfoDraft, validatePersonalInfo } from "../tools/questions";
 
+import {
+  buildPersonalInfoDraft,
+  validatePersonalInfo,
+} from "../tools/questions";
+
+import type {
+  PersonalInfoDraft,
+  PersonalInfoErrors,
+  PersonalInfoField,
+} from "@/types/kyc";
 const useUserDefaultData = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const [values, setValues] = useState<PersonalInfoDraft>(() => {

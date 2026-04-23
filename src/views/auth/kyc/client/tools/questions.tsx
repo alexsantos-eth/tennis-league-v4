@@ -1,4 +1,9 @@
-import type { KycAnswers, KycQuestion, PersonalInfoDraft, PersonalInfoErrors } from "@/types/kyc";
+import type {
+  KycAnswers,
+  KycQuestion,
+  PersonalInfoDraft,
+  PersonalInfoErrors,
+} from "@/types/kyc";
 import type { User } from "@/types/users";
 import { Calendar, Clock, PlayCircle, Trophy } from "lucide-react";
 

@@ -1,29 +1,24 @@
-import { useState, type FC, type FormEvent } from "react";
 import {
   Check,
-  CheckIcon,
   ChevronRight,
-  Mail,
   Mars,
   Phone,
   SaveIcon,
   User,
-  Users2,
   Venus,
 } from "lucide-react";
+import { type FC, type FormEvent, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-
-import RadioItem from "./kyc-radio-item";
-import type { PersonalInfoDraft, PersonalInfoErrors } from "@/types/kyc";
-import { GENDER_OPTIONS } from "../tools/questions";
 import BoxContainer from "@/components/ui/container";
-import Text from "@/components/ui/text";
-import KycInput from "./kyc-input";
 import Stack from "@/components/ui/stack";
+import Text from "@/components/ui/text";
 import MatchButtonRow from "@/views/match/new/client/components/match-button-row";
 
+import { GENDER_OPTIONS } from "../tools/questions";
+import KycInput from "./kyc-input";
+
+import type { PersonalInfoDraft, PersonalInfoErrors } from "@/types/kyc";
 interface PersonalInfoStepProps {
   values: PersonalInfoDraft;
   errors: PersonalInfoErrors;
@@ -88,7 +83,9 @@ const PersonalInfoStep: FC<PersonalInfoStepProps> = ({
 
             <div className="flex flex-col gap-2">
               <div>
-                <Text variant="bodySmall">Género</Text>
+                <Text variant="bodySmall" className="font-semibold">
+                  Género
+                </Text>
                 <Text variant="bodyXs">
                   Esto nos ayuda a personalizar tu perfil.
                 </Text>
@@ -100,11 +97,13 @@ const PersonalInfoStep: FC<PersonalInfoStepProps> = ({
                     key={option.value}
                     className="px-0"
                     onClick={() => handleGenderSelect(option.value)}
-                    icon={option.value === "hombre" ? (
-                      <Mars className="h-4 w-4" />
-                    ) : (
-                      <Venus className="h-4 w-4" />
-                    )}
+                    icon={
+                      option.value === "hombre" ? (
+                        <Mars className="h-4 w-4" />
+                      ) : (
+                        <Venus className="h-4 w-4" />
+                      )
+                    }
                     title={option.label}
                   >
                     {genderOption === option.value ? (

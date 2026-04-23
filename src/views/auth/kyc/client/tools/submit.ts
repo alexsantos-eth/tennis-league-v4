@@ -1,8 +1,10 @@
 import { createOrUpdateUser } from "@/firebase/users";
 import { getCategory } from "@/lib/category";
-import type { User } from "@/types/users";
 
 import { calculateKycScore } from "./questions";
+
+import type { User } from "@/types/users";
+
 import type { KycAnswers, PersonalInfoDraft } from "@/types/kyc";
 
 interface SubmitKycProfileInput {

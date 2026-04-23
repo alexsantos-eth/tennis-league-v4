@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import type { KycAnswers } from "@/types/kyc";
-import { KYC_QUESTIONS, calculateKycScore } from "../tools/questions";
+import { calculateKycScore, KYC_QUESTIONS } from "../tools/questions";
 
+import type { KycAnswers } from "@/types/kyc";
 interface UseHandleAnswerProps {
   onComplete: (answers: KycAnswers, totalUtr: number) => Promise<void> | void;
 }

@@ -1,18 +1,18 @@
-import { useState, type FormEvent } from "react";
+import { AlertCircle } from "lucide-react";
+import { type FormEvent, useState } from "react";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import Stack from "@/components/ui/stack";
+import Text from "@/components/ui/text";
 import { useAuthStore } from "@/store/auth";
 
 import PersonalInfoStep from "./components/kyc-personal-info";
-import useUserDefaultData from "./hooks/useUserDefaultData";
 import QuestionsStep from "./components/kyc-questions";
 import useHandleAnswer from "./hooks/useKycForm";
+import useUserDefaultData from "./hooks/useUserDefaultData";
 import { submitKycProfile } from "./tools/submit";
-import type { KycAnswers, KycStep } from "@/types/kyc";
-import Text from "@/components/ui/text";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 
+import type { KycAnswers, KycStep } from "@/types/kyc";
 const KycView = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const fetchCurrentUserData = useAuthStore(

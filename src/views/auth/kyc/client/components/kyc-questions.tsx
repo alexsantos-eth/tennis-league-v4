@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 import BoxContainer from "@/components/ui/container";
 import Stack from "@/components/ui/stack";
 import Text from "@/components/ui/text";
-
-import type { KycAnswers, KycQuestion } from "@/types/kyc";
 import MatchButtonRow from "@/views/match/new/client/components/match-button-row";
 
+import type { KycAnswers, KycQuestion } from "@/types/kyc";
 interface QuestionsStepProps {
   question: KycQuestion;
   answers: KycAnswers;
@@ -98,18 +97,15 @@ const QuestionsStep: FC<QuestionsStepProps> = ({
         </div>
       </BoxContainer>
 
-
-
-        <Button
-          type="button"
-          size="lg"
-            onClick={onBack}
-          className="h-12 rounded-2xl text-base font-semibold w-full"
-        >
-         <ArrowLeft className="size-4" />
+      <Button
+        type="button"
+        size="lg"
+        onClick={onBack}
+        className="h-12 rounded-2xl text-base font-semibold w-full"
+      >
+        <ArrowLeft className="size-4" />
         Volver
-        </Button> 
-
+      </Button>
     </Stack>
   );
 };

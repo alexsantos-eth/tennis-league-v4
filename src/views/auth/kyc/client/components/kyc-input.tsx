@@ -29,7 +29,9 @@ const KycInput: React.FC<KycInputProps> = ({
           {...props}
         />
       </div>
-      {props.error && <p className="text-xs text-rose-300 mt-2">{props.error}</p>}
+      {props.error && (
+        <p className="text-xs text-rose-300 mt-2">{props.error}</p>
+      )}
     </label>
   );
 };
