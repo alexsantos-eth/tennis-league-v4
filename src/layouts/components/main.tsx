@@ -20,7 +20,7 @@ const MainProvider: React.FC<Props> = ({
   children,
 }) => {
   const mainHeight = !Boolean(topbar) && (showNav || showFooter)
-    ? "calc(100% - 90px)"
+    ? "calc(100dvh - 90px)"
     : showFooter
       ? "calc(100dvh - 160px)"
       : showNav

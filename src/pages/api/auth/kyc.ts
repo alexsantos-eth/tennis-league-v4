@@ -1,7 +1,5 @@
 import type { APIRoute } from "astro";
 
-export const prerender = false;
-
 const ONE_WEEK_IN_SECONDS = 60 * 60 * 24 * 7;
 
 const setKycCookie = (cookies: Parameters<APIRoute>[0]["cookies"]) => {

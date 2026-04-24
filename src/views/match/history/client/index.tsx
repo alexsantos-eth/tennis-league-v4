@@ -7,7 +7,7 @@ const MatchHistoryPage: React.FC = () => {
   const { matches, isLoading, hasError } = useMatchHistory();
 
   return (
-    <Stack className="w-full pb-8 overflow-scroll h-full no-scrollbar" noPx>
+    <Stack className="w-full pb-6" noPx>
       <MatchHistoryList
         matches={matches}
         isLoading={isLoading}

@@ -52,7 +52,6 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
         </Stack>
       )}
 
-
       {!isLoading && !hasError && !match && (
         <Stack className="py-6 mt-16">
           <Alert>
@@ -104,7 +103,6 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
           />
         </>
       )}
-
     </div>
   );
 };
