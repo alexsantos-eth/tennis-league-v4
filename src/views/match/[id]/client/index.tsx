@@ -10,6 +10,7 @@ import MatchInfoCard from "./components/match-info-card";
 import MatchPlayersCard from "./components/match-players-card";
 import MatchSkillCard from "./components/match-skill-card";
 import useMatchDetail from "./hooks/useMatchDetail.ts";
+import ActionButton from "@/components/ui/action-button.tsx";
 
 interface MatchDetailPageProps {
   matchId: string;
@@ -32,7 +33,7 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
   return (
     <div className="w-full h-full pb-28 -mt-16">
       {isLoading && (
-        <Stack className="py-6">
+        <Stack className="py-6 mt-16">
           <Alert>
             <InfoIcon />
             <AlertDescription>Cargando partido...</AlertDescription>
@@ -41,12 +42,22 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
       )}
 
       {!isLoading && hasError && (
-        <Stack className="py-6">
+        <Stack className="py-6 mt-16">
           <Alert>
             <InfoIcon />
             <AlertDescription>
               No pudimos cargar los datos del partido.
             </AlertDescription>
+          </Alert>
+        </Stack>
+      )}
+
+
+      {!isLoading && !hasError && !match && (
+        <Stack className="py-6 mt-16">
+          <Alert>
+            <InfoIcon />
+            <AlertDescription>Partido no encontrado.</AlertDescription>
           </Alert>
         </Stack>
       )}
@@ -94,14 +105,6 @@ const MatchDetailPage: React.FC<MatchDetailPageProps> = ({ matchId }) => {
         </>
       )}
 
-      {!isLoading && !hasError && !match && (
-        <Stack className="py-6">
-          <Alert>
-            <InfoIcon />
-            <AlertDescription>Partido no encontrado.</AlertDescription>
-          </Alert>
-        </Stack>
-      )}
     </div>
   );
 };

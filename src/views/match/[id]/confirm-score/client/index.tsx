@@ -10,6 +10,7 @@ import MatchScoreSetsCard from "@/views/match/[id]/components/match-score-sets-c
 
 import useScoreEvents from "./hooks/useScoreEvents";
 import { getPlayerId, getPlayerName } from "./tools/sets";
+import ActionButton from "@/components/ui/action-button";
 
 interface ConfirmMatchScoreViewProps {
   matchId: string;
@@ -100,7 +101,7 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
   }
 
   return (
-    <Stack className="h-full overflow-y-auto py-6 bg-muted">
+    <Stack className="py-6">
       <BoxContainer
         className="gap-4"
         title="Confirmación de resultados"
@@ -262,13 +263,11 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
         </BoxContainer>
       )}
 
-      <Button
+      <ActionButton
         type="button"
-        size="lg"
-        className="h-12 rounded-2xl text-base font-semibold"
+
         onClick={submitConfirmation}
         disabled={confirmButtonDisabled}
-        variant={confirmButtonDisabled ? "secondary" : "default"}
       >
         {isSubmittingConfirmation ? <LoaderIcon /> : <CheckCheckIcon />}
 
@@ -277,7 +276,7 @@ const ConfirmMatchScoreView: React.FC<ConfirmMatchScoreViewProps> = ({
           : isSubmittingConfirmation
             ? "Confirmando..."
             : "Confirmar resultado"}
-      </Button>
+      </ActionButton>
     </Stack>
   );
 };

@@ -23,7 +23,7 @@ import type {
 } from "../types/match";
 import type { User } from "../types/users";
 import type { DocumentData, DocumentReference } from "firebase/firestore";
-type PlayersTab = "Amigos" | "Global";
+type PlayersTab = "Recents" | "Global";
 
 const getMaxGuestInvitesByMatchType = (matchType: PublicMatchType) =>
   matchType === "Singles" ? 1 : 3;
@@ -88,7 +88,7 @@ const getInitialNewMatchState = () => ({
   invitedPlayers: [] as MatchCreatorSummary[],
   availablePlayers: [] as User[],
   friendPlayerIds: [] as string[],
-  playersTab: "Amigos" as PlayersTab,
+  playersTab: "Recents" as PlayersTab,
   playersSearch: "",
   isLoadingPlayers: false,
 });

@@ -7,9 +7,10 @@ interface Props {
   topbar?: TopbarProps;
   className?: string;
   showNav?: boolean;
+  showFooter?: boolean;
 }
 
-const { topbar, className, showNav } = Astro.props;
+const { topbar, className, showNav, showFooter } = Astro.props;
 ---
 
 <body>
@@ -17,6 +18,7 @@ const { topbar, className, showNav } = Astro.props;
     topbar={topbar}
     className={className}
     showNav={showNav}
+    showFooter={showFooter}
     client:load
   >
     <slot />

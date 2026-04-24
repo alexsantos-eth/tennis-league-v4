@@ -17,14 +17,14 @@ export const formatGtr = (value: number) => {
 export const useFilteredPlayers = (
   availablePlayers: User[],
   friendPlayerIds: string[],
-  playersTab: "Amigos" | "Global",
+  playersTab: "Recents" | "Global",
   playersSearch: string,
 ) => {
   return useMemo(() => {
     const normalizedQuery = playersSearch.trim().toLowerCase();
 
     const scopedPlayers =
-      playersTab === "Amigos"
+      playersTab === "Recents"
         ? availablePlayers.filter((player) =>
             friendPlayerIds.includes(String(player.uid ?? ""))
           )

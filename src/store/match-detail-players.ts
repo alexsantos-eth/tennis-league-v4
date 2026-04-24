@@ -6,7 +6,7 @@ import type { MatchCreatorSummary } from "../types/match";
 import type { User } from "../types/users";
 import { useAuthStore } from "./auth";
 
-type PlayersTab = "Amigos" | "Global";
+type PlayersTab = "Recents" | "Global";
 
 const mapUserToMatchPlayer = (user: Partial<User>): MatchCreatorSummary => {
   const displayName = user.name || `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || "Jugador";

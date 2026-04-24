@@ -32,31 +32,21 @@ const NewMatchPage: React.FC = () => {
 
   return (
     <>
-      <Stack className="w-full pb-30 overflow-scroll h-full no-scrollbar" noPx>
-        <form onSubmit={handleSubmit}>
-          <SportTabs />
+      <form onSubmit={handleSubmit} className="pb-6">
+        <SportTabs />
 
-          <Stack className="mt-6">
-            <MatchTypeSection />
+        <Stack className="mt-6">
+          <MatchTypeSection />
+          <TeamsSection />
+          <DateTimeSection />
+          <LocationSection />
+          <MatchDetailsSection />
+          {isRanked && <SkillRangeSection />}
+          <CommentsSection />
+        </Stack>
 
-            <TeamsSection />
-
-            <DateTimeSection />
-
-            <LocationSection />
-
-            <MatchDetailsSection />
-
-            {isRanked && <SkillRangeSection />}
-
-            <CommentsSection />
-
-            <div className="fixed bottom-0 left-0 w-full p-6 bg-background border-t border-border z-10">
-              <CreateMatchButton />
-            </div>
-          </Stack>
-        </form>
-      </Stack>
+        <CreateMatchButton />
+      </form>
 
       <DateSheet />
 

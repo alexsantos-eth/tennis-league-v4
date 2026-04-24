@@ -1,3 +1,5 @@
+import { Children } from "react";
+
 import { cn } from "@/lib/styles";
 
 interface StackProps {
@@ -17,6 +19,10 @@ const Stack: React.FC<StackProps> = ({
   noPx = false,
   innerRef,
 }) => {
+  const normalizedChildren = Children.toArray(children).filter(
+    (child) => child !== null && child !== undefined && child !== false,
+  );
+
   return (
     <div
       ref={innerRef}
@@ -28,7 +34,7 @@ const Stack: React.FC<StackProps> = ({
         className,
       )}
     >
-      {children}
+      {normalizedChildren}
     </div>
   );
 };

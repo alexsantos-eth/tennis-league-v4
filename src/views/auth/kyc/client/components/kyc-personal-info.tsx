@@ -19,6 +19,7 @@ import { GENDER_OPTIONS } from "../tools/questions";
 import KycInput from "./kyc-input";
 
 import type { PersonalInfoDraft, PersonalInfoErrors } from "@/types/kyc";
+import ActionButton from "@/components/ui/action-button";
 interface PersonalInfoStepProps {
   values: PersonalInfoDraft;
   errors: PersonalInfoErrors;
@@ -124,15 +125,10 @@ const PersonalInfoStep: FC<PersonalInfoStepProps> = ({
           </div>
         </BoxContainer>
 
-        <Button
-          type="submit"
-          size="lg"
-          disabled={loading}
-          className="h-12 rounded-2xl text-base font-semibold w-full"
-        >
+        <ActionButton disabled={loading} type="submit">
           <SaveIcon />
           {loading ? "Guardando..." : "Confirmar"}
-        </Button>
+        </ActionButton>
       </Stack>
     </form>
   );

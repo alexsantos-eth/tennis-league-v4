@@ -8,6 +8,7 @@ import Text from "@/components/ui/text";
 import MatchButtonRow from "@/views/match/new/client/components/match-button-row";
 
 import type { KycAnswers, KycQuestion } from "@/types/kyc";
+import ActionButton from "@/components/ui/action-button";
 interface QuestionsStepProps {
   question: KycQuestion;
   answers: KycAnswers;
@@ -97,15 +98,13 @@ const QuestionsStep: FC<QuestionsStepProps> = ({
         </div>
       </BoxContainer>
 
-      <Button
+      <ActionButton
         type="button"
-        size="lg"
         onClick={onBack}
-        className="h-12 rounded-2xl text-base font-semibold w-full"
       >
         <ArrowLeft className="size-4" />
         Volver
-      </Button>
+      </ActionButton>
     </Stack>
   );
 };

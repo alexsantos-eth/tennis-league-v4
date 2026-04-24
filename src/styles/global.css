@@ -55,12 +55,9 @@ html,
 body {
   overscroll-behavior: none;
   background-color: var(--accent);
+  overflow: hidden;
 }
 
-html {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 
 :root {
   --default-animation-duration: 300ms;

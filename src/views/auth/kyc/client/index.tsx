@@ -87,7 +87,7 @@ const KycView = () => {
   }
 
   return (
-    <Stack className="overflow-scroll h-full py-6">
+    <Stack className="py-6">
       <Text variant="h2" className="text-muted-foreground">
         Queremos conocerte mejor{" "}
         <span className="font-bold text-foreground">

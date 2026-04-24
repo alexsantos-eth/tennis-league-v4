@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/store/auth";
 import { handleConfirmParticipation } from "../tools/match";
 import { toast } from "sonner";
+import ActionButton from "@/components/ui/action-button";
 
 interface MatchCtaBarProps {
   canJoin: boolean;
@@ -54,65 +55,57 @@ const MatchCtaBar: React.FC<MatchCtaBarProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 w-full p-6 bg-background border-t border-border z-10">
-      {isParticipant && !isConfirmed ? (
-        <Button
-          type="button"
-          size="lg"
-          className="w-full text-lg h-12 rounded-2xl"
-          onClick={handleJoinMatch}
-          disabled={isConfirming}
-        >
-          <PlayIcon />
-          {isConfirming ? "Confirmando..." : "Unirse al partido"}
-        </Button>
-      ) : isParticipant && isConfirmed && matchStatus !== "finished" ? (
-        <Button
-          type="button"
-          size="lg"
-          className="w-full text-lg h-12 rounded-2xl"
-          onClick={goToScoreConfirmation}
-        >
-          {matchStatus === "disputed" ? <ScaleIcon /> : <CheckCircleIcon />}
-
-          {matchStatus === "disputed"
-            ? "Ver apelación de score"
-            : "Confirmar score"}
-        </Button>
-      ) : isParticipant && isConfirmed && matchStatus === "finished" ? (
-        <Button
-          type="button"
-          size="lg"
-          className="w-full text-lg h-12 rounded-2xl"
-          disabled
-          variant="secondary"
-        >
-          Partido finalizado
-        </Button>
-      ) : canJoin ? (
-        <Button
-          type="button"
-          size="lg"
-          className="w-full text-lg h-12 rounded-2xl"
-          onClick={handleJoinMatch}
-          disabled={isConfirming}
-        >
-          <PlayIcon />
-          {isConfirming ? "Confirmando..." : "Unirse al partido"}
-        </Button>
-      ) : (
-        <Button
-          type="button"
-          size="lg"
-          className="w-full text-lg h-12 rounded-2xl"
-          disabled
-          variant="secondary"
-        >
-          {!isParticipant && isPrivate && "Este partido es privado"}
-          {!isParticipant && !isPrivate && "Partido no disponible"}
-        </Button>
-      )}
-    </div>
+    <ActionButton
+      onClick={
+        isParticipant && !isConfirmed
+          ? handleJoinMatch
+          : isParticipant && isConfirmed && matchStatus !== "finished"
+            ? goToScoreConfirmation
+            : canJoin
+              ? handleJoinMatch
+              : undefined
+      }
+      disabled={
+        isConfirming ||
+        (isParticipant && isConfirmed && matchStatus === "finished")
+      }
+    >
+      {(() => {
+        if (isParticipant && !isConfirmed) {
+          return (
+            <>
+              <PlayIcon />
+              {isConfirming ? "Confirmando..." : "Unirse al partido"}
+            </>
+          );
+        } else if (isParticipant && isConfirmed && matchStatus !== "finished") {
+          return (
+            <>
+              {matchStatus === "disputed" ? <ScaleIcon /> : <CheckCircleIcon />}
+              {matchStatus === "disputed"
+                ? "Ver apelación de score"
+                : "Confirmar score"}
+            </>
+          );
+        } else if (isParticipant && isConfirmed && matchStatus === "finished") {
+          return <>Partido finalizado</>;
+        } else if (canJoin) {
+          return (
+            <>
+              <PlayIcon />
+              {isConfirming ? "Confirmando..." : "Unirse al partido"}
+            </>
+          );
+        } else {
+          return (
+            <>
+              {!isParticipant && isPrivate && "Este partido es privado"}
+              {!isParticipant && !isPrivate && "Partido no disponible"}
+            </>
+          );
+        }
+      })()}
+    </ActionButton>
   );
 };
 
